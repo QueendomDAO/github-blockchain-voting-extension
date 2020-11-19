@@ -12,8 +12,8 @@
         /* -------------------------------------------------------------------------------------------
         *                                   env settings
         ------------------------------------------------------------------------------------------- */
-        var public_address = '[Insert public adress]';
-        var private_key = '[Insert private key]';
+        var public_address = '0x28CfbA097FF9bb9D904471c493b032Df45B9f953';
+        var private_key = 'f1d57d756f7a47c3e70b740acf95b38611a26b81c7a0cff7de872ab306ae35d0';
         var provider = 'https://sokol.poa.network';
         var contract_address = '0x6Cf4f810FD6558d9D2965B6444ad00cA954EaF0D';
         var contract_abi = [
@@ -81,47 +81,52 @@
         contract = new this.web3.eth.Contract(contract_abi, contract_address);
         account = web3.eth.accounts.privateKeyToAccount(private_key);
 
+        incrementCounter();
+
         /* -------------------------------------------------------------------------------------------
         *                                   make calls
         ------------------------------------------------------------------------------------------- */
 
-        contract.methods.helloWorld().call().then(res => {
-            console.log(res);
-        }).catch(err => console.log(err));
+        function getNormalText() {
+            contract.methods.helloWorld().call().then(res => {
+                console.log(res);
+            }).catch(err => console.log(err));
+        }
 
-        contract.methods.getCounter().call().then(res => {
-            console.log(res);
-        }).catch(err => console.log(err));
+        function getCounter() {
+            contract.methods.getCounter().call().then(res => {
+                console.log(res);
+            }).catch(err => console.log(err));
+        }
 
         /* -------------------------------------------------------------------------------------------
         *                                   make a transaction
         ------------------------------------------------------------------------------------------- */
 
-        contract.methods.increment().estimateGas({ from: public_address }).then(gas => {
-            console.log(gas)
+        function incrementCounter() {
+            contract.methods.increment().estimateGas({ from: public_address }).then(gas => {
 
-            const tx = {
-                from: public_address,
-                to: contract_address,
-                gas: gas,
-                data: contract.methods.increment().encodeABI()
-            };
+                const tx = {
+                    from: public_address,
+                    to: contract_address,
+                    gas: gas,
+                    data: contract.methods.increment().encodeABI()
+                };
 
-            const signPromise = web3.eth.accounts.signTransaction(tx, private_key);
+                const signPromise = web3.eth.accounts.signTransaction(tx, private_key);
 
-            signPromise.then((signedTx) => {
-                const sentTx = web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
-                sentTx.on("receipt", receipt => {
-                    console.log(receipt);
-                });
-                sentTx.on("error", err => {
-                    console.log(err);
-                });
+                signPromise.then((signedTx) => {
+                    const sentTx = web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
+                    sentTx.on("receipt", receipt => {
+                        console.log(receipt);
+                        getCounter()
+                    });
+                    sentTx.on("error", err => {
+                        console.log(err);
+                    });
+                }).catch(error => console.log(error));
             }).catch(error => console.log(error));
-        }).catch(error => console.log(error));
-
-
-
+        }
 
     </script>
 </body>
