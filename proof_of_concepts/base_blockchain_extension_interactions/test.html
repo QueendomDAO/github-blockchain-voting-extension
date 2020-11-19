@@ -3,8 +3,8 @@
 
 <body>
 
-    <h1>My First Heading</h1>
-    <p>My first paragraph.</p>
+    <h1 id="text">My First Heading</h1>
+    <button id="btn">My first paragraph.</button>
 
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
     <script>
@@ -81,8 +81,7 @@
         contract = new this.web3.eth.Contract(contract_abi, contract_address);
         account = web3.eth.accounts.privateKeyToAccount(private_key);
 
-        incrementCounter();
-
+        getCounter();
         /* -------------------------------------------------------------------------------------------
         *                                   make calls
         ------------------------------------------------------------------------------------------- */
@@ -95,9 +94,14 @@
 
         function getCounter() {
             contract.methods.getCounter().call().then(res => {
+                document.getElementById("text").innerText = res;
                 console.log(res);
             }).catch(err => console.log(err));
         }
+
+        document.getElementById("btn").addEventListener("click", () => {
+            incrementCounter();
+        })
 
         /* -------------------------------------------------------------------------------------------
         *                                   make a transaction
