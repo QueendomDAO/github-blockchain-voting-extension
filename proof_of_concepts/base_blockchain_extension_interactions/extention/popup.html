@@ -3,24 +3,44 @@
     <head>
       <style>
         body{
-          width:300px;
-          height:200px;
+          /* width:300px;
+          height:200px; */
+          color: #ffffff;
+          background-color: rgb(10, 77, 134);    
+          margin:10px;    
         }
         button {
           height: 20px;
           width: 30px;
           outline: none;
+          color: #ffffff;
+          background-color: rgb(212, 145, 0);
+          border-color: rgb(212, 145, 0);
+        }
+        #counterWrap{
+          display:flex;
+          flex-direction: row;
+          justify-content: flex-start;
+          
+        }
+        .margin{
+          margin-right:3px;
         }
       </style>
        
     </head>
     <body>
-      <!-- <button id="changeColor"></button> -->
+    <!-- <button id="changeColor"></button> -->
+    <div id="wrapDiv">
       <div id="output"></div>
-      <div id="counter"></div>
-      <button id="add">+</button>
+      <br>
+      <div id="counterWrap">
+        <button id="add" class="margin" >+</button>
+
+        <p class="margin"></p>Counter:   <div id="counter" class="margin"></div></p> 
+      </div>
       <script src="web3.min.js"> </script>
       <script src="popup.js"></script>
-      
+    </div>
     </body>
   </html>

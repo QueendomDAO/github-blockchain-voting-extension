@@ -119,7 +119,7 @@
         function getCounter() {
             contract.methods.getCounter().call().then(res => {
                 console.log(res);
-                document.getElementById("counter").innerHTML=res;
+                document.getElementById("counter").innerHTML=" "+res;
                 
             }).catch(err => console.log(err));
         }
@@ -129,7 +129,6 @@
         ------------------------------------------------------------------------------------------- */
 
         function incrementCounter() {
-            alert("uwu");
             contract.methods.increment().estimateGas({ from: public_address }).then(gas => {
 
                 const tx = {
@@ -146,7 +145,6 @@
                     sentTx.on("receipt", receipt => {
                         console.log(receipt);
                         getCounter()
-                       // alert("uwu");
                     });
                     sentTx.on("error", err => {
                         console.log(err);
