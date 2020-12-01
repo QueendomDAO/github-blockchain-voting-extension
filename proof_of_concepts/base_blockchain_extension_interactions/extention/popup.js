@@ -166,6 +166,18 @@
 
             // save adress and private key in the persistant storage
             console.log(acc);
+            chrome.storage.sync.set({ "acc": acc },function(){
+                chrome.storage.sync.get('acc', function (data) {
+                    console.log(data);
+                    document.getElementById("tempAccOutput").innerHTML="adress: "+ data.acc.address;
+                    document.getElementById("tempKeyOutput").innerHTML="key:    "+ data.acc.privateKey;
+                });
+            });
+            // chrome.storage.sync.set({ "key": keystore},function(){
+            //     chrome.storage.sync.get('key', function (data) {
+            //         document.getElementById("tempKeyOutput").innerHTML=""+data.private_key;
+            //     });
+            // });
         }
 
         document.getElementById("btn-add-poll").addEventListener("click", () => {
@@ -228,3 +240,17 @@
                 });
             }).catch(error => console.log(error));
         }
+/* -------------------------------------------------------------------------------------------
+        *                                   chekc existing values on load
+        ------------------------------------------------------------------------------------------- */
+        window.addEventListener("load",function(){
+            try{
+                chrome.storage.sync.get('acc', function (data) {
+                    console.log(data);
+                    document.getElementById("tempAccOutput").innerHTML="adress: "+ data.acc.address;
+                    document.getElementById("tempKeyOutput").innerHTML="key:    "+ data.acc.privateKey;
+                }); 
+            }catch(e){
+                console.log(e);
+            }
+        });
