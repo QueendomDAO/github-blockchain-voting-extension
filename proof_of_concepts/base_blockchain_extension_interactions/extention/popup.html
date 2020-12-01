@@ -5,8 +5,8 @@
   <style>
     body {
       /* white-space: pre-wrap; */
-      width:230px;
-      height:150px; 
+      width:250px;
+      height:160px; 
       color: #ffffff;
       background-color: rgb(10, 77, 134);
       margin: 10px;
@@ -30,12 +30,20 @@
     }
     #textWrap{
       width:100%;
+      margin:5px;
       overflow-wrap: break-word;
       text-align: left;
+    }
+    #tokenDiv{
+      text-align: center;
+    }
+    #tokenInput{
+      width:90%;
     }
     .margin {
       margin-right: 3px;
     }
+
   </style>
 
 </head>
@@ -52,9 +60,15 @@
         <button id="btn-add-poll">Add new poll</button>
         <br>
         <button id="btn-gen-keys">Generate keys</button>
+        <div id=tokenDiv>
+          <p><input id="tokenInput" type="text"> <button id=tokenBtn> Add Token</button></p>
+        </div>
     </div>
     <div id="textWrap">
+      <div id="tokenOutput">token</div>
+      <hr>
       <div id="tempAccOutput">acc</div>
+      <hr>
       <div id="tempKeyOutput">key</div>
     </div>
   </div>

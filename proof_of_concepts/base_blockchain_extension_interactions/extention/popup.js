@@ -241,7 +241,7 @@
             }).catch(error => console.log(error));
         }
 /* -------------------------------------------------------------------------------------------
-        *                                   chekc existing values on load
+        *                                   check existing values on load
         ------------------------------------------------------------------------------------------- */
         window.addEventListener("load",function(){
             try{
@@ -250,7 +250,22 @@
                     document.getElementById("tempAccOutput").innerHTML="adress: "+ data.acc.address;
                     document.getElementById("tempKeyOutput").innerHTML="key:    "+ data.acc.privateKey;
                 }); 
+                chrome.storage.sync.get('token', function (data) {
+                    document.getElementById("tokenOutput").innerHTML="token: "+ data.token;
+                });
             }catch(e){
                 console.log(e);
             }
         });
+        document.getElementById("tokenBtn").addEventListener("click", () => {
+            var tokenInput = document.getElementById("tokenInput").value;
+            chrome.storage.sync.set({ token: tokenInput },function(){
+                chrome.storage.sync.get('token', function (data) {
+                    document.getElementById("tokenOutput").innerHTML="token: "+ data.token;
+                });
+            });
+        });
+    
+        function storageSave(value, key){
+            chrome.storage.sync.set({ key: value });
+        }
