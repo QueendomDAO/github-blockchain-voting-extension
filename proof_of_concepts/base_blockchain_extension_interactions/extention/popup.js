@@ -28,14 +28,13 @@
 //               {code: 'document.body.innerHTML = "' + myResult + '";'});
 //         });
 //       };
-
-        /* -------------------------------------------------------------------------------------------
+/* -------------------------------------------------------------------------------------------
         *                                   env settings
         ------------------------------------------------------------------------------------------- */
         var public_address = '0x28CfbA097FF9bb9D904471c493b032Df45B9f953';
         var private_key = 'f1d57d756f7a47c3e70b740acf95b38611a26b81c7a0cff7de872ab306ae35d0';
         var provider = 'https://sokol.poa.network';
-        var contract_address = '0x6Cf4f810FD6558d9D2965B6444ad00cA954EaF0D';
+        var contract_address = '0x5C033433987134017A9b7a42673F6A62d673Df3b';
         var contract_abi = [
             {
                 "inputs": [],
@@ -44,18 +43,56 @@
                 "type": "constructor"
             },
             {
-                "constant": false,
-                "inputs": [],
-                "name": "increment",
-                "outputs": [],
+                "constant": true,
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "polls",
+                "outputs": [
+                    {
+                        "internalType": "string",
+                        "name": "pqLink",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "pqTitle",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "proVotes",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "contraVotes",
+                        "type": "uint256"
+                    }
+                ],
                 "payable": false,
-                "stateMutability": "nonpayable",
+                "stateMutability": "view",
                 "type": "function"
             },
             {
                 "constant": false,
-                "inputs": [],
-                "name": "test2",
+                "inputs": [
+                    {
+                        "internalType": "string",
+                        "name": "_pqLink",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "_pqTitle",
+                        "type": "string"
+                    }
+                ],
+                "name": "addNewPoll",
                 "outputs": [],
                 "payable": false,
                 "stateMutability": "nonpayable",
@@ -64,7 +101,7 @@
             {
                 "constant": true,
                 "inputs": [],
-                "name": "getCounter",
+                "name": "getPollsLength",
                 "outputs": [
                     {
                         "internalType": "uint256",
@@ -100,11 +137,12 @@
         web3 = new Web3(provider);
         contract = new this.web3.eth.Contract(contract_abi, contract_address);
         account = web3.eth.accounts.privateKeyToAccount(private_key);
+        web3.eth.getAccounts().then(res => {
+            console.log(res);
+        });
 
-        // incrementCounter();
-        getNormalText();
-        getCounter();
 
+        getPollNumbers();
         /* -------------------------------------------------------------------------------------------
         *                                   make calls
         ------------------------------------------------------------------------------------------- */
@@ -112,30 +150,45 @@
         function getNormalText() {
             contract.methods.helloWorld().call().then(res => {
                 console.log(res);
-                document.getElementById("output").innerHTML=res;
             }).catch(err => console.log(err));
         }
 
-        function getCounter() {
-            contract.methods.getCounter().call().then(res => {
-                console.log(res);
-                document.getElementById("counter").innerHTML=" "+res;
-                
+        function getPollNumbers() {
+            contract.methods.getPollsLength().call().then(res => {
+                document.getElementById("text").innerText = "Number of polls: " + res;
             }).catch(err => console.log(err));
         }
+
+        function genKeys() {
+            let acc = web3.eth.accounts.create(web3.utils.randomHex(32));
+            let wallet = web3.eth.accounts.wallet.add(acc);
+            let keystore = wallet.encrypt(web3.utils.randomHex(32));
+
+            // save adress and private key in the persistant storage
+            console.log(acc);
+        }
+
+        document.getElementById("btn-add-poll").addEventListener("click", () => {
+            addPoll("PQ-Test-URL", "PQ-Test-Name");
+        });
+
+        document.getElementById("btn-gen-keys").addEventListener("click", () => {
+            genKeys();
+        })
+
 
         /* -------------------------------------------------------------------------------------------
         *                                   make a transaction
         ------------------------------------------------------------------------------------------- */
 
-        function incrementCounter() {
-            contract.methods.increment().estimateGas({ from: public_address }).then(gas => {
+        function addPoll(pqLink, pqTitle) {
+            contract.methods.addNewPoll(pqLink, pqTitle).estimateGas({ from: public_address }).then(gas => {
 
                 const tx = {
                     from: public_address,
                     to: contract_address,
                     gas: gas,
-                    data: contract.methods.increment().encodeABI()
+                    data: contract.methods.addNewPoll(pqLink, pqTitle).encodeABI()
                 };
 
                 const signPromise = web3.eth.accounts.signTransaction(tx, private_key);
@@ -144,7 +197,7 @@
                     const sentTx = web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
                     sentTx.on("receipt", receipt => {
                         console.log(receipt);
-                        getCounter()
+                        getPollNumbers()
                     });
                     sentTx.on("error", err => {
                         console.log(err);
@@ -152,9 +205,26 @@
                 }).catch(error => console.log(error));
             }).catch(error => console.log(error));
         }
-        document.getElementById("add").addEventListener("click", () => {
-            incrementCounter();
-        });
 
 
+        function sendTest() {
+            const tx = {
+                from: public_address,
+                to: '0xA9126c7dAa5431D2379dEA9e9C3eFc37f35e58AB',
+                gas: 1287794,
+                value: '1000000000'
+            };
 
+            const signPromise = web3.eth.accounts.signTransaction(tx, private_key);
+
+            signPromise.then((signedTx) => {
+                const sentTx = web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
+                sentTx.on("receipt", receipt => {
+                    console.log(receipt);
+                    getCounter()
+                });
+                sentTx.on("error", err => {
+                    console.log(err);
+                });
+            }).catch(error => console.log(error));
+        }
