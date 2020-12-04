@@ -11,6 +11,7 @@
       background-color: rgb(10, 77, 134);
       margin: 10px;
       text-align: center;
+
     }
 
     button {
@@ -51,6 +52,25 @@
       display: block;
       
     }
+    .grid{
+      display:flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    #pollsCard{
+      justify-content: center;
+    }
+    .repoEntry{
+      background-color: rgb(3, 37, 66);
+      height:30px;
+      margin:1px;
+    }
+    .list{
+      background-color: rgb(18, 111, 192);
+      height:200px;
+      width:100%;
+      overflow-y:scroll;
+    }
 
   </style>
 
@@ -62,26 +82,36 @@
     <!-- Main Menu -->
     <div id=menuCard class="card">
       <h1>Menu</h1>
-      <button id="gotoRepoBtn" >Repositories</button>
-      <button id="gotoWalletBtn" >Wallet</button>
-      <button id="gotoPollsBtn" >Polls</button>
-      <button id="gotoPullBtn" >Pollable Pull-Requests</button>
-      <button id="showToken">Username and GitHub-Token</button>
+      <div id="menuBtnDiv" class="grid">
+        <button id="gotoRepoBtn" >Repositories</button>
+        <button id="gotoWalletBtn" >Wallet</button>
+        <button id="gotoPollsBtn" >Polls</button>
+        <button id="gotoPullBtn" >Pollable Pull-Requests</button>
+      </div>
+      <!-- <button id="showToken">Username and GitHub-Token</button> -->
     </div>
     <!-- Repository List -->
     <div id="repoCard" class="card">
-      <div id="repoList"></div>
-      <button class="backBtn">Back</button>
+      <h1>Repositories</h1>
+      <div id="repoList" class="list"></div>
+      <div class="grid">
+        <button id="tempAddPoll">Add new poll(temp)</button>
+        <button class="backBtn">Back</button>
+      </div>
     </div>
     <!-- Polls Requests -->
     <div id="pollsCard" class="card">
-      <div id="pollsList"></div>
+      <h1>Pull Votes</h1>
       <button id="btn-add-poll">Add new poll</button>
-      <button id="showPollsBtn">Show pollable pull-requests</button>
-      <button class="backBtn">Back</button>
+      <div id="pollsList" class="list"></div>
+      <div class="grid">
+        <button id="showPollsBtn">Show pollable pull-requests</button>
+        <button class="backBtn">Back</button>
+      </div>
     </div>
     <!-- Pollable Pulls -->
     <div id="pullCard" class="card">
+      <h1>Pollable pull-requests</h1>
       <div id="pullList"></div>
       <button class="backBtn">Back</button>
     </div>

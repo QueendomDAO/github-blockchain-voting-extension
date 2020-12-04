@@ -285,7 +285,6 @@
             backBtns[i].addEventListener("click",function(){gotoCard(0)});
         }
         
-
         function gotoCard(index){
             console.log("change card");
             cardArray.forEach(element => {
@@ -293,3 +292,15 @@
             });
             cardArray[index].style.display="block";
         }
+        //add to repository list
+        function addRepo(name, pullCount){
+            var repoEntry = document.createElement("div");
+            repoEntry.classList.add("repoEntry");
+            repoEntry.innerHTML="name "+"["+pullCount+"]";
+            repoEntry.addEventListener("click",function(){gotoCard(1)});
+            console.log(repoEntry);
+            console.log(repoList);
+            document.getElementById("repoList").appendChild(repoEntry);
+        }
+        //TEMP BUTTON
+        document.getElementById("tempAddPoll").addEventListener("click", function(){addRepo("test",2)});
