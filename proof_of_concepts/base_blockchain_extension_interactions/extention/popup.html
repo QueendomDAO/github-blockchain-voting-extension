@@ -14,12 +14,12 @@
     }
 
     button {
-      /* height: 20px;*/
+      height: 50px;
       width: 120px; 
       outline: none;
       color: #ffffff;
-      background-color: rgb(199, 144, 26);
-      border-color: rgb(199, 144, 26);
+      background-color: rgb(231, 148, 23);
+      border-color: rgb(231, 148, 23);
     }
 
     #counterWrap {
@@ -39,9 +39,17 @@
     }
     #tokenInput{
       width:90%;
+      margin:2px;
     }
     .margin {
       margin-right: 3px;
+    }
+    .card{
+      display:none;
+    }
+    #menuCard{
+      display: block;
+      
     }
 
   </style>
@@ -51,25 +59,54 @@
 <body>
 
   <div id="wrapDiv">
-    <h1 id="text">Counter state</h1>
+    <!-- Main Menu -->
+    <div id=menuCard class="card">
+      <h1>Menu</h1>
+      <button id="gotoRepoBtn" >Repositories</button>
+      <button id="gotoWalletBtn" >Wallet</button>
+      <button id="gotoPollsBtn" >Polls</button>
+      <button id="gotoPullBtn" >Pollable Pull-Requests</button>
+      <button id="showToken">Username and GitHub-Token</button>
+    </div>
+    <!-- Repository List -->
+    <div id="repoCard" class="card">
+      <div id="repoList"></div>
+      <button class="backBtn">Back</button>
+    </div>
+    <!-- Polls Requests -->
+    <div id="pollsCard" class="card">
+      <div id="pollsList"></div>
+      <button id="btn-add-poll">Add new poll</button>
+      <button id="showPollsBtn">Show pollable pull-requests</button>
+      <button class="backBtn">Back</button>
+    </div>
+    <!-- Pollable Pulls -->
+    <div id="pullCard" class="card">
+      <div id="pullList"></div>
+      <button class="backBtn">Back</button>
+    </div>
+    <!-- Wallet -->
+    <div id="walletCard" class="card">
+      <h1 id="text">Counter state</h1>
+      <p><input id="tokenInput" placeholder="Token" type="text"> <button id=tokenBtn> Add Token</button></p>
+      <button id="btn-gen-keys">Generate keys</button>
+      <div id="textWrap">
+        <div id="tokenOutput">token</div>
+        <hr>
+        <div id="tempAccOutput">acc</div>
+        <hr>
+        <div id="tempKeyOutput">key</div>
+      </div>
+      <button class="backBtn">Back</button>
+    </div>
     <br>
     <div id="counterWrap">
       <!-- <button id="add" class="margin" >+</button>
 
         <p class="margin"></p>Counter:   <div id="counter" class="margin"></div></p>  -->
-        <button id="btn-add-poll">Add new poll</button>
         <br>
-        <button id="btn-gen-keys">Generate keys</button>
         <div id=tokenDiv>
-          <p><input id="tokenInput" type="text"> <button id=tokenBtn> Add Token</button></p>
         </div>
-    </div>
-    <div id="textWrap">
-      <div id="tokenOutput">token</div>
-      <hr>
-      <div id="tempAccOutput">acc</div>
-      <hr>
-      <div id="tempKeyOutput">key</div>
     </div>
   </div>
 
