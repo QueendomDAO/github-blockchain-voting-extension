@@ -16,7 +16,16 @@
         var public_address = '0x28CfbA097FF9bb9D904471c493b032Df45B9f953';
         var private_key = 'f1d57d756f7a47c3e70b740acf95b38611a26b81c7a0cff7de872ab306ae35d0';
         var provider = 'https://sokol.poa.network';
-        var contract_address = '0x5C033433987134017A9b7a42673F6A62d673Df3b';
+        //var contract_address = '0x5C033433987134017A9b7a42673F6A62d673Df3b';
+        var contract_address = '0xaa857387aca2a3EE8DA8A7bab79D6f5abD83E548';
+        var github_token = '';
+
+        var contract_polls = [];
+        var starred_repos = [];
+        var pull_requests = [];
+        var pollable_pqs = [];
+        var username = "SerQuicky";
+
         var contract_abi = [
             {
                 "inputs": [],
@@ -36,6 +45,16 @@
                 "name": "polls",
                 "outputs": [
                     {
+                        "internalType": "uint256",
+                        "name": "rpId",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "pqId",
+                        "type": "uint256"
+                    },
+                    {
                         "internalType": "string",
                         "name": "pqLink",
                         "type": "string"
@@ -54,6 +73,11 @@
                         "internalType": "uint256",
                         "name": "contraVotes",
                         "type": "uint256"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "time",
+                        "type": "string"
                     }
                 ],
                 "payable": false,
@@ -63,6 +87,16 @@
             {
                 "constant": false,
                 "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "_rpId",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "_pqId",
+                        "type": "uint256"
+                    },
                     {
                         "internalType": "string",
                         "name": "_pqLink",
@@ -125,6 +159,86 @@
 
 
         getPollNumbers();
+        getContractPolls();
+
+        getRequest('https://api.github.com/users/serquicky/starred')
+            .then(data => starred_repos = data)
+            .catch(error => console.error(error));
+
+        getRequest('https://api.github.com/repos/serquicky/shoe-dataset/pulls')
+            .then(data => pull_requests = data)
+            .catch(error => console.error(error));
+
+        setTimeout(() => {
+            console.log(pull_requests);
+            combinePollsAndRepos();
+            getPollableRequests();
+            console.log("polls", contract_polls);
+            console.log("repos", starred_repos);
+            console.log("pollable requests", pollable_pqs);
+        }, 2000)
+
+        /* -------------------------------------------------------------------------------------------
+        *                                   Github calls
+        ------------------------------------------------------------------------------------------- */
+
+        function getPollableRequests() {
+            for (let i = 0; i < pull_requests.length; i++) {
+                let was_found = false;
+                let contract_index = 0;
+            
+                for (let j = 0; j < contract_polls.length; j++) {
+                    if(pull_requests[i]['id'] == contract_polls[j][1]) {
+                        was_found = true
+                        contract_index = j;
+                    }
+                }
+
+                if(!was_found && pull_requests[i]['state'] == "open") {
+                    pollable_pqs.push({pq: pull_requests[i], poll: contract_polls[contract_index]});
+                }
+            }
+        }
+
+        function combinePollsAndRepos() {
+            for (let i = 0; i < starred_repos.length; i++) {
+                starred_repos[i]['openPolls'] = [];
+
+                for (let j = 0; j < contract_polls.length; j++) {
+                    if (starred_repos[i]['id'] == contract_polls[j][0]) {
+                        starred_repos[i]['openPolls'].push(contract_polls[j]);
+                    }
+                }
+            }
+        }
+
+
+        function getRequest(url) {
+            return fetch(url, {
+                method: 'GET', // *GET, POST, PUT, DELETE, etc.
+                headers: new Headers({
+                    'User-agent': 'Mozilla/4.0 Custom User Agent',
+                    "Authorization": "Bearer " + github_token,
+                }),
+            })
+                .then(response => response.json()) //Converting the response to a JSON object
+        }
+
+
+        function getContractPolls() {
+            contract.methods.getPollsLength().call().then(async (res) => {
+                console.log(res);
+
+                for (let i = 0; i < res; i++) {
+                    await contract.methods.polls(i).call().then(poll => {
+                        contract_polls.push(poll);
+                        console.log(poll);
+                    });
+                }
+
+            }).catch(err => console.log(err));
+        }
+
         /* -------------------------------------------------------------------------------------------
         *                                   make calls
         ------------------------------------------------------------------------------------------- */
@@ -210,6 +324,9 @@
                 });
             }).catch(error => console.log(error));
         }
+
+
+
 
     </script>
 </body>
