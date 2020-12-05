@@ -265,7 +265,7 @@
         }
 
         document.getElementById("btn-add-poll").addEventListener("click", () => {
-            addPoll("PQ-Test-URL", "PQ-Test-Name");
+            addPoll(10, 10, "PQ-Test-URL", "PQ-Test-Name");
         });
 
         document.getElementById("btn-gen-keys").addEventListener("click", () => {
@@ -277,14 +277,14 @@
         *                                   make a transaction
         ------------------------------------------------------------------------------------------- */
 
-        function addPoll(pqLink, pqTitle) {
-            contract.methods.addNewPoll(pqLink, pqTitle).estimateGas({ from: public_address }).then(gas => {
+        function addPoll(rpId, pqId, pqLink, pqTitle) {
+            contract.methods.addNewPoll(rpId, pqId, pqLink, pqTitle).estimateGas({ from: public_address }).then(gas => {
 
                 const tx = {
                     from: public_address,
                     to: contract_address,
                     gas: gas,
-                    data: contract.methods.addNewPoll(pqLink, pqTitle).encodeABI()
+                    data: contract.methods.addNewPoll(rpId, pqId, pqLink, pqTitle).encodeABI()
                 };
 
                 const signPromise = web3.eth.accounts.signTransaction(tx, private_key);
