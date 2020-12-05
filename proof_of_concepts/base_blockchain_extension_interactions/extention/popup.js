@@ -266,6 +266,41 @@
             });
         });
     
-        function storageSave(value, key){
-            chrome.storage.sync.set({ key: value });
+/* -------------------------------------------------------------------------------------------
+        *                                   Menu Navigation
+        ------------------------------------------------------------------------------------------- */
+        var cardArray=[
+        document.getElementById("menuCard"),
+        document.getElementById("pollsCard"),
+        document.getElementById("repoCard"),
+        document.getElementById("pullCard"),
+        document.getElementById("walletCard")
+        ]
+        document.getElementById("gotoRepoBtn").addEventListener("click",function(){gotoCard(2)});
+        document.getElementById("gotoWalletBtn").addEventListener("click",function(){gotoCard(4)});
+        document.getElementById("gotoPollsBtn").addEventListener("click",function(){gotoCard(1)});
+        document.getElementById("gotoPullBtn").addEventListener("click",function(){gotoCard(3)});
+        var backBtns = document.getElementsByClassName("backBtn");
+        for (let i = 0; i < backBtns.length; i++) {
+            backBtns[i].addEventListener("click",function(){gotoCard(0)});
         }
+        
+        function gotoCard(index){
+            console.log("change card");
+            cardArray.forEach(element => {
+                element.style.display="none";
+            });
+            cardArray[index].style.display="block";
+        }
+        //add to repository list
+        function addRepo(name, pullCount){
+            var repoEntry = document.createElement("div");
+            repoEntry.classList.add("repoEntry");
+            repoEntry.innerHTML="name "+"["+pullCount+"]";
+            repoEntry.addEventListener("click",function(){gotoCard(1)});
+            console.log(repoEntry);
+            console.log(repoList);
+            document.getElementById("repoList").appendChild(repoEntry);
+        }
+        //TEMP BUTTON
+        document.getElementById("tempAddPoll").addEventListener("click", function(){addRepo("test",2)});
