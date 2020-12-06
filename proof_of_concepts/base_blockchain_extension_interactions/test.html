@@ -159,20 +159,30 @@
 
 
         getPollNumbers();
+
+        // #1 - Aufruf hole alle Smart Contract polls
         getContractPolls();
 
+        // #2 - Aufruf hole alle gefolgten Repositories
         getRequest('https://api.github.com/users/serquicky/starred')
             .then(data => starred_repos = data)
             .catch(error => console.error(error));
 
+        // #4 - Aufruf hole Pull Requests des ausgewählten Repos
         getRequest('https://api.github.com/repos/serquicky/shoe-dataset/pulls')
             .then(data => pull_requests = data)
             .catch(error => console.error(error));
 
         setTimeout(() => {
             console.log(pull_requests);
+
+            // #3 - Aufruf kombiniere Polls und Repositories
             combinePollsAndRepos();
+
+            // #5 - Aufruf überprüfe ob Pull Requests bereits als Poll liefen/laufen
             getPollableRequests();
+
+
             console.log("polls", contract_polls);
             console.log("repos", starred_repos);
             console.log("pollable requests", pollable_pqs);
