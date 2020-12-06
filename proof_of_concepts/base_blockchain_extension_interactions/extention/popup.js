@@ -293,14 +293,28 @@
             cardArray[index].style.display="block";
         }
         //add to repository list
-        function addRepo(name, pullCount){
+        var pollsList = document.getElementById("repoList");
+        function addRepo(name, pullCount,url){
             var repoEntry = document.createElement("div");
             repoEntry.classList.add("repoEntry");
-            repoEntry.innerHTML="name "+"["+pullCount+"]";
-            repoEntry.addEventListener("click",function(){gotoCard(1)});
+            repoEntry.innerHTML=name +"["+pullCount+"]";
+            repoEntry.addEventListener("click",function(){window.location = url;});
             console.log(repoEntry);
             console.log(repoList);
-            document.getElementById("repoList").appendChild(repoEntry);
+            pollsList.appendChild(repoEntry);
         }
         //TEMP BUTTON
-        document.getElementById("tempAddPoll").addEventListener("click", function(){addRepo("test",2)});
+        document.getElementById("tempAddPoll").addEventListener("click", function(){getRepos();});//addRepo("test",2)});
+
+        async function getRepos(){
+            // const headers ={
+            //     "Authorization":
+            // }
+
+            const url = "https://api.github.com/users/LeviiOnGit/repos";
+            const response = await fetch(url);
+            const result = await response.json();
+            console.log(result[0].full_name);
+            result.forEach(i=>{addRepo(i.full_name,4,i.html_url)});
+            //await addRepo(result.name,4,result.html_url);
+        }
