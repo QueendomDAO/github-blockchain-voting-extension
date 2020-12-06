@@ -159,20 +159,30 @@
 
 
         getPollNumbers();
+
+        // #1 - Aufruf hole alle Smart Contract polls
         getContractPolls();
 
+        // #2 - Aufruf hole alle gefolgten Repositories
         getRequest('https://api.github.com/users/serquicky/starred')
             .then(data => starred_repos = data)
             .catch(error => console.error(error));
 
+        // #4 - Aufruf hole Pull Requests des ausgewählten Repos
         getRequest('https://api.github.com/repos/serquicky/shoe-dataset/pulls')
             .then(data => pull_requests = data)
             .catch(error => console.error(error));
 
         setTimeout(() => {
             console.log(pull_requests);
+
+            // #3 - Aufruf kombiniere Polls und Repositories
             combinePollsAndRepos();
+
+            // #5 - Aufruf überprüfe ob Pull Requests bereits als Poll liefen/laufen
             getPollableRequests();
+
+
             console.log("polls", contract_polls);
             console.log("repos", starred_repos);
             console.log("pollable requests", pollable_pqs);
@@ -265,7 +275,7 @@
         }
 
         document.getElementById("btn-add-poll").addEventListener("click", () => {
-            addPoll("PQ-Test-URL", "PQ-Test-Name");
+            addPoll(10, 10, "PQ-Test-URL", "PQ-Test-Name");
         });
 
         document.getElementById("btn-gen-keys").addEventListener("click", () => {
@@ -277,14 +287,14 @@
         *                                   make a transaction
         ------------------------------------------------------------------------------------------- */
 
-        function addPoll(pqLink, pqTitle) {
-            contract.methods.addNewPoll(pqLink, pqTitle).estimateGas({ from: public_address }).then(gas => {
+        function addPoll(rpId, pqId, pqLink, pqTitle) {
+            contract.methods.addNewPoll(rpId, pqId, pqLink, pqTitle).estimateGas({ from: public_address }).then(gas => {
 
                 const tx = {
                     from: public_address,
                     to: contract_address,
                     gas: gas,
-                    data: contract.methods.addNewPoll(pqLink, pqTitle).encodeABI()
+                    data: contract.methods.addNewPoll(rpId, pqId, pqLink, pqTitle).encodeABI()
                 };
 
                 const signPromise = web3.eth.accounts.signTransaction(tx, private_key);
