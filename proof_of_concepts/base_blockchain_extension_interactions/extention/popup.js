@@ -37,7 +37,8 @@ var private_key = 'f1d57d756f7a47c3e70b740acf95b38611a26b81c7a0cff7de872ab306ae3
 var provider = 'https://sokol.poa.network';
 //var contract_address = '0x5C033433987134017A9b7a42673F6A62d673Df3b';
 var contract_address = '0xaa857387aca2a3EE8DA8A7bab79D6f5abD83E548';
-var github_token = '885e5ef4f0e52acc01114965406666af8897921b';
+var github_token = 'e7eae095461ac3dc01fe55090a7c3230313f294a';
+// var github_token = 'bb5e85bdcf7df9519c80bb186831e7661f1f564c';
 
 var contract_polls = [];
 var starred_repos = [];
@@ -179,40 +180,67 @@ web3.eth.getAccounts().then(res => {
 
 getPollNumbers();
 
-// #1 - Aufruf hole alle Smart Contract polls
-getContractPolls();
+function onLogin() {
+    console.log("user" + username);
+    // #1 - Aufruf hole alle Smart Contract polls
+    getContractPolls();
 
-// #2 - Aufruf hole alle gefolgten Repositories
-getRequest('https://api.github.com/users/LeviiOnGit/starred')
-    .then(data => starred_repos = data)
-    .catch(error => console.error(error));
+    // #2 - Aufruf hole alle gefolgten Repositories
+    getRequest('https://api.github.com/users/' + username + '/starred')
+        .then(data => starred_repos = data)
+        .catch(error => console.error(error));
 
-// #4 - Aufruf hole Pull Requests des ausgewählten Repos
-getRequest('https://api.github.com/repos/LeviiOnGit/ubuu/pulls')
-    .then(data => pull_requests = data)
-    .catch(error => console.error(error));
+    // #4 - Aufruf hole Pull Requests des ausgewählten Repos
+    getRequest('https://api.github.com/repos/LeviiOnGit/ubuu/pulls')
+        .then(data => pull_requests = data)
+        .catch(error => console.error(error));
 
-setTimeout(() => {
-    console.log(pull_requests);
+    setTimeout(() => {
+        console.log(pull_requests);
 
-    // #3 - Aufruf kombiniere Polls und Repositories
-    combinePollsAndRepos();
+        // #3 - Aufruf kombiniere Polls und Repositories
+        combinePollsAndRepos();
 
-    // #5 - Aufruf überprüfe ob Pull Requests bereits als Poll liefen/laufen
-    getPollableRequests();
+        // #5 - Aufruf überprüfe ob Pull Requests bereits als Poll liefen/laufen
+        getPollableRequests();
 
 
-    console.log("polls", contract_polls);
-    console.log("repos", starred_repos);
-    console.log("pollable requests", pollable_pqs);
-    starred_repos.forEach(e => {
-        addRepo(e.name,e.openPolls.length,e.url);
-    });
-    pollable_pqs.forEach(e => {
-        addpull(e.pq.title,e.pq.url);
-    });
-}, 2000)
+        console.log("polls", contract_polls);
+        console.log("repos", starred_repos);
+        console.log("pollable requests", pollable_pqs);
+        repoList.innerHTML="";
+        starred_repos.forEach(e => {
+            addRepo(e.name, e.openPolls.length, e.url);
+        });
+        pullList.innerHTML="";
+        pollable_pqs.forEach(e => {
+            addpull(e.pq.title, e.pq.url);
+        });
+    }, 2000)
+}
+function getPullRequests(repName) {
+    pull_requests = []
+    // var searchString = "https://api.github.com/repos/LeviiOnGit/ubuu/pulls";
+    var searchString = "https://api.github.com/repos/" + username + "/" + repName + "/pulls";
+    console.log(searchString);
+    getRequest(searchString)
+        .then(data => pull_requests = data)
+        .then(data => {
+            pollsList.innerHTML="";      
+            addVote(data[0].updated_at, data[0].title, data[0].url);//TODO iterate
+        })
+        .catch(error => console.error(error));
+}
+// async function getPullRequests(repName) {
 
+//     pull_requests = []
+//     const url = "https://api.github.com/repos/"+username+"/"+repName+"/pulls";
+//     const response = await fetch(url);
+//     const result = await response.json();
+//     console.log(result);
+//     await result.forEach(i=>{ addVote(i.time,i.pqTitle,i.pqLink);});
+
+// }
 /* -------------------------------------------------------------------------------------------
 *                                   Github calls
 ------------------------------------------------------------------------------------------- */
@@ -245,7 +273,7 @@ function combinePollsAndRepos() {
         for (let j = 0; j < contract_polls.length; j++) {
             if (starred_repos[i]['id'] == contract_polls[j][0]) {
                 starred_repos[i]['openPolls'].push(contract_polls[j]);
-                
+
             }
         }
     }
@@ -272,7 +300,7 @@ function getContractPolls() {
             await contract.methods.polls(i).call().then(poll => {
                 contract_polls.push(poll);
                 console.log(poll);
-                addVote(poll.time,poll.pqTitle,poll.pqLink);
+                // addVote(poll.time,poll.pqTitle,poll.pqLink);
             });
         }
 
@@ -304,9 +332,9 @@ function genKeys() {
     console.log(acc);
 }
 
-document.getElementById("btn-add-poll").addEventListener("click", () => {
-    addPoll(10, 10, "PQ-Test-URL", "PQ-Test-Name");
-});
+// document.getElementById("btn-add-poll").addEventListener("click", () => {
+//     addPoll(10, 10, "PQ-Test-URL", "PQ-Test-Name");
+// });
 
 document.getElementById("btn-gen-keys").addEventListener("click", () => {
     genKeys();
@@ -408,6 +436,19 @@ window.addEventListener("load", function () {
     } catch (e) {
         console.log(e);
     }
+    try {
+        chrome.storage.sync.get('username', function (data) {
+            if(data!=null && data.username!=""){
+                username=data.username;
+                console.log(data);
+                document.getElementById("username").innerHTML = " Logged in as: " + username;
+                onLogin();
+                gotoCard(0);
+            }
+        });
+    } catch (error) {
+        console.log(e);
+    }
     gotoCard(5);
 });
 document.getElementById("tokenBtn").addEventListener("click", () => {
@@ -420,9 +461,11 @@ document.getElementById("tokenBtn").addEventListener("click", () => {
 });
 document.getElementById("loginBtn").addEventListener("click", () => {
     username = document.getElementById("userInput").value;
-    document.getElementById("username").innerHTML=" Logged in as: "+username;
+    chrome.storage.sync.set({ username: username });
+    document.getElementById("username").innerHTML = " Logged in as: " + username;
     console.log(username);
     gotoCard(0);
+    onLogin();
 });
 document.getElementById("gotoLoginBtn").addEventListener("click", () => {
     gotoCard(5);
@@ -441,8 +484,9 @@ var cardArray = [
 ]
 document.getElementById("gotoRepoBtn").addEventListener("click", function () { gotoCard(2) });
 document.getElementById("gotoWalletBtn").addEventListener("click", function () { gotoCard(4) });
-document.getElementById("gotoPollsBtn").addEventListener("click", function () { gotoCard(1) });
-document.getElementById("gotoPullBtn").addEventListener("click", function () { gotoCard(3) });
+//document.getElementById("gotoPollsBtn").addEventListener("click", function () { gotoCard(1) });
+//document.getElementById("gotoPullBtn").addEventListener("click", function () { gotoCard(3) });
+document.getElementById("showPollsBtn").addEventListener("click", function () { gotoCard(3) });
 var backBtns = document.getElementsByClassName("backBtn");
 for (let i = 0; i < backBtns.length; i++) {
     backBtns[i].addEventListener("click", function () { gotoCard(0) });
@@ -454,10 +498,10 @@ function gotoCard(index) {
         element.style.display = "none";
     });
     cardArray[index].style.display = "block";
-    if(index==5){
-        document.getElementById("loggedAsDiv").style.display="none";
-    }else{
-        document.getElementById("loggedAsDiv").style.display="block";
+    if (index == 5) {
+        document.getElementById("loggedAsDiv").style.display = "none";
+    } else {
+        document.getElementById("loggedAsDiv").style.display = "block";
     }
 }
 //add to repository list
@@ -470,7 +514,11 @@ function addRepo(name, pullCount, url) {
     var repoEntry = document.createElement("div");
     repoEntry.classList.add("repoEntry");
     repoEntry.innerHTML = name + "[" + pullCount + "]";
-    repoEntry.addEventListener("click", function () { window.location = url; });
+    repoEntry.addEventListener("click", function () {
+        document.getElementById("pollsHeader").innerHTML="Pull-Requess of "+name;
+        getPullRequests(name);
+        gotoCard(1);
+    });
     console.log(repoEntry);
     console.log(repoList);
     repoList.appendChild(repoEntry);
@@ -486,19 +534,19 @@ function addVote(time, name, url) {
     voteBody.innerHTML = name;
     var confirmBtn = document.createElement("BUTTON");
     confirmBtn.innerHTML = "YES";
-    confirmBtn.addEventListener("click", function(){
+    confirmBtn.addEventListener("click", function () {
         //TODO vote yes
     });
     var denyBtn = document.createElement("BUTTON");
     denyBtn.innerHTML = "NO";
-    denyBtn.addEventListener("click", function(){
+    denyBtn.addEventListener("click", function () {
         //TODO vote no
     });
     var linkBtn = document.createElement("BUTTON");
     linkBtn.innerHTML = "GOTO";
-    linkBtn.addEventListener("click", function(){
+    linkBtn.addEventListener("click", function () {
         //TODO goto url
-        window.open(url,"_blank");
+        window.open(url, "_blank");
     });
     voteBody.appendChild(document.createElement("BR"));
     voteBody.appendChild(confirmBtn);
@@ -508,9 +556,9 @@ function addVote(time, name, url) {
     pollsList.appendChild(voteEntry);
 }
 
-function addpull(name,url){
+function addpull(name, url) {
     var pullEntry = document.createElement("div");
-    pullEntry.innerHTML=name;
+    pullEntry.innerHTML = name;
     var linkBtn = document.createElement("BUTTON");
     pullEntry.appendChild(linkBtn);
     pullList.appendChild(pullEntry);
@@ -519,7 +567,7 @@ function addpull(name,url){
 
 
 //TEMP BUTTON
-document.getElementById("tempAddPoll").addEventListener("click", function () { getRepos(); });//addRepo("test",2)});
+//document.getElementById("tempAddPoll").addEventListener("click", function () { getRepos(); });//addRepo("test",2)});
 
 // async function getRepos() {
 //     // const headers ={
