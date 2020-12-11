@@ -6,7 +6,7 @@ var private_key = 'f1d57d756f7a47c3e70b740acf95b38611a26b81c7a0cff7de872ab306ae3
 var provider = 'https://sokol.poa.network';
 //var contract_address = '0x5C033433987134017A9b7a42673F6A62d673Df3b';
 var contract_address = '0xaa857387aca2a3EE8DA8A7bab79D6f5abD83E548';
-var github_token = 'bb5e85bdcf7df9519c80bb186831e7661f1f564c';
+var github_token = 'fa35b9b1cb332db97cd81f6a31f3fc28e6b8788f';
 // var github_token = 'bb5e85bdcf7df9519c80bb186831e7661f1f564c';
 
 var contract_polls = [];
@@ -29,9 +29,6 @@ account = web3.eth.accounts.privateKeyToAccount(private_key);
 web3.eth.getAccounts().then(res => {
     console.log(res);
 });
-
-
-getPollNumbers();
 
 function onLogin() {
     // get all contract polls, that are on the smart contract
@@ -157,24 +154,27 @@ function getNormalText() {
     }).catch(err => console.log(err));
 }
 
-function getPollNumbers() {
-    contract.methods.getPollsLength().call().then(res => {
-        document.getElementById("text").innerText = "Number of polls: " + res;
-    }).catch(err => console.log(err));
-}
-
 function genKeys() {
     let acc = web3.eth.accounts.create(web3.utils.randomHex(32));
-    let wallet = web3.eth.accounts.wallet.add(acc);
-    let keystore = wallet.encrypt(web3.utils.randomHex(32));
 
     // save adress and private key in the persistant storage
     console.log(acc);
+    document.getElementById("public-key").textContent = acc['address'];
+    document.getElementById("private-key").textContent = acc['privateKey'];
+    chrome.storage.sync.set({ pbk: acc['address'] });
+    chrome.storage.sync.set({ prk: acc['privateKey'] });
 }
 
 document.getElementById("btn-gen-keys").addEventListener("click", () => {
     genKeys();
 })
+
+document.getElementById("save-btn").addEventListener("click", () => {
+    chrome.storage.sync.set({ username: document.getElementById("cred-username").value });
+    chrome.storage.sync.set({ token: document.getElementById("cred-token").value });
+    initLayout();
+})
+
 
 
 /* -------------------------------------------------------------------------------------------
@@ -214,60 +214,83 @@ function addPoll(rpId, pqId, pqLink, pqTitle) {
                         check existing values on load
  ------------------------------------------------------------------------------------------- */
 window.addEventListener("load", function () {
-
-    // sync the key and account data from the chrome storage
-    try {
-        chrome.storage.sync.get('acc', function (data) {
-            if (data.acc) {
-                document.getElementById("tempAccOutput").innerHTML = "adress: " + data.acc.address;
-                document.getElementById("tempKeyOutput").innerHTML = "key:    " + data.acc.privateKey;
-            }
-        });
-        chrome.storage.sync.get('token', function (data) {
-            document.getElementById("tokenOutput").innerHTML = "token: " + data.token;
-        });
-    } catch (e) {
-        console.log(e);
-    }
+    initLayout();
 
     // sync the username from the chrome storage
-    try {
-        chrome.storage.sync.get('username', function (data) {
-            if (data != null && data.username != "") {
-                username = data.username;
-                console.log(data);
-                document.getElementById("username").innerHTML = " Logged in as: " + username;
-                onLogin();
-                gotoCard(0);
-            }
-        });
-    } catch (error) {
-        console.log(e);
-    }
-    gotoCard(5);
+    /*     try {
+            chrome.storage.sync.get('username', function (data) {
+                if (data != null && data.username != "") {
+                    username = data.username;
+                    console.log(data);
+                    document.getElementById("username").innerHTML = " Logged in as: " + username;
+                    onLogin();
+                    gotoCard(0);
+                }
+            });
+        } catch (error) {
+            console.log(e);
+        }
+        gotoCard(6); */
 });
 
+function initLayout() {
+    let keyMatrix = [
+        { key: "pbk", id: "public-key", type: "span" },
+        { key: "prk", id: "private-key", type: "span" },
+        { key: "username", id: "cred-username", type: "input" },
+        { key: "token", id: "cred-token", type: "input" }
+    ];
+
+    // sync the key and account data from the chrome storage
+    valideSyncStorageKey(keyMatrix).then(_ => {
+        username = document.getElementById("cred-username").value;
+        onLogin();
+        gotoCard(0);
+    }).catch(err => {
+        gotoCard(6);
+    });
+}
+
+function valideSyncStorageKey(list) {
+    return new Promise(async (resolve, reject) => {
+        for (let i = 0; i < list.length; i++) {
+            await new Promise((resolve, reject) => {
+                chrome.storage.sync.get(list[i].key, function (data) {
+                    if (data[list[i].key]) {
+                        console.log(data[list[i].key]);
+                        list[i].type == "span" ?
+                            document.getElementById(list[i].id).innerHTML = data[list[i].key]
+                            : document.getElementById(list[i].id).value = data[list[i].key];
+                            resolve();
+                    } else {
+                        reject();
+                    }
+                });
+            });
+        }
+        resolve();
+    });
+}
 
 
-document.getElementById("tokenBtn").addEventListener("click", () => {
+
+/* document.getElementById("tokenBtn").addEventListener("click", () => {
     var tokenInput = document.getElementById("tokenInput").value;
     chrome.storage.sync.set({ token: tokenInput }, function () {
         chrome.storage.sync.get('token', function (data) {
             document.getElementById("tokenOutput").innerHTML = "token: " + data.token;
         });
     });
-});
-document.getElementById("loginBtn").addEventListener("click", () => {
+}); */
+
+/* document.getElementById("loginBtn").addEventListener("click", () => {
     username = document.getElementById("userInput").value;
     chrome.storage.sync.set({ username: username });
     document.getElementById("username").innerHTML = " Logged in as: " + username;
     console.log(username);
     gotoCard(0);
     onLogin();
-});
-document.getElementById("gotoLoginBtn").addEventListener("click", () => {
-    gotoCard(5);
-});
+}); */
 
 /* -------------------------------------------------------------------------------------------
                                           Menu Navigation
@@ -280,6 +303,7 @@ var cardArray = [
     document.getElementById("repoCard"),
     document.getElementById("pullCard"),
     document.getElementById("walletCard"),
+    document.getElementById("credCard"),
     document.getElementById("loginCard")
 ];
 
@@ -292,6 +316,10 @@ for (let i = 0; i < backBtns.length; i++) {
 
 document.getElementById("gotoRepoBtn").addEventListener("click", function () { gotoCard(2) });
 document.getElementById("gotoWalletBtn").addEventListener("click", function () { gotoCard(4) });
+document.getElementById("gotoCredBtn").addEventListener("click", function () { gotoCard(5) });
+document.getElementById("cred-btn").addEventListener("click", function () { gotoCard(5) });
+document.getElementById("wallet-btn").addEventListener("click", function () { gotoCard(4) });
+
 var reposList = document.getElementById("repoList");
 var pollsList = document.getElementById("pollsList");
 var pullList = document.getElementById("pullList");
@@ -299,16 +327,10 @@ var pullList = document.getElementById("pullList");
 
 // generic navigation function
 function gotoCard(index) {
-    console.log("change card");
     cardArray.forEach(element => {
         element.style.display = "none";
     });
     cardArray[index].style.display = "block";
-    if (index == 5) {
-        document.getElementById("loggedAsDiv").style.display = "none";
-    } else {
-        document.getElementById("loggedAsDiv").style.display = "block";
-    }
 }
 
 
@@ -449,7 +471,9 @@ function UIappendPollable() {
         // add the action button to the poll element layout container
         var pollBtn = document.createElement("div");
         pollBtn.classList.add("link-button");
-        pollBtn.appendChild(document.createTextNode("Create poll"));
+        let pollBtnSpan = document.createElement("span");
+        pollBtnSpan.textContent = "Create poll";
+        pollBtn.appendChild(pollBtnSpan);
         pollBtn.addEventListener("click", function () {
             //TODO vote yes
         });

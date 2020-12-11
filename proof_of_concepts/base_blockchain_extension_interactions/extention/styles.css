@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url("https://fonts.googleapis.com/css?family=Roboto");
 
 body {
     /* white-space: pre-wrap; */
@@ -11,7 +11,7 @@ body {
 }
 
 .header {
-    color: #27323F;
+    color: #27323f;
     font-size: 20px;
 }
 
@@ -19,12 +19,12 @@ span {
     font-family: "Roboto";
 }
 
-.info-error {
-    color: #F88859;
+.warning {
+    color: #f88859;
 }
 
 .dark-btn {
-    background: #27323F;
+    background: #27323f;
     color: white;
     width: 70%;
     display: block;
@@ -41,7 +41,7 @@ span {
 
 .show-polls-btn > div {
     border-radius: 50%;
-    background: #E11F1F;
+    background: #e11f1f;
     width: 65%;
     height: 60%;
     padding-top: 10px;
@@ -54,6 +54,25 @@ span {
     font-size: 12px;
     font-weight: 200;
     padding-top: 15px;
+}
+
+/* ------------------------ LOGIN CONTEXT ---------------------------- */
+
+.login-container {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 15% 1fr 30%;
+}
+
+.login-warning {
+    width: 90%;
+    height: 100%;
+    display: block;
+    margin: 35px auto;
+    word-wrap:break-word;
+    max-width: 300px;
+    font-size: 18px;
 }
 
 /* ------------------------ MENU CONTEXT ---------------------------- */
@@ -83,7 +102,7 @@ span {
 .repository-element {
     display: grid;
     grid-template-columns: 80% 20%;
-    background: #27323F;
+    background: #27323f;
     color: white;
     width: 80%;
     height: 40px;
@@ -100,7 +119,7 @@ span {
 
 .repository-element > div {
     border-radius: 50%;
-    background: #E11F1F;
+    background: #e11f1f;
     width: 65%;
     height: 60%;
     padding-top: 10px;
@@ -127,7 +146,7 @@ span {
     display: grid;
     grid-template-columns: 65% 35%;
     grid-template-rows: 35% 1fr;
-    background: #27323F;
+    background: #27323f;
     color: white;
     width: 90%;
     height: 60px;
@@ -140,7 +159,7 @@ span {
     text-align: left;
     display: block;
     padding-left: 20px;
-    color: #FF6464;
+    color: #ff6464;
 }
 
 .poll-date > span {
@@ -172,17 +191,17 @@ span {
 }
 
 .accept-button {
-    background: #4AEC2F;
+    background: #4aec2f;
     color: white;
 }
 
 .decline-button {
-    background: #E11F1F;
+    background: #e11f1f;
     color: white;
 }
 
 .link-button {
-    background: #999E98;
+    background: #999e98;
     color: white;
 }
 
@@ -204,13 +223,87 @@ span {
 .pollable-element {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    background: #27323F;
+    background: #27323f;
     color: white;
     width: 90%;
     height: 60px;
     margin: 5px auto;
     border-radius: 10px;
 }
+
+.pollable-element > div > span {
+    display: block;
+    padding-top: 20px;
+}
+
+.pollable-element > div > div {
+    width: 70%;
+    height: 50%;
+    margin: 15px auto;
+    display: block;
+    border-radius: 5px;
+}
+
+.pollable-element > div > div > span {
+    display: block;
+    padding-top: 7.5px;
+}
+
+/* ------------------------ Wallet CONTEXT ---------------------------- */
+
+.wallet-container {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 15% 20% 1fr 15%;
+}
+
+.wallet-key-holder {
+    width: 90%;
+    height: 35px;
+    display: grid;
+    grid-template-columns: 20% 1fr;
+    margin: 10px auto;
+    word-wrap:break-word;
+}
+
+.wallet-key-holder > span {
+    max-width: 250px;
+}
+
+.wallet-desc  {
+    font-weight: bold;
+}
+
+.wallet-key-holder > span {
+    color: #27323f;
+}
+
+.warning-holder {
+    width: 90%;
+    height: 35px;
+    display: block;
+    margin: 10px auto;
+}
+
+
+/* ------------------------ credentials CONTEXT ---------------------------- */
+
+.credentials-container {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 15% 1fr 30%;
+}
+
+.cred-holder {
+    width: 90%;
+    height: 75px;
+    display: grid;
+    grid-template-rows: 1fr 50%;
+    margin: 25px auto;
+}
+
 
 
 /* .bigButton,
@@ -282,8 +375,8 @@ span {
     white-space: nowrap;
     display: "none";
 }
-#username,
+/* #username,
 #gotoLoginBtn {
     float: right;
     margin: 2px;
-}
+} */

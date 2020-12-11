@@ -10,10 +10,20 @@
   <div id="wrapDiv">
     <!-- Login -->
     <div id="loginCard" class="card">
-      <h2>Login</h2>
-      <p>Bitte geben sie ihren GitHub Namen an</p>
-      <input id="userInput" placeholder="GitHub Name" type="text">
-      <button id="loginBtn">OK</button>
+      <div class="login-container">
+        <h2 class="header">deVote</h2>
+        <div>
+          <div class="login-warning">
+            <span class="warning">
+              User credentials are missing or no wallet is used, please check that have set both of them.
+            </span>
+          </div>
+        </div>
+        <div>
+          <button id="cred-btn" class="dark-btn">Insert Username & Token</button>
+          <button id="wallet-btn" class="dark-btn">Generate Wallet</button>
+        </div>
+      </div>
     </div>
 
     <!------------------------------------------ Main Menu ------------------------------------------>
@@ -106,12 +116,77 @@
     <!------------------------------------------ Wallet ------------------------------------------>
 
     <div id="walletCard" class="card">
+      <div class="wallet-container">
+        <h2 class="header">Wallet</h2>
+        <div>
+          <button id="btn-gen-keys" class="dark-btn">Generate keys</button>
+        </div>
+        <div>
+          <div class="wallet-key-holder">
+            <span class="wallet-desc">Public key:</span>
+            <span id="public-key"></span>
+          </div>
+          <div class="wallet-key-holder">
+            <span class="wallet-desc">Private key:</span>
+            <span id="private-key"></span>
+          </div>
+          <div class="warning-holder">
+            <span class="warning">
+              Warning: Do not share your private key with anyone, otherwise you could lose your wallet!
+            </span>
+          </div>
+        </div>
+        <div>
+          <button class="backBtn dark-btn">Back</button>
+        </div>
+      </div>
+    </div>
+
+    <!------------------------------------------ Credentials ------------------------------------------>
+
+    <div id="credCard" class="card">
+      <div class="credentials-container">
+        <h2 class="header">User credentials</h2>
+        <div>
+          <div class="cred-holder">
+            <span class="wallet-desc">Username:</span>
+            <input id="cred-username"></span>
+          </div>
+          <div class="cred-holder">
+            <span class="wallet-desc">GitHub-Token:</span>
+            <input id="cred-token"></span>
+          </div>
+        </div>
+        <div>
+          <button id="save-btn" class="dark-btn">Save</button>
+          <button class="backBtn dark-btn">Back</button>
+        </div>
+      </div>
+
+    </div>
+
+
+  </div>
+
+
+  <script src="web3.min.js"> </script>
+  <script src="contract.js"></script>
+  <script src="popup.js"></script>
+</body>
+
+</html>
+
+<!--     <div id="walletCard" class="card">
+      <div class="wallet-container">
+        <h2 class="header">Counter state</h2>
+
+      </div>
+
       <h1 id="text">Counter state</h1>
       <p><input id="tokenInput" placeholder="Token" type="text"> <button id=tokenBtn class="bigButton"> Add
           Token</button></p>
       <button id="btn-gen-keys" class="bigButton">Generate keys</button>
       <div id="textWrap">
-        <div id="tokenOutput">token</div>
         <hr>
         <div id="tempAccOutput">acc</div>
         <hr>
@@ -121,22 +196,7 @@
     </div>
     <br>
     <div id="counterWrap">
-      <!-- <button id="add" class="margin" >+</button>
-
-        <p class="margin"></p>Counter:   <div id="counter" class="margin"></div></p>  -->
       <br>
       <div id=tokenDiv>
       </div>
-    </div>
-  </div>
-  <div id="loggedAsDiv">
-    <button id="gotoLoginBtn">change</button>
-    <div id="username"></div>
-  </div>
-
-  <script src="web3.min.js"> </script>
-  <script src="contract.js"></script>
-  <script src="popup.js"></script>
-</body>
-
-</html>
+    </div> -->
