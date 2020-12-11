@@ -68,10 +68,13 @@
         <div id="pollsList" class="poll-list"></div>
 
         <div>
-          <div id="showPollsBtn" class="dark-btn">
+          <div id="showPollsBtn" class="dark-btn show-polls-btn">
             <span>
               Show pollable pull-requests
             </span>
+            <div>
+              0
+            </div>
           </div>
 
           <div class="dark-btn backBtn">
@@ -83,14 +86,25 @@
       </div>
     </div>
 
-    <!-- Pollable Pulls -->
+    <!------------------------------------------ Pollable List ------------------------------------------>
+
     <div id="pullCard" class="card">
-      <h1>Pollable pull-requests</h1>
-      <div id="pullList" class="list"></div>
-      <button class="backBtn" class="bigButton">Back</button>
+      <div class="pollable-container">
+        <h2 id="pollableHeader" class="header">Pollable Requests</h2>
+        <div id="pullList" class="pollable-list">
+
+        </div>
+        <div>
+          <div class="dark-btn backBtn">
+            <span>Back</span>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Wallet -->
+
+    <!------------------------------------------ Wallet ------------------------------------------>
+
     <div id="walletCard" class="card">
       <h1 id="text">Counter state</h1>
       <p><input id="tokenInput" placeholder="Token" type="text"> <button id=tokenBtn class="bigButton"> Add

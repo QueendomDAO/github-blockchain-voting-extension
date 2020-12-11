@@ -34,6 +34,21 @@ span {
     border-radius: 7.5px;
 }
 
+.show-polls-btn {
+    display: grid !important;
+    grid-template-columns: 80% 1fr;
+}
+
+.show-polls-btn > div {
+    border-radius: 50%;
+    background: #E11F1F;
+    width: 65%;
+    height: 60%;
+    padding-top: 10px;
+    margin-top: 2px;
+    display: block;
+}
+
 .dark-btn > span {
     display: block;
     font-size: 12px;
@@ -169,6 +184,32 @@ span {
 .link-button {
     background: #999E98;
     color: white;
+}
+
+/* ------------------------ Pollable CONTEXT ---------------------------- */
+
+.pollable-container {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 15% 1fr 20%;
+}
+
+.pollable-list {
+    width: 100%;
+    height: 300px;
+    overflow-y: scroll;
+}
+
+.pollable-element {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: #27323F;
+    color: white;
+    width: 90%;
+    height: 60px;
+    margin: 5px auto;
+    border-radius: 10px;
 }
 
 

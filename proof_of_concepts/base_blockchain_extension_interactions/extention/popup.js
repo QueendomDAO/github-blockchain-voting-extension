@@ -13,8 +13,9 @@ var contract_polls = [];
 var starred_repos = [];
 var pull_requests = [];
 var pollable_pqs = [];
+var running_polls = [];
 var username = "SerQuicky";
-//var contract_abi = getContractAbi();
+var currentRepo = "";
 
 /* -------------------------------------------------------------------------------------------
 *                                   init web3js
@@ -33,11 +34,10 @@ web3.eth.getAccounts().then(res => {
 getPollNumbers();
 
 function onLogin() {
-    console.log("user" + username);
-    // #1 - Aufruf hole alle Smart Contract polls
+    // get all contract polls, that are on the smart contract
     getContractPolls();
 
-    // #2 - Aufruf hole alle gefolgten Repositories
+    // get all the repository that the user follows
     getRequest('https://api.github.com/users/' + username + '/starred')
         .then(data => starred_repos = data)
         .catch(error => console.error(error));
@@ -48,59 +48,24 @@ function onLogin() {
         .catch(error => console.error(error));
 
     setTimeout(() => {
-        console.log(pull_requests);
-
-        // #3 - Aufruf kombiniere Polls und Repositories
         combinePollsAndRepos();
 
-        // #5 - Aufruf überprüfe ob Pull Requests bereits als Poll liefen/laufen
-        getPollableRequests();
-
-
-        console.log("polls", contract_polls);
-        console.log("repos", starred_repos);
-        console.log("pollable requests", pollable_pqs);
-        repoList.innerHTML = "";
         starred_repos.forEach(e => {
-            addRepo(e.name, e.openPolls.length, e.url);
-        });
-        pullList.innerHTML = "";
-        pollable_pqs.forEach(e => {
-            addpull(e.pq.title, e.pq.url);
+            UIapppendRepo(e.name, e.openPolls.length, e.url);
         });
     }, 2000)
 }
-function getPullRequests(repName) {
-    pull_requests = []
-    // var searchString = "https://api.github.com/repos/LeviiOnGit/ubuu/pulls";
-    var searchString = "https://api.github.com/repos/" + username + "/" + repName + "/pulls";
-    console.log(searchString);
-    getRequest(searchString)
-        .then(data => pull_requests = data)
-        .then(data => {
-            pollsList.innerHTML = "";
-            addVote(data[0].updated_at, data[0].title, data[0].url);//TODO iterate
-        })
-        .catch(error => console.error(error));
-}
-// async function getPullRequests(repName) {
 
-//     pull_requests = []
-//     const url = "https://api.github.com/repos/"+username+"/"+repName+"/pulls";
-//     const response = await fetch(url);
-//     const result = await response.json();
-//     console.log(result);
-//     await result.forEach(i=>{ addVote(i.time,i.pqTitle,i.pqLink);});
 
-// }
+
 /* -------------------------------------------------------------------------------------------
 *                                   Github calls
 ------------------------------------------------------------------------------------------- */
-// const headers = {
-//     "Authorization": "Token "+github_token
-// }
+
 
 function getPollableRequests() {
+    pollable_pqs = [];
+
     for (let i = 0; i < pull_requests.length; i++) {
         let was_found = false;
         let contract_index = 0;
@@ -113,7 +78,7 @@ function getPollableRequests() {
         }
 
         if (!was_found && pull_requests[i]['state'] == "open") {
-            pollable_pqs.push({ pq: pull_requests[i], poll: contract_polls[contract_index] });
+            pollable_pqs.push(pull_requests[i]);
         }
     }
 }
@@ -151,12 +116,35 @@ function getContractPolls() {
         for (let i = 0; i < res; i++) {
             await contract.methods.polls(i).call().then(poll => {
                 contract_polls.push(poll);
-                console.log(poll);
-                // addVote(poll.time,poll.pqTitle,poll.pqLink);
             });
         }
 
     }).catch(err => console.log(err));
+}
+
+function getPullRequests(repName) {
+    pull_requests = []
+
+    getRequest("https://api.github.com/repos/" + username + "/" + repName + "/pulls")
+        .then(data => pull_requests = data)
+        .then(data => {
+            getPollableRequests();
+            comparePQsWithPolls();
+            UIsetPollableNumber(pollable_pqs.length);
+        })
+        .catch(error => console.error(error));
+}
+
+function comparePQsWithPolls() {
+    running_polls = [];
+
+    for (let i = 0; i < contract_polls.length; i++) {
+        const found = pull_requests.find(pq => parseInt(contract_polls[i]["pqId"] == pq['id']));
+
+        if (found) {
+            UIaddPoll(contract_polls[i]["time"], contract_polls[i]["pqTitle"], contract_polls[i]["pqLink"]);
+        }
+    }
 }
 
 /* -------------------------------------------------------------------------------------------
@@ -183,10 +171,6 @@ function genKeys() {
     // save adress and private key in the persistant storage
     console.log(acc);
 }
-
-// document.getElementById("btn-add-poll").addEventListener("click", () => {
-//     addPoll(10, 10, "PQ-Test-URL", "PQ-Test-Name");
-// });
 
 document.getElementById("btn-gen-keys").addEventListener("click", () => {
     genKeys();
@@ -223,60 +207,17 @@ function addPoll(rpId, pqId, pqLink, pqTitle) {
 }
 
 
-function sendTest() {
-    const tx = {
-        from: public_address,
-        to: '0xA9126c7dAa5431D2379dEA9e9C3eFc37f35e58AB',
-        gas: 1287794,
-        value: '1000000000'
-    };
+// Extension Logic implementation
+// --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    const signPromise = web3.eth.accounts.signTransaction(tx, private_key);
-
-    signPromise.then((signedTx) => {
-        const sentTx = web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
-        sentTx.on("receipt", receipt => {
-            console.log(receipt);
-            getCounter()
-        });
-        sentTx.on("error", err => {
-            console.log(err);
-        });
-    }).catch(error => console.log(error));
-}
-
-
-
-
-
-function sendTest() {
-    const tx = {
-        from: public_address,
-        to: '0xA9126c7dAa5431D2379dEA9e9C3eFc37f35e58AB',
-        gas: 1287794,
-        value: '1000000000'
-    };
-
-    const signPromise = web3.eth.accounts.signTransaction(tx, private_key);
-
-    signPromise.then((signedTx) => {
-        const sentTx = web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
-        sentTx.on("receipt", receipt => {
-            console.log(receipt);
-            getCounter()
-        });
-        sentTx.on("error", err => {
-            console.log(err);
-        });
-    }).catch(error => console.log(error));
-}
 /* -------------------------------------------------------------------------------------------
-        *                                   check existing values on load
-        ------------------------------------------------------------------------------------------- */
+                        check existing values on load
+ ------------------------------------------------------------------------------------------- */
 window.addEventListener("load", function () {
+
+    // sync the key and account data from the chrome storage
     try {
         chrome.storage.sync.get('acc', function (data) {
-            console.log(data.acc);
             if (data.acc) {
                 document.getElementById("tempAccOutput").innerHTML = "adress: " + data.acc.address;
                 document.getElementById("tempKeyOutput").innerHTML = "key:    " + data.acc.privateKey;
@@ -288,6 +229,8 @@ window.addEventListener("load", function () {
     } catch (e) {
         console.log(e);
     }
+
+    // sync the username from the chrome storage
     try {
         chrome.storage.sync.get('username', function (data) {
             if (data != null && data.username != "") {
@@ -303,6 +246,9 @@ window.addEventListener("load", function () {
     }
     gotoCard(5);
 });
+
+
+
 document.getElementById("tokenBtn").addEventListener("click", () => {
     var tokenInput = document.getElementById("tokenInput").value;
     chrome.storage.sync.set({ token: tokenInput }, function () {
@@ -324,8 +270,10 @@ document.getElementById("gotoLoginBtn").addEventListener("click", () => {
 });
 
 /* -------------------------------------------------------------------------------------------
-        *                                   Menu Navigation
-        ------------------------------------------------------------------------------------------- */
+                                          Menu Navigation
+------------------------------------------------------------------------------------------- */
+
+// Navigation-Views
 var cardArray = [
     document.getElementById("menuCard"),
     document.getElementById("pollsCard"),
@@ -333,17 +281,23 @@ var cardArray = [
     document.getElementById("pullCard"),
     document.getElementById("walletCard"),
     document.getElementById("loginCard")
-]
-document.getElementById("gotoRepoBtn").addEventListener("click", function () { gotoCard(2) });
-document.getElementById("gotoWalletBtn").addEventListener("click", function () { gotoCard(4) });
-//document.getElementById("gotoPollsBtn").addEventListener("click", function () { gotoCard(1) });
-//document.getElementById("gotoPullBtn").addEventListener("click", function () { gotoCard(3) });
-document.getElementById("showPollsBtn").addEventListener("click", function () { gotoCard(3) });
+];
+
+// Back functionality for the navigation
 var backBtns = document.getElementsByClassName("backBtn");
 for (let i = 0; i < backBtns.length; i++) {
     backBtns[i].addEventListener("click", function () { gotoCard(0) });
 }
 
+
+document.getElementById("gotoRepoBtn").addEventListener("click", function () { gotoCard(2) });
+document.getElementById("gotoWalletBtn").addEventListener("click", function () { gotoCard(4) });
+var reposList = document.getElementById("repoList");
+var pollsList = document.getElementById("pollsList");
+var pullList = document.getElementById("pullList");
+
+
+// generic navigation function
 function gotoCard(index) {
     console.log("change card");
     cardArray.forEach(element => {
@@ -356,35 +310,25 @@ function gotoCard(index) {
         document.getElementById("loggedAsDiv").style.display = "block";
     }
 }
-//add to repository list
-var reposList = document.getElementById("repoList");
-var pollsList = document.getElementById("pollsList");
-var pullList = document.getElementById("pullList");
 
-function addRepo(name, pullCount, url) {
-    console.log("ADDED REPO");
-    let repoEntry = document.createElement("div");
-    let repo_name = document.createElement("span");
-    let repo_polls = document.createElement("div");
 
-    repo_name.textContent = name;
-    repo_polls.textContent = pullCount;
 
-    repoEntry.classList.add("repository-element");
-    repoEntry.addEventListener("click", function () {
-        document.getElementById("pollsHeader").innerHTML = "Polls of " + name;
-        getPullRequests(name);
-        gotoCard(1);
-    });
-    console.log(repoEntry);
-    console.log(repoList);
-    repoEntry.appendChild(repo_name);
-    repoEntry.appendChild(repo_polls);
-    repoList.appendChild(repoEntry);
-}
-function addVote(time, name, url) {
-    var voteEntry = document.createElement("div");
-    voteEntry.classList.add("poll-element");
+
+
+
+
+/* -------------------------------------------------------------------------------------------
+                            User-Interface Scripting
+------------------------------------------------------------------------------------------- */
+
+
+
+
+function UIaddPoll(time, name, url) {
+
+    // Layout generation of the grid-poll-element
+    var pollElement = document.createElement("div");
+    pollElement.classList.add("poll-element");
 
     let pollDate = document.createElement("div");
     let pollDateSpan = document.createElement("span");
@@ -402,49 +346,68 @@ function addVote(time, name, url) {
     pollButtons.classList.add("poll-buttons");
 
 
-
-
-
-
-
-
-
-
-
-
+    // add the action button to the poll element layout container
     var confirmBtn = document.createElement("div");
     confirmBtn.classList.add("accept-button");
     confirmBtn.appendChild(document.createTextNode("Y"));
     confirmBtn.addEventListener("click", function () {
         //TODO vote yes
     });
+
+
     var denyBtn = document.createElement("div");
     denyBtn.classList.add("decline-button");
     denyBtn.appendChild(document.createTextNode("N"));
     denyBtn.addEventListener("click", function () {
         //TODO vote no
     });
+
     var linkBtn = document.createElement("div");
     linkBtn.classList.add("link-button");
     linkBtn.appendChild(document.createTextNode("L"));
     linkBtn.addEventListener("click", function () {
-        //TODO goto url
         window.open(url, "_blank");
     });
 
+
+    // append buttons
     pollButtons.appendChild(confirmBtn);
     pollButtons.appendChild(denyBtn);
     pollButtons.appendChild(linkBtn);
 
+    // append element parts
+    pollElement.appendChild(pollDate);
+    pollElement.appendChild(pollName);
+    pollElement.appendChild(pollButtons);
 
-    voteEntry.appendChild(pollDate);
-    voteEntry.appendChild(pollName);
-    voteEntry.appendChild(pollButtons);
-
-    pollsList.appendChild(voteEntry);
+    // append complete poll element
+    pollsList.appendChild(pollElement);
 }
 
-function addpull(name, url) {
+function UIapppendRepo(name, pullCount, url) {
+    let repoElement = document.createElement("div");
+    let repoName = document.createElement("span");
+    let repoPolls = document.createElement("div");
+
+    repoName.textContent = name;
+    repoPolls.textContent = pullCount;
+
+    repoElement.classList.add("repository-element");
+    repoElement.addEventListener("click", function () {
+        currentRepo = name;
+        document.getElementById("pollsHeader").innerHTML = "Polls of " + name;
+        getPullRequests(name);
+        gotoCard(1);
+    });
+    console.log(repoElement);
+    console.log(repoList);
+    repoElement.appendChild(repoName);
+    repoElement.appendChild(repoPolls);
+    repoList.appendChild(repoElement);
+}
+
+
+function UIappendPull(name, url) {
     var pullEntry = document.createElement("div");
     pullEntry.innerHTML = name;
     var linkBtn = document.createElement("BUTTON");
@@ -452,33 +415,50 @@ function addpull(name, url) {
     pullList.appendChild(pullEntry);
 }
 
+function UIsetPollableNumber(length) {
+    let btn = document.getElementById("showPollsBtn");
+    btn.addEventListener("click", function () {
+        gotoCard(3);
+        UIappendPollable();
+    });
 
-async function getRepos() {
-
-    const url = "https://api.github.com/users/LeviiOnGit/repos";
-    const response = await fetch(url);
-    const result = await response.json();
-    console.log(result);
-
+    let pollNumber = document.createElement("div");
+    pollNumber.textContent = length;
+    console.log(btn.childNodes);
+    btn.replaceChild(pollNumber, btn.childNodes[3]);
 }
 
-async function getPollablePulls() {
-    pollable_pqs = [];
-    
-    for (let i = 0; i < pull_requests.length; i++) {
-        let was_found = false;
-        let contract_index = 0;
+function UIappendPollable() {
+    document.getElementById("pollableHeader").textContent = "Pollable pull-requests of " + currentRepo;
+    console.log(pollable_pqs);
 
-        for (let j = 0; j < contract_polls.length; j++) {
-            if (pull_requests[i]['id'] == contract_polls[j][1]) {
-                was_found = true
-                contract_index = j;
-            }
-        }
+    pollable_pqs.forEach(pollable_pq => {
+        // Layout generation of the grid-poll-element
+        var pollableElement = document.createElement("div");
+        pollableElement.classList.add("pollable-element");
 
-        if (!was_found && pull_requests[i]['state'] == "open") {
-            pollable_pqs.push({ pq: pull_requests[i], poll: contract_polls[contract_index] });
-        }
-    }
+        let pollableName = document.createElement("div");
+        let pollableNameSpan = document.createElement("span");
+        pollableNameSpan.textContent = pollable_pq.title;
+        pollableName.appendChild(pollableNameSpan);
+
+        let pollableButton = document.createElement("div");
+        pollableButton.classList.add("pollable-button");
+
+
+        // add the action button to the poll element layout container
+        var pollBtn = document.createElement("div");
+        pollBtn.classList.add("link-button");
+        pollBtn.appendChild(document.createTextNode("Create poll"));
+        pollBtn.addEventListener("click", function () {
+            //TODO vote yes
+        });
+
+
+        pollableButton.appendChild(pollBtn);
+        pollableElement.appendChild(pollableName);
+        pollableElement.appendChild(pollableButton);
+
+        pullList.appendChild(pollableElement);
+    });
 }
-
