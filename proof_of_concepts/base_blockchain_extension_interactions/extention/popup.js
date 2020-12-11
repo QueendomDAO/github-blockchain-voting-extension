@@ -1,34 +1,3 @@
-// var web3 = new Web3("https://sokol.poa.network");
-// console.log(web3);
-
-// web3.eth.getBlock(3150).then((result) => {
-//     console.log(result);
-// }).catch((err) => {
-//     console.log("error");
-// });
-//document.getElementById("output").html=web3;
-// var changeColor = document.getElementById('changeColor');
-
-//     chrome.storage.sync.get('color', function (data) {
-//         changeColor.style.backgroundColor = data.color;
-//         changeColor.setAttribute('value', data.color);
-//     });
-//     changeColor.onclick = function(element) {
-//         var myResult;
-//         web3.eth.getBlock(3150).then((result) => {
-//             changeColor.innerHTML=result.author;
-//         }).catch((err) => {
-//             console.log("error");
-//         });
-
-//         let color = element.target.value;
-//         chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-//           chrome.tabs.executeScript(
-//               tabs[0].id,
-//               {code: 'document.body.innerHTML = "' + myResult + '";'});
-//         });
-//       };
-
 /* -------------------------------------------------------------------------------------------
 *                                   env settings
 ------------------------------------------------------------------------------------------- */
@@ -37,7 +6,7 @@ var private_key = 'f1d57d756f7a47c3e70b740acf95b38611a26b81c7a0cff7de872ab306ae3
 var provider = 'https://sokol.poa.network';
 //var contract_address = '0x5C033433987134017A9b7a42673F6A62d673Df3b';
 var contract_address = '0xaa857387aca2a3EE8DA8A7bab79D6f5abD83E548';
-var github_token = 'e7eae095461ac3dc01fe55090a7c3230313f294a';
+var github_token = 'bb5e85bdcf7df9519c80bb186831e7661f1f564c';
 // var github_token = 'bb5e85bdcf7df9519c80bb186831e7661f1f564c';
 
 var contract_polls = [];
@@ -45,130 +14,13 @@ var starred_repos = [];
 var pull_requests = [];
 var pollable_pqs = [];
 var username = "SerQuicky";
-
-var contract_abi = [
-    {
-        "inputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "constructor"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "name": "polls",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "rpId",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "pqId",
-                "type": "uint256"
-            },
-            {
-                "internalType": "string",
-                "name": "pqLink",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "pqTitle",
-                "type": "string"
-            },
-            {
-                "internalType": "uint256",
-                "name": "proVotes",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "contraVotes",
-                "type": "uint256"
-            },
-            {
-                "internalType": "string",
-                "name": "time",
-                "type": "string"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_rpId",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_pqId",
-                "type": "uint256"
-            },
-            {
-                "internalType": "string",
-                "name": "_pqLink",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "_pqTitle",
-                "type": "string"
-            }
-        ],
-        "name": "addNewPoll",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [],
-        "name": "getPollsLength",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [],
-        "name": "helloWorld",
-        "outputs": [
-            {
-                "internalType": "string",
-                "name": "",
-                "type": "string"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "pure",
-        "type": "function"
-    }
-];
+//var contract_abi = getContractAbi();
 
 /* -------------------------------------------------------------------------------------------
 *                                   init web3js
 ------------------------------------------------------------------------------------------- */
+
+console.log(contract_abi);
 
 web3 = new Web3(provider);
 contract = new this.web3.eth.Contract(contract_abi, contract_address);
@@ -208,11 +60,11 @@ function onLogin() {
         console.log("polls", contract_polls);
         console.log("repos", starred_repos);
         console.log("pollable requests", pollable_pqs);
-        repoList.innerHTML="";
+        repoList.innerHTML = "";
         starred_repos.forEach(e => {
             addRepo(e.name, e.openPolls.length, e.url);
         });
-        pullList.innerHTML="";
+        pullList.innerHTML = "";
         pollable_pqs.forEach(e => {
             addpull(e.pq.title, e.pq.url);
         });
@@ -226,7 +78,7 @@ function getPullRequests(repName) {
     getRequest(searchString)
         .then(data => pull_requests = data)
         .then(data => {
-            pollsList.innerHTML="";      
+            pollsList.innerHTML = "";
             addVote(data[0].updated_at, data[0].title, data[0].url);//TODO iterate
         })
         .catch(error => console.error(error));
@@ -438,8 +290,8 @@ window.addEventListener("load", function () {
     }
     try {
         chrome.storage.sync.get('username', function (data) {
-            if(data!=null && data.username!=""){
-                username=data.username;
+            if (data != null && data.username != "") {
+                username = data.username;
                 console.log(data);
                 document.getElementById("username").innerHTML = " Logged in as: " + username;
                 onLogin();
@@ -511,48 +363,84 @@ var pullList = document.getElementById("pullList");
 
 function addRepo(name, pullCount, url) {
     console.log("ADDED REPO");
-    var repoEntry = document.createElement("div");
-    repoEntry.classList.add("repoEntry");
-    repoEntry.innerHTML = name + "[" + pullCount + "]";
+    let repoEntry = document.createElement("div");
+    let repo_name = document.createElement("span");
+    let repo_polls = document.createElement("div");
+
+    repo_name.textContent = name;
+    repo_polls.textContent = pullCount;
+
+    repoEntry.classList.add("repository-element");
     repoEntry.addEventListener("click", function () {
-        document.getElementById("pollsHeader").innerHTML="Pull-Requess of "+name;
+        document.getElementById("pollsHeader").innerHTML = "Polls of " + name;
         getPullRequests(name);
         gotoCard(1);
     });
     console.log(repoEntry);
     console.log(repoList);
+    repoEntry.appendChild(repo_name);
+    repoEntry.appendChild(repo_polls);
     repoList.appendChild(repoEntry);
 }
 function addVote(time, name, url) {
     var voteEntry = document.createElement("div");
-    voteEntry.classList.add("voteEntry");
-    var voteTime = document.createElement("div");
-    voteTime.innerHTML = time;
-    voteEntry.appendChild(voteTime);
+    voteEntry.classList.add("poll-element");
 
-    var voteBody = document.createElement("div");
-    voteBody.innerHTML = name;
-    var confirmBtn = document.createElement("BUTTON");
-    confirmBtn.innerHTML = "YES";
+    let pollDate = document.createElement("div");
+    let pollDateSpan = document.createElement("span");
+    pollDateSpan.textContent = time;
+    pollDate.appendChild(pollDateSpan);
+    pollDate.classList.add("poll-date");
+
+    let pollName = document.createElement("div");
+    let pollNameSpan = document.createElement("span");
+    pollNameSpan.textContent = name;
+    pollName.appendChild(pollNameSpan);
+    pollName.classList.add("poll-name");
+
+    let pollButtons = document.createElement("div");
+    pollButtons.classList.add("poll-buttons");
+
+
+
+
+
+
+
+
+
+
+
+
+    var confirmBtn = document.createElement("div");
+    confirmBtn.classList.add("accept-button");
+    confirmBtn.appendChild(document.createTextNode("Y"));
     confirmBtn.addEventListener("click", function () {
         //TODO vote yes
     });
-    var denyBtn = document.createElement("BUTTON");
-    denyBtn.innerHTML = "NO";
+    var denyBtn = document.createElement("div");
+    denyBtn.classList.add("decline-button");
+    denyBtn.appendChild(document.createTextNode("N"));
     denyBtn.addEventListener("click", function () {
         //TODO vote no
     });
-    var linkBtn = document.createElement("BUTTON");
-    linkBtn.innerHTML = "GOTO";
+    var linkBtn = document.createElement("div");
+    linkBtn.classList.add("link-button");
+    linkBtn.appendChild(document.createTextNode("L"));
     linkBtn.addEventListener("click", function () {
         //TODO goto url
         window.open(url, "_blank");
     });
-    voteBody.appendChild(document.createElement("BR"));
-    voteBody.appendChild(confirmBtn);
-    voteBody.appendChild(denyBtn);
-    voteBody.appendChild(linkBtn);
-    voteEntry.appendChild(voteBody);
+
+    pollButtons.appendChild(confirmBtn);
+    pollButtons.appendChild(denyBtn);
+    pollButtons.appendChild(linkBtn);
+
+
+    voteEntry.appendChild(pollDate);
+    voteEntry.appendChild(pollName);
+    voteEntry.appendChild(pollButtons);
+
     pollsList.appendChild(voteEntry);
 }
 
@@ -565,25 +453,6 @@ function addpull(name, url) {
 }
 
 
-
-//TEMP BUTTON
-//document.getElementById("tempAddPoll").addEventListener("click", function () { getRepos(); });//addRepo("test",2)});
-
-// async function getRepos() {
-//     // const headers ={
-//     //     "Authorization":
-//     // }
-
-//     // const url = "https://api.github.com/users/LeviiOnGit/repos";
-//     // const url = "https://raw.githubusercontent.com/LeviiOnGit/ubuu/master/Eigene%20Version/index.html";
-//     const url = "http://api.github.com/repos/LeviiOnGit/ubuu/git/branches/master/Eigene%20Version";
-//     const response = await fetch(url);
-//     const result = await response.json();
-//     console.log(result);
-//     // console.log(result[0].full_name);
-//     // result.forEach(i=>{addRepo(i.full_name,4,i.html_url)});
-//     //await addRepo(result.name,4,result.html_url);
-// }
 async function getRepos() {
 
     const url = "https://api.github.com/users/LeviiOnGit/repos";
@@ -591,5 +460,25 @@ async function getRepos() {
     const result = await response.json();
     console.log(result);
 
+}
+
+async function getPollablePulls() {
+    pollable_pqs = [];
+    
+    for (let i = 0; i < pull_requests.length; i++) {
+        let was_found = false;
+        let contract_index = 0;
+
+        for (let j = 0; j < contract_polls.length; j++) {
+            if (pull_requests[i]['id'] == contract_polls[j][1]) {
+                was_found = true
+                contract_index = j;
+            }
+        }
+
+        if (!was_found && pull_requests[i]['state'] == "open") {
+            pollable_pqs.push({ pq: pull_requests[i], poll: contract_polls[contract_index] });
+        }
+    }
 }
 
