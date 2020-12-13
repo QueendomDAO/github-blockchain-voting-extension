@@ -192,6 +192,36 @@ var contract_abi = [
     },
     {
         "constant": false,
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_pollId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bool",
+                "name": "_decision",
+                "type": "bool"
+            },
+            {
+                "internalType": "uint256",
+                "name": "value",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "addr",
+                "type": "address"
+            }
+        ],
+        "name": "vote",
+        "outputs": [],
+        "payable": true,
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "constant": false,
         "inputs": [],
         "name": "deposit",
         "outputs": [],

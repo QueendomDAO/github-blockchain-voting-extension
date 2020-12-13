@@ -4,7 +4,7 @@
 var public_address = '0x28CfbA097FF9bb9D904471c493b032Df45B9f953';
 var private_key = 'f1d57d756f7a47c3e70b740acf95b38611a26b81c7a0cff7de872ab306ae35d0';
 var provider = 'https://sokol.poa.network';
-var contract_address = '0xb26b9f4f66A2976fF9509889660A864A708881C9';
+var contract_address = '0x294E5457CD9EAFc53b90D85dab3b7864D3cdcDad';
 var github_token = 'fa35b9b1cb332db97cd81f6a31f3fc28e6b8788f';
 
 var pollable_pqs = [];
@@ -43,37 +43,63 @@ function getRequest(url) {
 
 function initRepositoriesAndContracts() {
     return new Promise(async (resolve, reject) => {
-        let _contracts = [];
+        reposList.innerHTML = "";
+        let _polls = [];
         let _votes = [];
+
+        console.log(document.getElementById("public-key").textContent);
 
         // load data from data from contract and github
         const _repositories = await getRequest('https://api.github.com/users/' + username + '/starred');
-        const _contracts_length = await contract.methods.getPollsLength().call();
+        const _polls_length = await contract.methods.getPollsLength().call();
         const _votes_length = await contract.methods.getVotesLength().call();
 
         // get votes to compare it.
         for (let i = 0; i < _votes_length; i++) {
             await contract.methods.votes(i).call().then(vote => {
-                if (vote['delegate'] == public_address) {
+                if (vote['delegate'] == document.getElementById("public-key").textContent) {
                     _votes.push(vote);
                 }
             })
         }
 
         // formate contract from contract pull
-        for (let i = 0; i < _contracts_length; i++) {
+        for (let i = 0; i < _polls_length; i++) {
             await contract.methods.polls(i).call().then(poll => {
-                _contracts.push(poll);
+                _polls.push(poll);
             });
         }
+
+        console.log(_polls);
 
         // combine repository and contract data
         for (let i = 0; i < _repositories.length; i++) {
             _repositories[i]['openPolls'] = [];
+            _repositories[i]['closedPolls'] = [];
+            _repositories[i]['votedPolls'] = [];
 
-            for (let j = 0; j < _contracts.length; j++) {
-                if (_repositories[i]['id'] == _contracts[j][0]) {
-                    _repositories[i]['openPolls'].push(_contracts[j]);
+            for (let j = 0; j < _polls.length; j++) {
+
+                /*console.log(_repositories[i]['id'] + " vs " + _polls[j]["rpId"]);
+                console.log(getCurrentDate() + " vs " + _polls[j]["time"]);
+
+                console.log(_repositories[i]['id'] == _polls[j]["rpId"]);
+                console.log(parseInt(_polls[j]["time"]) > getCurrentDate());
+                console.log(!_votes.some(vote => vote["poll"] == _polls[j]["id"]));*/
+
+
+                if (_repositories[i]['id'] == _polls[j]["rpId"] 
+                    && parseInt(_polls[j]["time"]) > getCurrentDate()
+                    && !_votes.some(vote => vote["poll"] == _polls[j]["id"])) {
+                    
+                    _repositories[i]['pollId'] = _polls[j]["id"];
+                    _repositories[i]['openPolls'].push(_polls[j]);
+
+                } else if (_repositories[i]['id'] == _polls[j]["rpId"]  && parseInt(_polls[j]["time"] < getCurrentDate())) {
+                    _repositories[i]['closedPolls'].push(_polls[j]);
+
+                } else if (_votes.some(vote => vote["poll"] == _polls[j]["id"])) {
+                    _repositories[i]['votedPolls'].push(_polls[j]);
 
                 }
             }
@@ -85,55 +111,29 @@ function initRepositoriesAndContracts() {
 
 function initContractPollsAndPollables(repository) {
     return new Promise(async (resolve, reject) => {
-        let _contracts = [];
+        console.log(repository["openPolls"]);
+        console.log(repository["closedPolls"]);
+        console.log(repository["votedPolls"]);
+
+        pollsList.innerHTML = "";
+        pullList.innerHTML = "";
+
+
         let _pollables = [];
-        let _votes = [];
-
-        // load data from data from contract
-        const _contracts_length = await contract.methods.getPollsLength().call();
-        const _votes_length = await contract.methods.getVotesLength().call();
-        const _pulls = await getRequest("https://api.github.com/repos/" + username + "/" + repository.name + "/pulls");
-
-        console.log(_votes_length);
-        console.log(_contracts_length);
+        let _pulls = await getRequest("https://api.github.com/repos/" + repository['owner']['login'] + "/" + repository.name + "/pulls");
 
 
-        // get votes to compare it.
-        for (let i = 0; i < _votes_length; i++) {
-            await contract.methods.votes(i).call().then(vote => {
-                if (vote['delegate'] == public_address) {
-                    _votes.push(vote);
-                }
-            })
-        }
-
-
-        // format contract from contract pull
-        for (let i = 0; i < _contracts_length; i++) {
-            await contract.methods.polls(i).call().then(poll => {
-                let a = _votes.some(vote => vote['poll'] == poll["id"]);
-
-                console.log(a);
-
-
-                if (poll["rpId"] == repository['id'] && !_votes.some(vote => vote['poll'] == poll["id"])) {
-                    _contracts.push(poll);
-                }
-            });
-        }
-
-        console.log(_votes);
-        console.log(_contracts);
-
-        // get pollable pulls
         for (let i = 0; i < _pulls.length; i++) {
-            if (!_contracts.some(contract => contract['pqId'] == _pulls[i]['id'])) {
+            if(!repository["openPolls"].some(poll => poll['pqId'] == _pulls[i]['id']) 
+                && !repository["closedPolls"].some(poll => poll['pqId'] == _pulls[i]['id'])
+                && !repository["votedPolls"].some(poll => poll['pqId'] == _pulls[i]['id'])) {
+
                 _pollables.push(_pulls[i]);
             }
+
         }
 
-
-        resolve({ contracts: _contracts, pollables: _pollables });
+        resolve({ contracts: repository["openPolls"], pollables: _pollables });
     });
 }
 
@@ -159,11 +159,15 @@ function initLayout() {
     ];
 
     // sync the key and account data from the chrome storage
-    valideSyncStorageKey(keyMatrix).then(_ => {
+    valideSyncStorageKey(keyMatrix).then(async _ => {
         username = document.getElementById("cred-username").value;
+        let balance = await web3.eth.getBalance(document.getElementById("public-key").textContent); 
+        document.getElementById("account-balance").textContent = (parseInt(balance) / (10 ** 18)) + " ETH";
+
         onLogin();
         gotoCard(0);
     }).catch(err => {
+        console.log(err);
         gotoCard(6);
     });
 }
@@ -279,7 +283,8 @@ function UIaddPoll(time, name, url, repository) {
     checkmark_icon.src = "./assets/checkmark.png";
     confirmBtn.appendChild(checkmark_icon);
     confirmBtn.addEventListener("click", function () {
-        //TODO vote yes
+        console.log({pollId: repository['pollId'], decision: true, value: 500000, address: document.getElementById("public-key").textContent});
+        addVote(repository['pollId'], true, 500000, document.getElementById("public-key").textContent);
     });
 
 
@@ -289,7 +294,7 @@ function UIaddPoll(time, name, url, repository) {
     cross_icon.src = "./assets/cross.png";
     denyBtn.appendChild(cross_icon);
     denyBtn.addEventListener("click", function () {
-        //TODO vote no
+        addVote(repository['pollId'], false, 500000, document.getElementById("public-key").textContent);
     });
 
     var linkBtn = document.createElement("div");
@@ -348,6 +353,12 @@ function UIsetPollableNumber(pollables, repository) {
         UIappendPollable(pollables, repository);
     });
 
+    let btn2 = document.getElementById("showMergeBt");
+    btn2.addEventListener("click", function () {
+        gotoCard(3);
+        UIappendPollable(pollables, repository);
+    });
+
     let pollNumber = document.createElement("div");
     pollNumber.textContent = pollables.length;
     btn.replaceChild(pollNumber, btn.childNodes[3]);
@@ -378,7 +389,7 @@ function UIappendPollable(pollables, repository) {
         pollBtnSpan.textContent = "Create poll";
         pollBtn.appendChild(pollBtnSpan);
         pollBtn.addEventListener("click", function () {
-            addPoll(repository.id, pollable_pq['id'], pollable_pq['url'], pollable_pq['title'], 5000, public_address);
+            addPoll(repository.id, pollable_pq['id'], pollable_pq['url'], pollable_pq['title'], 500000, document.getElementById("public-key").textContent);
         });
 
 
@@ -398,6 +409,18 @@ function formateName(str) {
     return str.length > 15 ? str.substr(0, 15) + "..." : str;
 }
 
+function getCurrentDate() {
+    let today = new Date();
+    return parseInt(today.getFullYear() + "" + (today.getMonth() + 1) + "" + today.getDate() + "" + today.getHours() + "" + today.getMinutes());
+}
+
+function getPublicKey() {
+    return document.getElementById("public-key").textContent;
+}
+
+function getPrivateKey() {
+    return document.getElementById("private-key").textContent;
+}
 
 /* -------------------------------------------------------------------------------------------
 *                                   make calls
@@ -432,10 +455,10 @@ document.getElementById("save-btn").addEventListener("click", () => {
 ------------------------------------------------------------------------------------------- */
 
 function addPoll(rpId, pqId, pqLink, pqTitle, value, address) {
-    contract.methods.addNewPoll(rpId, pqId, pqLink, pqTitle, value, address).estimateGas({ from: public_address }).then(gas => {
+    contract.methods.addNewPoll(rpId, pqId, pqLink, pqTitle, value, address).estimateGas({ from: document.getElementById("public-key").textContent }).then(gas => {
 
         const tx = {
-            from: public_address,
+            from: document.getElementById("public-key").textContent,
             to: contract_address,
             contractAddress: contract_address,
             gas: gas + value,
@@ -443,7 +466,7 @@ function addPoll(rpId, pqId, pqLink, pqTitle, value, address) {
             data: contract.methods.addNewPoll(rpId, pqId, pqLink, pqTitle, value, address).encodeABI()
         };
 
-        const signPromise = web3.eth.accounts.signTransaction(tx, private_key);
+        const signPromise = web3.eth.accounts.signTransaction(tx, document.getElementById("private-key").textContent);
 
         signPromise.then((signedTx) => {
             const sentTx = web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
@@ -458,19 +481,19 @@ function addPoll(rpId, pqId, pqLink, pqTitle, value, address) {
     }).catch(error => console.log(error));
 }
 
-function deposit(value) {
-    contract.methods.deposit().estimateGas({ from: public_address }).then(gas => {
+function addVote(pollId, decision, value, address) {
+    contract.methods.vote(pollId, decision, value, address).estimateGas({ from: document.getElementById("public-key").textContent }).then(gas => {
 
         const tx = {
-            from: public_address,
+            from: document.getElementById("public-key").textContent,
             to: contract_address,
             contractAddress: contract_address,
-            gas: gas,
+            gas: gas + value,
             value: value,
-            data: contract.methods.deposit().encodeABI()
+            data: contract.methods.vote(pollId, decision, value, address).encodeABI()
         };
 
-        const signPromise = web3.eth.accounts.signTransaction(tx, private_key);
+        const signPromise = web3.eth.accounts.signTransaction(tx, document.getElementById("private-key").textContent);
 
         signPromise.then((signedTx) => {
             const sentTx = web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);

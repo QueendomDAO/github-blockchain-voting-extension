@@ -34,7 +34,7 @@ contract Voting {
                 pqId: 19815,
                 pqLink: "https://github.com/vercel/next.js/pull/19815",
                 pqTitle: "fix: webpack 5 invalid config error",
-                time: "174515122020"
+                time: "202012151745"
             })
         );
 
@@ -64,7 +64,7 @@ contract Voting {
                 pqId: _pqId,
                 pqLink: _pqLink,
                 pqTitle: _pqTitle,
-                time: "144516122020"
+                time: "202012161445"
             })
         );
 
@@ -72,6 +72,17 @@ contract Voting {
             Vote({
                 poll: polls.length - 1,
                 decision: true,
+                delegate: addr,
+                weight: value
+            })
+        );
+    }
+
+    function vote(uint256 _pollId, bool _decision, uint value, address addr) public payable{
+        votes.push(
+            Vote({
+                poll: _pollId,
+                decision: _decision,
                 delegate: addr,
                 weight: value
             })
