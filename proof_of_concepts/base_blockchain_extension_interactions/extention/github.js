@@ -1,3 +1,14 @@
+function getRequest(url) {
+    return fetch(url, {
+        method: 'GET', // *GET, POST, PUT, DELETE, etc.
+        headers: new Headers({
+            'User-agent': 'Mozilla/4.0 Custom User Agent',
+            "Authorization": "Bearer " + github_token,
+        }),
+    })
+    .then(response => response.json()) //Converting the response to a JSON object
+}
+
 function mergePullRequest(url, sha) {
     return fetch(url, {
         method: 'PUT',
