@@ -5,7 +5,7 @@ var public_address = '0x28CfbA097FF9bb9D904471c493b032Df45B9f953';
 var private_key = 'f1d57d756f7a47c3e70b740acf95b38611a26b81c7a0cff7de872ab306ae35d0';
 var provider = 'https://sokol.poa.network';
 var contract_address = '0x294E5457CD9EAFc53b90D85dab3b7864D3cdcDad';
-var github_token = 'fa35b9b1cb332db97cd81f6a31f3fc28e6b8788f';
+var github_token = '';
 
 var pollable_pqs = [];
 var username = "SerQuicky";
@@ -37,7 +37,7 @@ function getRequest(url) {
             "Authorization": "Bearer " + github_token,
         }),
     })
-        .then(response => response.json()) //Converting the response to a JSON object
+    .then(response => response.json()) //Converting the response to a JSON object
 }
 
 
@@ -47,7 +47,7 @@ function initRepositoriesAndContracts() {
         let _polls = [];
         let _votes = [];
 
-        console.log(document.getElementById("public-key").textContent);
+        console.log(getPublicKey());
 
         // load data from data from contract and github
         const _repositories = await getRequest('https://api.github.com/users/' + username + '/starred');
@@ -57,7 +57,7 @@ function initRepositoriesAndContracts() {
         // get votes to compare it.
         for (let i = 0; i < _votes_length; i++) {
             await contract.methods.votes(i).call().then(vote => {
-                if (vote['delegate'] == document.getElementById("public-key").textContent) {
+                if (vote['delegate'] == getPublicKey()) {
                     _votes.push(vote);
                 }
             })
@@ -117,11 +117,24 @@ function initContractPollsAndPollables(repository) {
 
         pollsList.innerHTML = "";
         pullList.innerHTML = "";
+        mergeList.innerHTML = "";
 
 
         let _pollables = [];
+        let _mergeables = [];
+        let _votes = [];
         let _pulls = await getRequest("https://api.github.com/repos/" + repository['owner']['login'] + "/" + repository.name + "/pulls");
+        const _votes_length = await contract.methods.getVotesLength().call();
 
+
+        // get votes for mergeables
+        for (let i = 0; i < _votes_length; i++) {
+            await contract.methods.votes(i).call().then(vote => {
+                _votes.push(vote);
+            })
+        }
+
+        console.log(_pulls);
 
         for (let i = 0; i < _pulls.length; i++) {
             if(!repository["openPolls"].some(poll => poll['pqId'] == _pulls[i]['id']) 
@@ -131,9 +144,37 @@ function initContractPollsAndPollables(repository) {
                 _pollables.push(_pulls[i]);
             }
 
+
+            if(
+                //repository["closedPolls"].some(poll => poll['pqId'] == _pulls[i]['id']) 
+            //&& 
+            repository['owner']['login'] == username
+            && _pulls[i]['state'] == "open") {
+
+                let pollId = "1"; //repository["closedPolls"].find(poll => poll['pqId'] == _pulls[i]['id'])[0];
+                _pulls[i]['proWeight'] = 0;
+                _pulls[i]['contraWeight'] = 0;
+
+                for(let j = 0; j < _votes.length; j++) {
+                    if(_votes[j]['poll'] == pollId) {
+
+                        // sum up weights
+                        _votes[j]["decision"] ? 
+                            _pulls[i]['proWeight'] += parseInt(_votes[j]["weight"])
+                           : _pulls[i]['contraWeight'] += parseInt(_votes[j]["weight"]);
+
+                    }
+                }
+
+                _mergeables.push(_pulls[i]);
+            }
         }
 
-        resolve({ contracts: repository["openPolls"], pollables: _pollables });
+        console.log(_votes);
+        console.log(_mergeables);
+
+
+        resolve({ contracts: repository["openPolls"], pollables: _pollables, mergeables: _mergeables });
     });
 }
 
@@ -161,7 +202,7 @@ function initLayout() {
     // sync the key and account data from the chrome storage
     valideSyncStorageKey(keyMatrix).then(async _ => {
         username = document.getElementById("cred-username").value;
-        let balance = await web3.eth.getBalance(document.getElementById("public-key").textContent); 
+        let balance = await web3.eth.getBalance(getPublicKey()); 
         document.getElementById("account-balance").textContent = (parseInt(balance) / (10 ** 18)) + " ETH";
 
         onLogin();
@@ -205,7 +246,8 @@ var cardArray = [
     document.getElementById("pullCard"),
     document.getElementById("walletCard"),
     document.getElementById("credCard"),
-    document.getElementById("loginCard")
+    document.getElementById("loginCard"),
+    document.getElementById("mergeCard")
 ];
 
 // Back functionality for the navigation
@@ -231,6 +273,7 @@ document.getElementById("wallet-btn").addEventListener("click", function () { go
 var reposList = document.getElementById("repoList");
 var pollsList = document.getElementById("pollsList");
 var pullList = document.getElementById("pullList");
+var mergeList = document.getElementById("mergeList");
 
 
 // generic navigation function
@@ -254,11 +297,14 @@ function gotoCard(index) {
 
 
 
-function UIaddPoll(time, name, url, repository) {
+function UIaddPoll(time, name, url, index, repository) {
 
     // Layout generation of the grid-poll-element
     var pollElement = document.createElement("div");
     pollElement.classList.add("poll-element");
+    pollElement.setAttribute("id", "poll-element-" + index);
+
+
 
     let pollDate = document.createElement("div");
     let pollDateSpan = document.createElement("span");
@@ -273,6 +319,7 @@ function UIaddPoll(time, name, url, repository) {
     pollName.classList.add("poll-name");
 
     let pollButtons = document.createElement("div");
+    pollButtons.setAttribute("id", "poll-element-buttons-" + index);
     pollButtons.classList.add("poll-buttons");
 
 
@@ -283,8 +330,7 @@ function UIaddPoll(time, name, url, repository) {
     checkmark_icon.src = "./assets/checkmark.png";
     confirmBtn.appendChild(checkmark_icon);
     confirmBtn.addEventListener("click", function () {
-        console.log({pollId: repository['pollId'], decision: true, value: 500000, address: document.getElementById("public-key").textContent});
-        addVote(repository['pollId'], true, 500000, document.getElementById("public-key").textContent);
+        UIupdateForVote("poll-element-" + index, "poll-element-buttons-" + index, true, repository);
     });
 
 
@@ -294,7 +340,7 @@ function UIaddPoll(time, name, url, repository) {
     cross_icon.src = "./assets/cross.png";
     denyBtn.appendChild(cross_icon);
     denyBtn.addEventListener("click", function () {
-        addVote(repository['pollId'], false, 500000, document.getElementById("public-key").textContent);
+        UIupdateForVote("poll-element-" + index, "poll-element-buttons-" + index, false, repository);
     });
 
     var linkBtn = document.createElement("div");
@@ -321,6 +367,46 @@ function UIaddPoll(time, name, url, repository) {
     pollsList.appendChild(pollElement);
 }
 
+function UIupdateForVote(element_id, buttons_id, decision, repository) {
+    document.getElementById(buttons_id).remove();
+    let element = document.getElementById(element_id);
+
+    let votingElement = document.createElement("div");
+    votingElement.classList.add("poll-voting");
+
+    let votingInput = document.createElement("input");
+    votingInput.setAttribute("type", "number");
+    votingInput.setAttribute("id", element_id + "-intput");
+
+    let sendButton = document.createElement("div");
+    sendButton.classList.add("link-button");
+    var send_icon = document.createElement("img");
+    send_icon.src = "./assets/send.png";
+    sendButton.appendChild(send_icon);
+    sendButton.addEventListener("click", function () {
+        addVote(repository['pollId'], decision, votingInput.value, getPublicKey()).then(response => {
+            console.log(response);
+            goToPollsEvent(repository);
+        });
+    });
+
+
+    var cancelButton = document.createElement("div");
+    cancelButton.classList.add("link-button");
+    var cross_icon = document.createElement("img");
+    cross_icon.src = "./assets/back.png";
+    cancelButton.appendChild(cross_icon);
+    cancelButton.addEventListener("click", function () {
+        console.log(repository);
+        goToPollsEvent(repository);
+    });
+
+    votingElement.appendChild(votingInput);
+    votingElement.appendChild(sendButton);
+    votingElement.appendChild(cancelButton);
+    element.appendChild(votingElement);
+}
+
 function UIapppendRepo(repository) {
     let repoElement = document.createElement("div");
     let repoName = document.createElement("span");
@@ -330,15 +416,8 @@ function UIapppendRepo(repository) {
     repoPolls.textContent = repository.openPolls.length;
 
     repoElement.classList.add("repository-element");
-    repoElement.addEventListener("click", async function () {
-        document.getElementById("pollsHeader").innerHTML = "Polls of " + formateName(repository.name);
-        gotoCard(1);
-        let response = await initContractPollsAndPollables(repository);
-
-        UIsetPollableNumber(response.pollables, repository);
-        for (let i = 0; i < response.contracts.length; i++) {
-            UIaddPoll(response.contracts[i]["time"], response.contracts[i]["pqTitle"], response.contracts[i]["pqLink"], repository);
-        }
+    repoElement.addEventListener("click", function () {
+        goToPollsEvent(repository);
     });
 
     repoElement.appendChild(repoName);
@@ -346,22 +425,37 @@ function UIapppendRepo(repository) {
     repoList.appendChild(repoElement);
 }
 
-function UIsetPollableNumber(pollables, repository) {
-    let btn = document.getElementById("showPollsBtn");
-    btn.addEventListener("click", function () {
+async function goToPollsEvent(repository) {
+    document.getElementById("pollsHeader").innerHTML = "Polls of " + formateName(repository.name);
+    gotoCard(1);
+    let response = await initContractPollsAndPollables(repository);
+
+    UIsetPollableAndMergeableNumber(response.pollables, response.mergeables, repository);
+    for (let i = 0; i < response.contracts.length; i++) {
+        UIaddPoll(response.contracts[i]["time"], response.contracts[i]["pqTitle"], response.contracts[i]["pqLink"], i, repository);
+    }
+}
+
+function UIsetPollableAndMergeableNumber(pollables, mergeables, repository) {
+    let showPollBtn = document.getElementById("showPollsBtn");
+    showPollBtn.addEventListener("click", function () {
         gotoCard(3);
         UIappendPollable(pollables, repository);
     });
 
-    let btn2 = document.getElementById("showMergeBt");
-    btn2.addEventListener("click", function () {
-        gotoCard(3);
-        UIappendPollable(pollables, repository);
+    let showMergeBtn = document.getElementById("showMergeBtn");
+    showMergeBtn.addEventListener("click", function () {
+        gotoCard(7);
+        UIappendMergeables(mergeables, repository);
     });
 
     let pollNumber = document.createElement("div");
     pollNumber.textContent = pollables.length;
-    btn.replaceChild(pollNumber, btn.childNodes[3]);
+    showPollBtn.replaceChild(pollNumber, showPollBtn.childNodes[3]);
+
+    let mergeNumber = document.createElement("div");
+    mergeNumber.textContent = mergeables.length;
+    showMergeBtn.replaceChild(mergeNumber, showMergeBtn.childNodes[3]);
 }
 
 function UIappendPollable(pollables, repository) {
@@ -389,7 +483,11 @@ function UIappendPollable(pollables, repository) {
         pollBtnSpan.textContent = "Create poll";
         pollBtn.appendChild(pollBtnSpan);
         pollBtn.addEventListener("click", function () {
-            addPoll(repository.id, pollable_pq['id'], pollable_pq['url'], pollable_pq['title'], 500000, document.getElementById("public-key").textContent);
+            addPoll(repository.id, pollable_pq['id'], pollable_pq['url'], pollable_pq['title'], 500000, getPublicKey()).then(response => {
+                console.log(response);
+            }).catch(err => {
+                console.log("blockchain_error", err);
+            });
         });
 
 
@@ -398,6 +496,65 @@ function UIappendPollable(pollables, repository) {
         pollableElement.appendChild(pollableButton);
 
         pullList.appendChild(pollableElement);
+    });
+}
+
+function UIappendMergeables(mergeables, repository) {
+    mergeList.textContent = '';
+    document.getElementById("mergeableHeader").textContent = "Mergeable pull-requests of " + formateName(repository.name);
+
+    mergeables.forEach(mergeable_pq => {
+        console.log(mergeable_pq);
+        let proWeight = mergeable_pq["proWeight"] / (10 ** 18);
+        let contraWeight = mergeable_pq["contraWeight"] / (10 ** 18);
+
+
+        // Layout generation of the grid-poll-element
+        var mergeableElement = document.createElement("div");
+        mergeableElement.classList.add("mergeable-element");
+
+        let mergeableStat = document.createElement("div");
+        let mergeableStatSpan = document.createElement("span");
+        mergeableStatSpan.classList.add("mergeable-stats");
+        mergeableStatSpan.classList.add((proWeight > contraWeight) ? "pro-merge": "contra-merge");
+        mergeableStatSpan.textContent = proWeight + " ETH vs " + contraWeight + " ETH";
+        mergeableStat.appendChild(mergeableStatSpan);
+
+        let mergeableName = document.createElement("div");
+        let mergeableNameSpan = document.createElement("span");
+        mergeableNameSpan.classList.add("mergeable-name");
+        mergeableNameSpan.textContent = mergeable_pq.title;
+        mergeableName.appendChild(mergeableNameSpan);
+
+        let mergeableButton = document.createElement("div");
+        mergeableButton.classList.add("mergeable-button");
+
+
+        // add the action button to the poll element layout container
+        var mergeBtn = document.createElement("div");
+        mergeBtn.classList.add("link-button");
+        let mergeBtnSpan = document.createElement("span");
+        mergeBtnSpan.textContent = "Execute action";
+        mergeBtn.appendChild(mergeBtnSpan);
+        mergeBtn.addEventListener("click", function () {
+            if(proWeight > contraWeight) {
+                mergePullRequest( mergeable_pq["url"] + "/merge", mergeable_pq["head"]["sha"]).then(re => {
+                    console.log(re);
+                });
+            } else {
+                rejectPullRequest(mergeable_pq["url"]).then(re => {
+                    console.log(re);
+                });
+            }
+        });
+
+
+        mergeableButton.appendChild(mergeBtn);
+        mergeableElement.appendChild(mergeableStat);
+        mergeableElement.appendChild(mergeableName);
+        mergeableElement.appendChild(mergeableButton);
+
+        mergeList.appendChild(mergeableElement);
     });
 }
 
@@ -448,6 +605,37 @@ document.getElementById("save-btn").addEventListener("click", () => {
     initLayout();
 })
 
+function mergePullRequest(url, sha) {
+    console.log(url);
+    return fetch(url, {
+        method: 'PUT',
+        headers: new Headers({
+            'User-agent': 'Mozilla/4.0 Custom User Agent',
+            "Authorization": "Bearer " + github_token,
+        }),
+        body: JSON.stringify({
+            "sha": sha,
+            "merge_method": "merge",
+            "commit_title": "Community Merge",
+            "commit_message": "The community decided to merge this pull request."
+        })
+    })
+    .then(response => response.json()) //Converting the response to a JSON object
+}
+
+function rejectPullRequest(url) {
+    return fetch(url, {
+        method: 'PATCH',
+        headers: new Headers({
+            'User-agent': 'Mozilla/4.0 Custom User Agent',
+            "Authorization": "Bearer " + github_token,
+        }),
+        body: JSON.stringify({
+            "state": "closed"
+        })
+    })
+    .then(response => response.json())
+}
 
 
 /* -------------------------------------------------------------------------------------------
@@ -455,56 +643,58 @@ document.getElementById("save-btn").addEventListener("click", () => {
 ------------------------------------------------------------------------------------------- */
 
 function addPoll(rpId, pqId, pqLink, pqTitle, value, address) {
-    contract.methods.addNewPoll(rpId, pqId, pqLink, pqTitle, value, address).estimateGas({ from: document.getElementById("public-key").textContent }).then(gas => {
+    return new Promise((resolve, reject) => {
+        contract.methods.addNewPoll(rpId, pqId, pqLink, pqTitle, value, address).estimateGas({ from: getPublicKey() }).then(gas => {
 
-        const tx = {
-            from: document.getElementById("public-key").textContent,
-            to: contract_address,
-            contractAddress: contract_address,
-            gas: gas + value,
-            value: value,
-            data: contract.methods.addNewPoll(rpId, pqId, pqLink, pqTitle, value, address).encodeABI()
-        };
-
-        const signPromise = web3.eth.accounts.signTransaction(tx, document.getElementById("private-key").textContent);
-
-        signPromise.then((signedTx) => {
-            const sentTx = web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
-            sentTx.on("receipt", receipt => {
-                console.log(receipt);
-                getPollNumbers()
-            });
-            sentTx.on("error", err => {
-                console.log(err);
-            });
+            const tx = {
+                from: getPublicKey(),
+                to: contract_address,
+                contractAddress: contract_address,
+                gas: gas + value,
+                value: value,
+                data: contract.methods.addNewPoll(rpId, pqId, pqLink, pqTitle, value, address).encodeABI()
+            };
+    
+            const signPromise = web3.eth.accounts.signTransaction(tx, getPrivateKey());
+    
+            signPromise.then((signedTx) => {
+                const sentTx = web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
+                sentTx.on("receipt", receipt => {
+                    resolve(receipt);
+                });
+                sentTx.on("error", err => {
+                    reject(err);
+                });
+            }).catch(error => console.log(error));
         }).catch(error => console.log(error));
-    }).catch(error => console.log(error));
+    });
 }
 
 function addVote(pollId, decision, value, address) {
-    contract.methods.vote(pollId, decision, value, address).estimateGas({ from: document.getElementById("public-key").textContent }).then(gas => {
+    return new Promise((resolve, reject) => {
+        contract.methods.vote(pollId, decision, value, address).estimateGas({ from: getPublicKey() }).then(gas => {
 
-        const tx = {
-            from: document.getElementById("public-key").textContent,
-            to: contract_address,
-            contractAddress: contract_address,
-            gas: gas + value,
-            value: value,
-            data: contract.methods.vote(pollId, decision, value, address).encodeABI()
-        };
-
-        const signPromise = web3.eth.accounts.signTransaction(tx, document.getElementById("private-key").textContent);
-
-        signPromise.then((signedTx) => {
-            const sentTx = web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
-            sentTx.on("receipt", receipt => {
-                console.log(receipt);
-                getPollNumbers()
-            });
-            sentTx.on("error", err => {
-                console.log(err);
-            });
+            const tx = {
+                from: getPublicKey(),
+                to: contract_address,
+                contractAddress: contract_address,
+                gas: gas,
+                value: value,
+                data: contract.methods.vote(pollId, decision, value, address).encodeABI()
+            };
+    
+            const signPromise = web3.eth.accounts.signTransaction(tx, getPrivateKey());
+    
+            signPromise.then((signedTx) => {
+                const sentTx = web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
+                sentTx.on("receipt", receipt => {
+                    resolve(receipt);
+                });
+                sentTx.on("error", err => {
+                    reject(err);
+                });
+            }).catch(error => console.log(error));
         }).catch(error => console.log(error));
-    }).catch(error => console.log(error));
+    });
 }
 
