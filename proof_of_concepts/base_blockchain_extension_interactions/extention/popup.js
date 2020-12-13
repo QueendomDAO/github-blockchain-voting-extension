@@ -4,16 +4,10 @@
 var public_address = '0x28CfbA097FF9bb9D904471c493b032Df45B9f953';
 var private_key = 'f1d57d756f7a47c3e70b740acf95b38611a26b81c7a0cff7de872ab306ae35d0';
 var provider = 'https://sokol.poa.network';
-//var contract_address = '0x5C033433987134017A9b7a42673F6A62d673Df3b';
-var contract_address = '0xaa857387aca2a3EE8DA8A7bab79D6f5abD83E548';
+var contract_address = '0xb26b9f4f66A2976fF9509889660A864A708881C9';
 var github_token = 'fa35b9b1cb332db97cd81f6a31f3fc28e6b8788f';
-// var github_token = 'bb5e85bdcf7df9519c80bb186831e7661f1f564c';
 
-var contract_polls = [];
-var starred_repos = [];
-var pull_requests = [];
 var pollable_pqs = [];
-var running_polls = [];
 var username = "SerQuicky";
 var currentRepo = "";
 
@@ -21,77 +15,18 @@ var currentRepo = "";
 *                                   init web3js
 ------------------------------------------------------------------------------------------- */
 
-console.log(contract_abi);
-
 web3 = new Web3(provider);
 contract = new this.web3.eth.Contract(contract_abi, contract_address);
 account = web3.eth.accounts.privateKeyToAccount(private_key);
-web3.eth.getAccounts().then(res => {
-    console.log(res);
-});
 
-function onLogin() {
-    // get all contract polls, that are on the smart contract
-    getContractPolls();
 
-    // get all the repository that the user follows
-    getRequest('https://api.github.com/users/' + username + '/starred')
-        .then(data => starred_repos = data)
-        .catch(error => console.error(error));
-
-    // #4 - Aufruf hole Pull Requests des ausgewählten Repos
-    getRequest('https://api.github.com/repos/LeviiOnGit/ubuu/pulls')
-        .then(data => pull_requests = data)
-        .catch(error => console.error(error));
-
-    setTimeout(() => {
-        combinePollsAndRepos();
-
-        starred_repos.forEach(e => {
-            UIapppendRepo(e.name, e.openPolls.length, e.url);
-        });
-    }, 2000)
-}
+function onLogin() { }
 
 
 
 /* -------------------------------------------------------------------------------------------
 *                                   Github calls
 ------------------------------------------------------------------------------------------- */
-
-
-function getPollableRequests() {
-    pollable_pqs = [];
-
-    for (let i = 0; i < pull_requests.length; i++) {
-        let was_found = false;
-        let contract_index = 0;
-
-        for (let j = 0; j < contract_polls.length; j++) {
-            if (pull_requests[i]['id'] == contract_polls[j][1]) {
-                was_found = true
-                contract_index = j;
-            }
-        }
-
-        if (!was_found && pull_requests[i]['state'] == "open") {
-            pollable_pqs.push(pull_requests[i]);
-        }
-    }
-}
-
-function combinePollsAndRepos() {
-    for (let i = 0; i < starred_repos.length; i++) {
-        starred_repos[i]['openPolls'] = [];
-
-        for (let j = 0; j < contract_polls.length; j++) {
-            if (starred_repos[i]['id'] == contract_polls[j][0]) {
-                starred_repos[i]['openPolls'].push(contract_polls[j]);
-
-            }
-        }
-    }
-}
 
 
 function getRequest(url) {
@@ -106,105 +41,103 @@ function getRequest(url) {
 }
 
 
-function getContractPolls() {
-    contract.methods.getPollsLength().call().then(async (res) => {
-        console.log(res);
+function initRepositoriesAndContracts() {
+    return new Promise(async (resolve, reject) => {
+        let _contracts = [];
+        let _votes = [];
 
-        for (let i = 0; i < res; i++) {
+        // load data from data from contract and github
+        const _repositories = await getRequest('https://api.github.com/users/' + username + '/starred');
+        const _contracts_length = await contract.methods.getPollsLength().call();
+        const _votes_length = await contract.methods.getVotesLength().call();
+
+        // get votes to compare it.
+        for (let i = 0; i < _votes_length; i++) {
+            await contract.methods.votes(i).call().then(vote => {
+                if (vote['delegate'] == public_address) {
+                    _votes.push(vote);
+                }
+            })
+        }
+
+        // formate contract from contract pull
+        for (let i = 0; i < _contracts_length; i++) {
             await contract.methods.polls(i).call().then(poll => {
-                contract_polls.push(poll);
+                _contracts.push(poll);
             });
         }
 
-    }).catch(err => console.log(err));
-}
+        // combine repository and contract data
+        for (let i = 0; i < _repositories.length; i++) {
+            _repositories[i]['openPolls'] = [];
 
-function getPullRequests(repName) {
-    pull_requests = []
+            for (let j = 0; j < _contracts.length; j++) {
+                if (_repositories[i]['id'] == _contracts[j][0]) {
+                    _repositories[i]['openPolls'].push(_contracts[j]);
 
-    getRequest("https://api.github.com/repos/" + username + "/" + repName + "/pulls")
-        .then(data => pull_requests = data)
-        .then(data => {
-            getPollableRequests();
-            comparePQsWithPolls();
-            UIsetPollableNumber(pollable_pqs.length);
-        })
-        .catch(error => console.error(error));
-}
-
-function comparePQsWithPolls() {
-    running_polls = [];
-
-    for (let i = 0; i < contract_polls.length; i++) {
-        const found = pull_requests.find(pq => parseInt(contract_polls[i]["pqId"] == pq['id']));
-
-        if (found) {
-            UIaddPoll(contract_polls[i]["time"], contract_polls[i]["pqTitle"], contract_polls[i]["pqLink"]);
+                }
+            }
         }
-    }
+
+        resolve(_repositories);
+    });
 }
 
-/* -------------------------------------------------------------------------------------------
-*                                   make calls
-------------------------------------------------------------------------------------------- */
+function initContractPollsAndPollables(repository) {
+    return new Promise(async (resolve, reject) => {
+        let _contracts = [];
+        let _pollables = [];
+        let _votes = [];
 
-function getNormalText() {
-    contract.methods.helloWorld().call().then(res => {
-        console.log(res);
-    }).catch(err => console.log(err));
-}
+        // load data from data from contract
+        const _contracts_length = await contract.methods.getPollsLength().call();
+        const _votes_length = await contract.methods.getVotesLength().call();
+        const _pulls = await getRequest("https://api.github.com/repos/" + username + "/" + repository.name + "/pulls");
 
-function genKeys() {
-    let acc = web3.eth.accounts.create(web3.utils.randomHex(32));
-
-    // save adress and private key in the persistant storage
-    console.log(acc);
-    document.getElementById("public-key").textContent = acc['address'];
-    document.getElementById("private-key").textContent = acc['privateKey'];
-    chrome.storage.sync.set({ pbk: acc['address'] });
-    chrome.storage.sync.set({ prk: acc['privateKey'] });
-}
-
-document.getElementById("btn-gen-keys").addEventListener("click", () => {
-    genKeys();
-})
-
-document.getElementById("save-btn").addEventListener("click", () => {
-    chrome.storage.sync.set({ username: document.getElementById("cred-username").value });
-    chrome.storage.sync.set({ token: document.getElementById("cred-token").value });
-    initLayout();
-})
+        console.log(_votes_length);
+        console.log(_contracts_length);
 
 
+        // get votes to compare it.
+        for (let i = 0; i < _votes_length; i++) {
+            await contract.methods.votes(i).call().then(vote => {
+                if (vote['delegate'] == public_address) {
+                    _votes.push(vote);
+                }
+            })
+        }
 
-/* -------------------------------------------------------------------------------------------
-*                                   make a transaction
-------------------------------------------------------------------------------------------- */
 
-function addPoll(rpId, pqId, pqLink, pqTitle) {
-    contract.methods.addNewPoll(rpId, pqId, pqLink, pqTitle).estimateGas({ from: public_address }).then(gas => {
+        // format contract from contract pull
+        for (let i = 0; i < _contracts_length; i++) {
+            await contract.methods.polls(i).call().then(poll => {
+                let a = _votes.some(vote => vote['poll'] == poll["id"]);
 
-        const tx = {
-            from: public_address,
-            to: contract_address,
-            gas: gas,
-            data: contract.methods.addNewPoll(rpId, pqId, pqLink, pqTitle).encodeABI()
-        };
+                console.log(a);
 
-        const signPromise = web3.eth.accounts.signTransaction(tx, private_key);
 
-        signPromise.then((signedTx) => {
-            const sentTx = web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
-            sentTx.on("receipt", receipt => {
-                console.log(receipt);
-                getPollNumbers()
+                if (poll["rpId"] == repository['id'] && !_votes.some(vote => vote['poll'] == poll["id"])) {
+                    _contracts.push(poll);
+                }
             });
-            sentTx.on("error", err => {
-                console.log(err);
-            });
-        }).catch(error => console.log(error));
-    }).catch(error => console.log(error));
+        }
+
+        console.log(_votes);
+        console.log(_contracts);
+
+        // get pollable pulls
+        for (let i = 0; i < _pulls.length; i++) {
+            if (!_contracts.some(contract => contract['pqId'] == _pulls[i]['id'])) {
+                _pollables.push(_pulls[i]);
+            }
+        }
+
+
+        resolve({ contracts: _contracts, pollables: _pollables });
+    });
 }
+
+
 
 
 // Extension Logic implementation
@@ -215,22 +148,6 @@ function addPoll(rpId, pqId, pqLink, pqTitle) {
  ------------------------------------------------------------------------------------------- */
 window.addEventListener("load", function () {
     initLayout();
-
-    // sync the username from the chrome storage
-    /*     try {
-            chrome.storage.sync.get('username', function (data) {
-                if (data != null && data.username != "") {
-                    username = data.username;
-                    console.log(data);
-                    document.getElementById("username").innerHTML = " Logged in as: " + username;
-                    onLogin();
-                    gotoCard(0);
-                }
-            });
-        } catch (error) {
-            console.log(e);
-        }
-        gotoCard(6); */
 });
 
 function initLayout() {
@@ -257,11 +174,10 @@ function valideSyncStorageKey(list) {
             await new Promise((resolve, reject) => {
                 chrome.storage.sync.get(list[i].key, function (data) {
                     if (data[list[i].key]) {
-                        console.log(data[list[i].key]);
                         list[i].type == "span" ?
                             document.getElementById(list[i].id).innerHTML = data[list[i].key]
                             : document.getElementById(list[i].id).value = data[list[i].key];
-                            resolve();
+                        resolve();
                     } else {
                         reject();
                     }
@@ -272,25 +188,6 @@ function valideSyncStorageKey(list) {
     });
 }
 
-
-
-/* document.getElementById("tokenBtn").addEventListener("click", () => {
-    var tokenInput = document.getElementById("tokenInput").value;
-    chrome.storage.sync.set({ token: tokenInput }, function () {
-        chrome.storage.sync.get('token', function (data) {
-            document.getElementById("tokenOutput").innerHTML = "token: " + data.token;
-        });
-    });
-}); */
-
-/* document.getElementById("loginBtn").addEventListener("click", () => {
-    username = document.getElementById("userInput").value;
-    chrome.storage.sync.set({ username: username });
-    document.getElementById("username").innerHTML = " Logged in as: " + username;
-    console.log(username);
-    gotoCard(0);
-    onLogin();
-}); */
 
 /* -------------------------------------------------------------------------------------------
                                           Menu Navigation
@@ -314,7 +211,14 @@ for (let i = 0; i < backBtns.length; i++) {
 }
 
 
-document.getElementById("gotoRepoBtn").addEventListener("click", function () { gotoCard(2) });
+document.getElementById("gotoRepoBtn").addEventListener("click", async function () {
+    gotoCard(2);
+    let repositories = await initRepositoriesAndContracts();
+    repositories.forEach(repository => {
+        UIapppendRepo(repository);
+    });
+});
+
 document.getElementById("gotoWalletBtn").addEventListener("click", function () { gotoCard(4) });
 document.getElementById("gotoCredBtn").addEventListener("click", function () { gotoCard(5) });
 document.getElementById("cred-btn").addEventListener("click", function () { gotoCard(5) });
@@ -346,7 +250,7 @@ function gotoCard(index) {
 
 
 
-function UIaddPoll(time, name, url) {
+function UIaddPoll(time, name, url, repository) {
 
     // Layout generation of the grid-poll-element
     var pollElement = document.createElement("div");
@@ -354,13 +258,13 @@ function UIaddPoll(time, name, url) {
 
     let pollDate = document.createElement("div");
     let pollDateSpan = document.createElement("span");
-    pollDateSpan.textContent = time;
+    pollDateSpan.textContent = formateTime(time);
     pollDate.appendChild(pollDateSpan);
     pollDate.classList.add("poll-date");
 
     let pollName = document.createElement("div");
     let pollNameSpan = document.createElement("span");
-    pollNameSpan.textContent = name;
+    pollNameSpan.textContent = formateName(name);
     pollName.appendChild(pollNameSpan);
     pollName.classList.add("poll-name");
 
@@ -371,7 +275,9 @@ function UIaddPoll(time, name, url) {
     // add the action button to the poll element layout container
     var confirmBtn = document.createElement("div");
     confirmBtn.classList.add("accept-button");
-    confirmBtn.appendChild(document.createTextNode("Y"));
+    var checkmark_icon = document.createElement("img");
+    checkmark_icon.src = "./assets/checkmark.png";
+    confirmBtn.appendChild(checkmark_icon);
     confirmBtn.addEventListener("click", function () {
         //TODO vote yes
     });
@@ -379,16 +285,20 @@ function UIaddPoll(time, name, url) {
 
     var denyBtn = document.createElement("div");
     denyBtn.classList.add("decline-button");
-    denyBtn.appendChild(document.createTextNode("N"));
+    var cross_icon = document.createElement("img");
+    cross_icon.src = "./assets/cross.png";
+    denyBtn.appendChild(cross_icon);
     denyBtn.addEventListener("click", function () {
         //TODO vote no
     });
 
     var linkBtn = document.createElement("div");
     linkBtn.classList.add("link-button");
-    linkBtn.appendChild(document.createTextNode("L"));
+    var link_icon = document.createElement("img");
+    link_icon.src = "./assets/link.png";
+    linkBtn.appendChild(link_icon);
     linkBtn.addEventListener("click", function () {
-        window.open(url, "_blank");
+        window.open("https://github.com/" + url.split("/")[4] + "/" + url.split("/")[5] + "/" + url.split("/")[6] + "/" + url.split("/")[7], "_blank");
     });
 
 
@@ -406,55 +316,48 @@ function UIaddPoll(time, name, url) {
     pollsList.appendChild(pollElement);
 }
 
-function UIapppendRepo(name, pullCount, url) {
+function UIapppendRepo(repository) {
     let repoElement = document.createElement("div");
     let repoName = document.createElement("span");
     let repoPolls = document.createElement("div");
 
-    repoName.textContent = name;
-    repoPolls.textContent = pullCount;
+    repoName.textContent = formateName(repository.name);
+    repoPolls.textContent = repository.openPolls.length;
 
     repoElement.classList.add("repository-element");
-    repoElement.addEventListener("click", function () {
-        currentRepo = name;
-        document.getElementById("pollsHeader").innerHTML = "Polls of " + name;
-        getPullRequests(name);
+    repoElement.addEventListener("click", async function () {
+        document.getElementById("pollsHeader").innerHTML = "Polls of " + formateName(repository.name);
         gotoCard(1);
+        let response = await initContractPollsAndPollables(repository);
+
+        UIsetPollableNumber(response.pollables, repository);
+        for (let i = 0; i < response.contracts.length; i++) {
+            UIaddPoll(response.contracts[i]["time"], response.contracts[i]["pqTitle"], response.contracts[i]["pqLink"], repository);
+        }
     });
-    console.log(repoElement);
-    console.log(repoList);
+
     repoElement.appendChild(repoName);
     repoElement.appendChild(repoPolls);
     repoList.appendChild(repoElement);
 }
 
-
-function UIappendPull(name, url) {
-    var pullEntry = document.createElement("div");
-    pullEntry.innerHTML = name;
-    var linkBtn = document.createElement("BUTTON");
-    pullEntry.appendChild(linkBtn);
-    pullList.appendChild(pullEntry);
-}
-
-function UIsetPollableNumber(length) {
+function UIsetPollableNumber(pollables, repository) {
     let btn = document.getElementById("showPollsBtn");
     btn.addEventListener("click", function () {
         gotoCard(3);
-        UIappendPollable();
+        UIappendPollable(pollables, repository);
     });
 
     let pollNumber = document.createElement("div");
-    pollNumber.textContent = length;
-    console.log(btn.childNodes);
+    pollNumber.textContent = pollables.length;
     btn.replaceChild(pollNumber, btn.childNodes[3]);
 }
 
-function UIappendPollable() {
-    document.getElementById("pollableHeader").textContent = "Pollable pull-requests of " + currentRepo;
-    console.log(pollable_pqs);
+function UIappendPollable(pollables, repository) {
+    pullList.textContent = '';
+    document.getElementById("pollableHeader").textContent = "Pollable pull-requests of " + formateName(repository.name);
 
-    pollable_pqs.forEach(pollable_pq => {
+    pollables.forEach(pollable_pq => {
         // Layout generation of the grid-poll-element
         var pollableElement = document.createElement("div");
         pollableElement.classList.add("pollable-element");
@@ -475,7 +378,7 @@ function UIappendPollable() {
         pollBtnSpan.textContent = "Create poll";
         pollBtn.appendChild(pollBtnSpan);
         pollBtn.addEventListener("click", function () {
-            //TODO vote yes
+            addPoll(repository.id, pollable_pq['id'], pollable_pq['url'], pollable_pq['title'], 5000, public_address);
         });
 
 
@@ -486,3 +389,99 @@ function UIappendPollable() {
         pullList.appendChild(pollableElement);
     });
 }
+
+function formateTime(str) {
+    return str.substr(4, 2) + "." + str.substr(6, 2) + "." + str.substr(8, 4) + " " + str.substr(0, 2) + ":" + str.substr(2, 2);
+}
+
+function formateName(str) {
+    return str.length > 15 ? str.substr(0, 15) + "..." : str;
+}
+
+
+/* -------------------------------------------------------------------------------------------
+*                                   make calls
+------------------------------------------------------------------------------------------- */
+
+
+function genKeys() {
+    let acc = web3.eth.accounts.create(web3.utils.randomHex(32));
+
+    // save adress and private key in the persistant storage
+    document.getElementById("public-key").textContent = acc['address'];
+    document.getElementById("private-key").textContent = acc['privateKey'];
+    chrome.storage.sync.set({ pbk: acc['address'] });
+    chrome.storage.sync.set({ prk: acc['privateKey'] });
+    initWalletWithGas(web3, public_address, acc['address'], private_key);
+}
+
+document.getElementById("btn-gen-keys").addEventListener("click", () => {
+    genKeys();
+})
+
+document.getElementById("save-btn").addEventListener("click", () => {
+    chrome.storage.sync.set({ username: document.getElementById("cred-username").value });
+    chrome.storage.sync.set({ token: document.getElementById("cred-token").value });
+    initLayout();
+})
+
+
+
+/* -------------------------------------------------------------------------------------------
+*                                   make a transaction
+------------------------------------------------------------------------------------------- */
+
+function addPoll(rpId, pqId, pqLink, pqTitle, value, address) {
+    contract.methods.addNewPoll(rpId, pqId, pqLink, pqTitle, value, address).estimateGas({ from: public_address }).then(gas => {
+
+        const tx = {
+            from: public_address,
+            to: contract_address,
+            contractAddress: contract_address,
+            gas: gas + value,
+            value: value,
+            data: contract.methods.addNewPoll(rpId, pqId, pqLink, pqTitle, value, address).encodeABI()
+        };
+
+        const signPromise = web3.eth.accounts.signTransaction(tx, private_key);
+
+        signPromise.then((signedTx) => {
+            const sentTx = web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
+            sentTx.on("receipt", receipt => {
+                console.log(receipt);
+                getPollNumbers()
+            });
+            sentTx.on("error", err => {
+                console.log(err);
+            });
+        }).catch(error => console.log(error));
+    }).catch(error => console.log(error));
+}
+
+function deposit(value) {
+    contract.methods.deposit().estimateGas({ from: public_address }).then(gas => {
+
+        const tx = {
+            from: public_address,
+            to: contract_address,
+            contractAddress: contract_address,
+            gas: gas,
+            value: value,
+            data: contract.methods.deposit().encodeABI()
+        };
+
+        const signPromise = web3.eth.accounts.signTransaction(tx, private_key);
+
+        signPromise.then((signedTx) => {
+            const sentTx = web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
+            sentTx.on("receipt", receipt => {
+                console.log(receipt);
+                getPollNumbers()
+            });
+            sentTx.on("error", err => {
+                console.log(err);
+            });
+        }).catch(error => console.log(error));
+    }).catch(error => console.log(error));
+}
+

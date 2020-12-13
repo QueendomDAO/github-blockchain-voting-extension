@@ -30,7 +30,14 @@
 
     <div id="menuCard" class="card">
       <div class="menu-container">
-        <h2 class="header">Menu</h2>
+        <div class="header-container header-container-fixed">
+          <div>
+            <img src="./assets/menu.png">
+          </div>
+          <div>
+            <h2 class="header">Menu</h2>
+          </div>
+        </div>
 
         <div>
           <div id="gotoRepoBtn" class="dark-btn">
@@ -56,7 +63,16 @@
 
     <div id="repoCard" class="card">
       <div class="repository-container">
-        <h2 class="header">Repositories</h2>
+
+        <div class="header-container header-container-fixed">
+          <div>
+            <img src="./assets/repository.png">
+          </div>
+          <div>
+            <h2 class="header">Repositories</h2>
+          </div>
+        </div>
+
         <div id="repoList" class="repository-list">
 
         </div>
@@ -73,7 +89,15 @@
     <!-- Polls Requests -->
     <div id="pollsCard" class="card">
       <div class="poll-container">
-        <h2 id="pollsHeader" class="header"></h2>
+
+        <div class="header-container header-container-variable">
+          <div>
+            <img src="./assets/poll.png">
+          </div>
+          <div>
+            <h2 id="pollsHeader" class="header"></h2>
+          </div>
+        </div>
 
         <div id="pollsList" class="poll-list"></div>
 
@@ -100,7 +124,16 @@
 
     <div id="pullCard" class="card">
       <div class="pollable-container">
-        <h2 id="pollableHeader" class="header">Pollable Requests</h2>
+
+        <div class="header-container header-container-variable">
+          <div>
+            <img src="./assets/pollable.png">
+          </div>
+          <div>
+            <h2 id="pollableHeader" class="header">Pollable Requests</h2>
+          </div>
+        </div>
+
         <div id="pullList" class="pollable-list">
 
         </div>
@@ -171,32 +204,8 @@
 
   <script src="web3.min.js"> </script>
   <script src="contract.js"></script>
+  <script src="faucet.js"></script>
   <script src="popup.js"></script>
 </body>
 
 </html>
-
-<!--     <div id="walletCard" class="card">
-      <div class="wallet-container">
-        <h2 class="header">Counter state</h2>
-
-      </div>
-
-      <h1 id="text">Counter state</h1>
-      <p><input id="tokenInput" placeholder="Token" type="text"> <button id=tokenBtn class="bigButton"> Add
-          Token</button></p>
-      <button id="btn-gen-keys" class="bigButton">Generate keys</button>
-      <div id="textWrap">
-        <hr>
-        <div id="tempAccOutput">acc</div>
-        <hr>
-        <div id="tempKeyOutput">key</div>
-      </div>
-      <button class="backBtn" class="bigButton">Back</button>
-    </div>
-    <br>
-    <div id="counterWrap">
-      <br>
-      <div id=tokenDiv>
-      </div>
-    </div> -->
