@@ -268,7 +268,10 @@ document.getElementById("gotoRepoBtn").addEventListener("click", async function 
 document.getElementById("gotoWalletBtn").addEventListener("click", function () { gotoCard(4) });
 document.getElementById("gotoCredBtn").addEventListener("click", function () { gotoCard(5) });
 document.getElementById("cred-btn").addEventListener("click", function () { gotoCard(5) });
-document.getElementById("wallet-btn").addEventListener("click", function () { gotoCard(4) });
+document.getElementById("wallet-btn").addEventListener("click", async function () { 
+    document.getElementById("account-balance").textContent = await getWalletBalance(web3, getPublicKey());
+    gotoCard(4);
+});
 
 var reposList = document.getElementById("repoList");
 var pollsList = document.getElementById("pollsList");
@@ -384,7 +387,7 @@ function UIupdateForVote(element_id, buttons_id, decision, repository) {
     send_icon.src = "./assets/send.png";
     sendButton.appendChild(send_icon);
     sendButton.addEventListener("click", function () {
-        addVote(repository['pollId'], decision, votingInput.value, getPublicKey()).then(response => {
+        addVote(web3, getPublicKey(), getPrivateKey(), {"pollId": repository['pollId'], "decision": decision, "value": votingInput.value, "address": getPublicKey()}).then(response => {
             console.log(response);
             goToPollsEvent(repository);
         });
@@ -483,7 +486,7 @@ function UIappendPollable(pollables, repository) {
         pollBtnSpan.textContent = "Create poll";
         pollBtn.appendChild(pollBtnSpan);
         pollBtn.addEventListener("click", function () {
-            addPoll(repository.id, pollable_pq['id'], pollable_pq['url'], pollable_pq['title'], 500000, getPublicKey()).then(response => {
+            addPoll(web3, getPublicKey(), getPrivateKey(), {"rpId": repository.id, "pqId": pollable_pq['id'], "pqLink": pollable_pq['url'], "pqTitle": pollable_pq['title'], "value": 500000, "address": getPublicKey()}).then(response => {
                 console.log(response);
             }).catch(err => {
                 console.log("blockchain_error", err);
@@ -559,7 +562,7 @@ function UIappendMergeables(mergeables, repository) {
 }
 
 function formateTime(str) {
-    return str.substr(4, 2) + "." + str.substr(6, 2) + "." + str.substr(8, 4) + " " + str.substr(0, 2) + ":" + str.substr(2, 2);
+    return str.substr(6, 2) + "." + str.substr(4, 2) + "." + str.substr(0, 4) + " " + str.substr(8, 2) + ":" + str.substr(10, 2);
 }
 
 function formateName(str) {
@@ -584,7 +587,7 @@ function getPrivateKey() {
 ------------------------------------------------------------------------------------------- */
 
 
-function genKeys() {
+async function genKeys() {
     let acc = web3.eth.accounts.create(web3.utils.randomHex(32));
 
     // save adress and private key in the persistant storage
@@ -592,7 +595,8 @@ function genKeys() {
     document.getElementById("private-key").textContent = acc['privateKey'];
     chrome.storage.sync.set({ pbk: acc['address'] });
     chrome.storage.sync.set({ prk: acc['privateKey'] });
-    initWalletWithGas(web3, public_address, acc['address'], private_key);
+    await initWalletWithGas(web3, public_address, acc['address'], private_key);
+    document.getElementById("account-balance").textContent = await getWalletBalance(web3, getPublicKey());
 }
 
 document.getElementById("btn-gen-keys").addEventListener("click", () => {
@@ -606,7 +610,6 @@ document.getElementById("save-btn").addEventListener("click", () => {
 })
 
 function mergePullRequest(url, sha) {
-    console.log(url);
     return fetch(url, {
         method: 'PUT',
         headers: new Headers({
@@ -635,66 +638,5 @@ function rejectPullRequest(url) {
         })
     })
     .then(response => response.json())
-}
-
-
-/* -------------------------------------------------------------------------------------------
-*                                   make a transaction
-------------------------------------------------------------------------------------------- */
-
-function addPoll(rpId, pqId, pqLink, pqTitle, value, address) {
-    return new Promise((resolve, reject) => {
-        contract.methods.addNewPoll(rpId, pqId, pqLink, pqTitle, value, address).estimateGas({ from: getPublicKey() }).then(gas => {
-
-            const tx = {
-                from: getPublicKey(),
-                to: contract_address,
-                contractAddress: contract_address,
-                gas: gas + value,
-                value: value,
-                data: contract.methods.addNewPoll(rpId, pqId, pqLink, pqTitle, value, address).encodeABI()
-            };
-    
-            const signPromise = web3.eth.accounts.signTransaction(tx, getPrivateKey());
-    
-            signPromise.then((signedTx) => {
-                const sentTx = web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
-                sentTx.on("receipt", receipt => {
-                    resolve(receipt);
-                });
-                sentTx.on("error", err => {
-                    reject(err);
-                });
-            }).catch(error => console.log(error));
-        }).catch(error => console.log(error));
-    });
-}
-
-function addVote(pollId, decision, value, address) {
-    return new Promise((resolve, reject) => {
-        contract.methods.vote(pollId, decision, value, address).estimateGas({ from: getPublicKey() }).then(gas => {
-
-            const tx = {
-                from: getPublicKey(),
-                to: contract_address,
-                contractAddress: contract_address,
-                gas: gas,
-                value: value,
-                data: contract.methods.vote(pollId, decision, value, address).encodeABI()
-            };
-    
-            const signPromise = web3.eth.accounts.signTransaction(tx, getPrivateKey());
-    
-            signPromise.then((signedTx) => {
-                const sentTx = web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
-                sentTx.on("receipt", receipt => {
-                    resolve(receipt);
-                });
-                sentTx.on("error", err => {
-                    reject(err);
-                });
-            }).catch(error => console.log(error));
-        }).catch(error => console.log(error));
-    });
 }
 
