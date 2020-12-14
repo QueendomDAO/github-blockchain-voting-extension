@@ -2,7 +2,7 @@ function addPoll(web3, public_key, private_key, data) {
     showLoader();
 
     return new Promise((resolve, reject) => {
-        contract.methods.addNewPoll(data["rpId"], data["pqId"], data["pqLink"], data["pqTitle"], data["value"], data["address"]).estimateGas({ from: public_key }).then(gas => {
+        contract.methods.addNewPoll(data["rpId"], data["pqId"], data["pqLink"], data["pqTitle"], data["time"], data["value"], data["address"]).estimateGas({ from: public_key }).then(gas => {
 
             const tx = {
                 from: getPublicKey(),
@@ -10,7 +10,7 @@ function addPoll(web3, public_key, private_key, data) {
                 contractAddress: contract_address,
                 gas: gas,
                 value: data["value"],
-                data: contract.methods.addNewPoll(data["rpId"], data["pqId"], data["pqLink"], data["pqTitle"], data["value"], data["address"]).encodeABI()
+                data: contract.methods.addNewPoll(data["rpId"], data["pqId"], data["pqLink"], data["pqTitle"], data["time"], data["value"], data["address"]).encodeABI()
             };
     
             const signPromise = web3.eth.accounts.signTransaction(tx, private_key);

@@ -53,6 +53,7 @@ contract Voting {
         uint256 _pqId,
         string memory _pqLink,
         string memory _pqTitle,
+        string memory _time,
         uint value,
         address addr
     ) public payable {
@@ -64,7 +65,7 @@ contract Voting {
                 pqId: _pqId,
                 pqLink: _pqLink,
                 pqTitle: _pqTitle,
-                time: "202012161445"
+                time: _time
             })
         );
 

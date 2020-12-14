@@ -4,7 +4,7 @@
 var public_address = '0x28CfbA097FF9bb9D904471c493b032Df45B9f953';
 var private_key = 'f1d57d756f7a47c3e70b740acf95b38611a26b81c7a0cff7de872ab306ae35d0';
 var provider = 'https://sokol.poa.network';
-var contract_address = '0x294E5457CD9EAFc53b90D85dab3b7864D3cdcDad';
+var contract_address = '0xCa3a8f28f2190E297Ac50906310315aDD21E6303';
 var github_token = '';
 var username = "SerQuicky";
 
@@ -44,7 +44,6 @@ function initLayout() {
         hideLoader();
 
     }).catch(err => {
-        console.log(err);
         gotoCard(6);
     });
 }
@@ -121,11 +120,11 @@ async function initWalletView() {
 //-------------------------------------------------------------------------------------------
 
 // load or reloard the polls list (the poll elements)
-async function goToPollsEvent(repository) {
+async function goToPollsEvent(repository, index) {
     showLoader();
 
     document.getElementById("pollsHeader").innerHTML = "Polls of " + formateName(repository.name);
-    gotoCard(1);
+    gotoCard(index);
 
     let response = await initContractPollsAndPollables(repository);
     UIsetPollableAndMergeableNumber(response.pollables, response.mergeables, repository);
@@ -181,7 +180,7 @@ function UIapppendRepo(repository) {
 
     repoElement.classList.add("repository-element");
     repoElement.addEventListener("click", function () {
-        goToPollsEvent(repository);
+        goToPollsEvent(repository, 1);
     });
 
     repoElement.appendChild(repoName);
@@ -209,7 +208,7 @@ function UIaddPoll(time, name, url, index, repository) {
     pollName.appendChild(generateSpan(formateName(name)));
 
     // poll button listings
-    let pollButtons = generateDiv("poll-buttons", "poll-element-buttons-" + index); 
+    let pollButtons = generateDiv("poll-buttons", "poll-element-buttons-" + index);
 
     // accept poll button
     var confirmBtn = generateButton("accept-button", null, "./assets/checkmark.png");
@@ -256,14 +255,13 @@ function UIupdateForVote(element_id, buttons_id, decision, repository) {
     let sendButton = generateButton("link-button", null, "./assets/send.png");
     sendButton.addEventListener("click", function () {
         addVote(web3, getPublicKey(), getPrivateKey(), { "pollId": repository['pollId'], "decision": decision, "value": votingInput.value, "address": getPublicKey() }).then(response => {
-            goToPollsEvent(repository);
+            goToPollsEvent(repository, 0);
         });
     });
 
     var cancelButton = generateButton("link-button", null, "./assets/back.png");
     cancelButton.addEventListener("click", function () {
-        console.log(repository);
-        goToPollsEvent(repository);
+        goToPollsEvent(repository, 1);
     });
 
     votingElement.appendChild(votingInput);
@@ -316,8 +314,8 @@ function UIappendPollable(pollables, repository) {
         var pollBtn = generateDiv("link-button", null);
         pollBtn.appendChild(generateSpan("Create poll"));
         pollBtn.addEventListener("click", function () {
-            addPoll(web3, getPublicKey(), getPrivateKey(), { "rpId": repository.id, "pqId": pollable_pq['id'], "pqLink": pollable_pq['url'], "pqTitle": pollable_pq['title'], "value": 500000, "address": getPublicKey() }).then(response => {
-                console.log(response);
+            addPoll(web3, getPublicKey(), getPrivateKey(), { "rpId": repository.id, "pqId": pollable_pq['id'], "pqLink": pollable_pq['url'], "pqTitle": pollable_pq['title'], "value": 500000, "time": generatePollEnd(20), "address": getPublicKey() }).then(response => {
+                goToPollsEvent(repository, 0);
             }).catch(err => {
                 console.log("blockchain_error", err);
             });
@@ -341,7 +339,7 @@ function UIappendMergeables(mergeables, repository) {
 
         // Layout generation of the grid-poll-element
         var mergeableElement = generateDiv("mergeable-element", null);
-        
+
         let mergeableStat = generateDiv(null, null);
         let mergeableStatSpan = generateSpan(proWeight + " ETH vs " + contraWeight + " ETH");
         mergeableStatSpan.classList.add("mergeable-stats");
@@ -360,13 +358,11 @@ function UIappendMergeables(mergeables, repository) {
             showLoader();
             if (proWeight > contraWeight) {
                 mergePullRequest(mergeable_pq["url"] + "/merge", mergeable_pq["head"]["sha"]).then(re => {
-                    hideLoader();
-                    console.log(re);
+                    goToPollsEvent(repository, 0);
                 });
             } else {
                 rejectPullRequest(mergeable_pq["url"]).then(re => {
-                    hideLoader();
-                    console.log(re);
+                    goToPollsEvent(repository, 0);
                 });
             }
         });
@@ -388,8 +384,6 @@ function initRepositoriesAndContracts() {
         reposList.innerHTML = "";
         let _polls = [];
         let _votes = [];
-
-        console.log(getPublicKey());
 
         // load data from data from contract and github
         const _repositories = await getRequest('https://api.github.com/users/' + username + '/starred');
@@ -413,6 +407,7 @@ function initRepositoriesAndContracts() {
         }
 
         console.log(_polls);
+        console.log(_votes);
 
         // combine repository and contract data
         for (let i = 0; i < _repositories.length; i++) {
@@ -422,13 +417,15 @@ function initRepositoriesAndContracts() {
 
             for (let j = 0; j < _polls.length; j++) {
 
-                /*console.log(_repositories[i]['id'] + " vs " + _polls[j]["rpId"]);
-                console.log(getCurrentDate() + " vs " + _polls[j]["time"]);
+/*                 console.log(_repositories[i]['id'] + " vs " + _polls[j]["rpId"]);
+                console.log(_repositories[i]['id'] == _polls[j]["rpId"])
 
-                console.log(_repositories[i]['id'] == _polls[j]["rpId"]);
-                console.log(parseInt(_polls[j]["time"]) > getCurrentDate());
-                console.log(!_votes.some(vote => vote["poll"] == _polls[j]["id"]));*/
+                console.log(parseInt(_polls[j]["time"]) + " vs " + getCurrentDate());
+                console.log(parseInt(_polls[j]["time"]) > getCurrentDate())
 
+                console.log(!_votes.some(vote => vote["poll"] == _polls[j]["id"])); */
+
+                console.log("-------------------");
 
                 if (_repositories[i]['id'] == _polls[j]["rpId"]
                     && parseInt(_polls[j]["time"]) > getCurrentDate()
@@ -437,7 +434,7 @@ function initRepositoriesAndContracts() {
                     _repositories[i]['pollId'] = _polls[j]["id"];
                     _repositories[i]['openPolls'].push(_polls[j]);
 
-                } else if (_repositories[i]['id'] == _polls[j]["rpId"] && parseInt(_polls[j]["time"] < getCurrentDate())) {
+                } else if (_repositories[i]['id'] == _polls[j]["rpId"] && parseInt(_polls[j]["time"]) < getCurrentDate()) {
                     _repositories[i]['closedPolls'].push(_polls[j]);
 
                 } else if (_votes.some(vote => vote["poll"] == _polls[j]["id"])) {
@@ -453,9 +450,6 @@ function initRepositoriesAndContracts() {
 
 function initContractPollsAndPollables(repository) {
     return new Promise(async (resolve, reject) => {
-        console.log(repository["openPolls"]);
-        console.log(repository["closedPolls"]);
-        console.log(repository["votedPolls"]);
 
         pollsList.innerHTML = "";
         pullList.innerHTML = "";
@@ -487,13 +481,11 @@ function initContractPollsAndPollables(repository) {
             }
 
 
-            if (
-                //repository["closedPolls"].some(poll => poll['pqId'] == _pulls[i]['id']) 
-                //&& 
-                repository['owner']['login'] == username
+            if (repository["closedPolls"].some(poll => poll['pqId'] == _pulls[i]['id'])
+                && repository['owner']['login'] == username
                 && _pulls[i]['state'] == "open") {
 
-                let pollId = "1"; //repository["closedPolls"].find(poll => poll['pqId'] == _pulls[i]['id'])[0];
+                let pollId = repository["closedPolls"].find(poll => poll['pqId'] == _pulls[i]['id'])[0];
                 _pulls[i]['proWeight'] = 0;
                 _pulls[i]['contraWeight'] = 0;
 
@@ -511,10 +503,6 @@ function initContractPollsAndPollables(repository) {
                 _mergeables.push(_pulls[i]);
             }
         }
-
-        console.log(_votes);
-        console.log(_mergeables);
-
 
         resolve({ contracts: repository["openPolls"], pollables: _pollables, mergeables: _mergeables });
     });
