@@ -19,6 +19,17 @@ function getPrivateKey() {
     return document.getElementById("private-key").textContent;
 }
 
+function hideLoader() {
+    setTimeout(() => {
+        document.getElementById("overlay").classList.add("card");
+    }, 500);
+}
+
+function showLoader() {
+    document.getElementById("overlay").classList.remove("card");
+}
+
+
 function valideSyncStorageKey(list) {
     return new Promise(async (resolve, reject) => {
         for (let i = 0; i < list.length; i++) {
@@ -55,6 +66,43 @@ function generateDiv(classList, id) {
 
     if(id) {
         element.setAttribute("id", id);
+    }
+
+    return element;
+}
+
+function generateButton(classList, id, src) {
+    let element = document.createElement("div");
+    
+    if(classList) {
+        element.classList.add(classList);
+    }
+
+    if(id) {
+        element.setAttribute("id", id);
+    }
+
+    var icon = document.createElement("img");
+    icon.src = src;
+    element.appendChild(icon);
+
+    return element;
+}
+
+
+function generateInput(classList, id, type) {
+    let element = document.createElement("input");
+    
+    if(classList) {
+        element.classList.add(classList);
+    }
+
+    if(id) {
+        element.setAttribute("id", id);
+    }
+
+    if(type) {
+        element.setAttribute("type", type);
     }
 
     return element;

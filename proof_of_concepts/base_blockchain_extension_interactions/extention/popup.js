@@ -34,10 +34,15 @@ function initLayout() {
 
     // sync the key and account data from the chrome storage
     valideSyncStorageKey(keyMatrix).then(async _ => {
+        showLoader();
+
         username = document.getElementById("cred-username").value;
         let balance = await web3.eth.getBalance(getPublicKey());
         document.getElementById("account-balance").textContent = (parseInt(balance) / (10 ** 18)) + " ETH";
         gotoCard(0);
+
+        hideLoader();
+
     }).catch(err => {
         console.log(err);
         gotoCard(6);
@@ -77,11 +82,15 @@ document.getElementById("wallet-btn").addEventListener("click", function () { in
 
 
 document.getElementById("gotoRepoBtn").addEventListener("click", async function () {
+    showLoader();
+
     gotoCard(2);
     let repositories = await initRepositoriesAndContracts();
     repositories.forEach(repository => {
         UIapppendRepo(repository);
     });
+
+    hideLoader();
 });
 
 
@@ -100,8 +109,12 @@ function gotoCard(index) {
 
 
 async function initWalletView() {
+    showLoader();
+
     document.getElementById("account-balance").textContent = await getWalletBalance(web3, getPublicKey());
     gotoCard(4);
+
+    hideLoader();
 }
 
 //                          Events (generate, get, build up, ... something)
@@ -109,6 +122,8 @@ async function initWalletView() {
 
 // load or reloard the polls list (the poll elements)
 async function goToPollsEvent(repository) {
+    showLoader();
+
     document.getElementById("pollsHeader").innerHTML = "Polls of " + formateName(repository.name);
     gotoCard(1);
 
@@ -118,6 +133,8 @@ async function goToPollsEvent(repository) {
     for (let i = 0; i < response.contracts.length; i++) {
         UIaddPoll(response.contracts[i]["time"], response.contracts[i]["pqTitle"], response.contracts[i]["pqLink"], i, repository);
     }
+
+    hideLoader();
 }
 
 
@@ -126,6 +143,8 @@ async function goToPollsEvent(repository) {
 
 
 async function genKeys() {
+    showLoader();
+
     let acc = web3.eth.accounts.create(web3.utils.randomHex(32));
 
     // save adress and private key in the persistant storage
@@ -135,6 +154,8 @@ async function genKeys() {
     chrome.storage.sync.set({ prk: acc['privateKey'] });
     await initWalletWithGas(web3, public_address, acc['address'], private_key);
     document.getElementById("account-balance").textContent = await getWalletBalance(web3, getPublicKey());
+
+    hideLoader();
 }
 
 document.getElementById("btn-gen-keys").addEventListener("click", () => {
@@ -176,57 +197,37 @@ function UIapppendRepo(repository) {
 
 function UIaddPoll(time, name, url, index, repository) {
 
-    // Layout generation of the grid-poll-element
-    var pollElement = document.createElement("div");
-    pollElement.classList.add("poll-element");
-    pollElement.setAttribute("id", "poll-element-" + index);
+    // poll element layout
+    var pollElement = generateDiv("poll-element", "poll-element-" + index);
 
-    let pollDate = document.createElement("div");
-    let pollDateSpan = document.createElement("span");
-    pollDateSpan.textContent = formateTime(time);
-    pollDate.appendChild(pollDateSpan);
-    pollDate.classList.add("poll-date");
+    // poll date view
+    let pollDate = generateDiv("poll-date", null);
+    pollDate.appendChild(generateSpan(formateTime(time)));
 
-    let pollName = document.createElement("div");
-    let pollNameSpan = document.createElement("span");
-    pollNameSpan.textContent = formateName(name);
-    pollName.appendChild(pollNameSpan);
-    pollName.classList.add("poll-name");
+    // poll name view
+    let pollName = generateDiv("poll-name", null);
+    pollName.appendChild(generateSpan(formateName(name)));
 
-    let pollButtons = document.createElement("div");
-    pollButtons.setAttribute("id", "poll-element-buttons-" + index);
-    pollButtons.classList.add("poll-buttons");
+    // poll button listings
+    let pollButtons = generateDiv("poll-buttons", "poll-element-buttons-" + index); 
 
-
-    // add the action button to the poll element layout container
-    var confirmBtn = document.createElement("div");
-    confirmBtn.classList.add("accept-button");
-    var checkmark_icon = document.createElement("img");
-    checkmark_icon.src = "./assets/checkmark.png";
-    confirmBtn.appendChild(checkmark_icon);
+    // accept poll button
+    var confirmBtn = generateButton("accept-button", null, "./assets/checkmark.png");
     confirmBtn.addEventListener("click", function () {
         UIupdateForVote("poll-element-" + index, "poll-element-buttons-" + index, true, repository);
     });
 
-
-    var denyBtn = document.createElement("div");
-    denyBtn.classList.add("decline-button");
-    var cross_icon = document.createElement("img");
-    cross_icon.src = "./assets/cross.png";
-    denyBtn.appendChild(cross_icon);
+    // decline poll button
+    var denyBtn = generateButton("decline-button", null, "./assets/cross.png");
     denyBtn.addEventListener("click", function () {
         UIupdateForVote("poll-element-" + index, "poll-element-buttons-" + index, false, repository);
     });
 
-    var linkBtn = document.createElement("div");
-    linkBtn.classList.add("link-button");
-    var link_icon = document.createElement("img");
-    link_icon.src = "./assets/link.png";
-    linkBtn.appendChild(link_icon);
+    // open poll link (github pull request page)
+    var linkBtn = generateButton("link-button", null, "./assets/link.png");
     linkBtn.addEventListener("click", function () {
         window.open("https://github.com/" + url.split("/")[4] + "/" + url.split("/")[5] + "/" + url.split("/")[6] + "/" + url.split("/")[7], "_blank");
     });
-
 
     // append buttons
     pollButtons.appendChild(confirmBtn);
@@ -249,30 +250,17 @@ function UIupdateForVote(element_id, buttons_id, decision, repository) {
     document.getElementById(buttons_id).remove();
     let element = document.getElementById(element_id);
 
-    let votingElement = document.createElement("div");
-    votingElement.classList.add("poll-voting");
+    let votingElement = generateDiv("poll-voting", null);
+    let votingInput = generateInput(null, element_id + "-intput", "number");
 
-    let votingInput = document.createElement("input");
-    votingInput.setAttribute("type", "number");
-    votingInput.setAttribute("id", element_id + "-intput");
-
-    let sendButton = document.createElement("div");
-    sendButton.classList.add("link-button");
-    var send_icon = document.createElement("img");
-    send_icon.src = "./assets/send.png";
-    sendButton.appendChild(send_icon);
+    let sendButton = generateButton("link-button", null, "./assets/send.png");
     sendButton.addEventListener("click", function () {
         addVote(web3, getPublicKey(), getPrivateKey(), { "pollId": repository['pollId'], "decision": decision, "value": votingInput.value, "address": getPublicKey() }).then(response => {
             goToPollsEvent(repository);
         });
     });
 
-
-    var cancelButton = document.createElement("div");
-    cancelButton.classList.add("link-button");
-    var cross_icon = document.createElement("img");
-    cross_icon.src = "./assets/back.png";
-    cancelButton.appendChild(cross_icon);
+    var cancelButton = generateButton("link-button", null, "./assets/back.png");
     cancelButton.addEventListener("click", function () {
         console.log(repository);
         goToPollsEvent(repository);
@@ -284,6 +272,8 @@ function UIupdateForVote(element_id, buttons_id, decision, repository) {
     element.appendChild(votingElement);
 }
 
+//           generate dynamic number for possible pollable and mergeable polss
+//-------------------------------------------------------------------------------------------
 
 function UIsetPollableAndMergeableNumber(pollables, mergeables, repository) {
     let showPollBtn = document.getElementById("showPollsBtn");
@@ -307,30 +297,24 @@ function UIsetPollableAndMergeableNumber(pollables, mergeables, repository) {
     showMergeBtn.replaceChild(mergeNumber, showMergeBtn.childNodes[3]);
 }
 
+//                   generate dynamic poll-vote elements (gas input view)
+//-------------------------------------------------------------------------------------------
+
 function UIappendPollable(pollables, repository) {
     pullList.textContent = '';
     document.getElementById("pollableHeader").textContent = "Pollable pull-requests of " + formateName(repository.name);
 
     pollables.forEach(pollable_pq => {
-        // Layout generation of the grid-poll-element
-        var pollableElement = document.createElement("div");
-        pollableElement.classList.add("pollable-element");
+        var pollableElement = generateDiv("pollable-element", null);
 
-        let pollableName = document.createElement("div");
-        let pollableNameSpan = document.createElement("span");
-        pollableNameSpan.textContent = pollable_pq.title;
-        pollableName.appendChild(pollableNameSpan);
+        let pollableName = generateDiv(null, null);
+        pollableName.appendChild(generateSpan(pollable_pq.title));
 
-        let pollableButton = document.createElement("div");
-        pollableButton.classList.add("pollable-button");
-
+        let pollableButton = generateDiv("pollable-button", null);
 
         // add the action button to the poll element layout container
-        var pollBtn = document.createElement("div");
-        pollBtn.classList.add("link-button");
-        let pollBtnSpan = document.createElement("span");
-        pollBtnSpan.textContent = "Create poll";
-        pollBtn.appendChild(pollBtnSpan);
+        var pollBtn = generateDiv("link-button", null);
+        pollBtn.appendChild(generateSpan("Create poll"));
         pollBtn.addEventListener("click", function () {
             addPoll(web3, getPublicKey(), getPrivateKey(), { "rpId": repository.id, "pqId": pollable_pq['id'], "pqLink": pollable_pq['url'], "pqTitle": pollable_pq['title'], "value": 500000, "address": getPublicKey() }).then(response => {
                 console.log(response);
@@ -338,7 +322,6 @@ function UIappendPollable(pollables, repository) {
                 console.log("blockchain_error", err);
             });
         });
-
 
         pollableButton.appendChild(pollBtn);
         pollableElement.appendChild(pollableName);
@@ -353,45 +336,36 @@ function UIappendMergeables(mergeables, repository) {
     document.getElementById("mergeableHeader").textContent = "Mergeable pull-requests of " + formateName(repository.name);
 
     mergeables.forEach(mergeable_pq => {
-        console.log(mergeable_pq);
         let proWeight = mergeable_pq["proWeight"] / (10 ** 18);
         let contraWeight = mergeable_pq["contraWeight"] / (10 ** 18);
 
-
         // Layout generation of the grid-poll-element
-        var mergeableElement = document.createElement("div");
-        mergeableElement.classList.add("mergeable-element");
-
-        let mergeableStat = document.createElement("div");
-        let mergeableStatSpan = document.createElement("span");
+        var mergeableElement = generateDiv("mergeable-element", null);
+        
+        let mergeableStat = generateDiv(null, null);
+        let mergeableStatSpan = generateSpan(proWeight + " ETH vs " + contraWeight + " ETH");
         mergeableStatSpan.classList.add("mergeable-stats");
         mergeableStatSpan.classList.add((proWeight > contraWeight) ? "pro-merge" : "contra-merge");
-        mergeableStatSpan.textContent = proWeight + " ETH vs " + contraWeight + " ETH";
         mergeableStat.appendChild(mergeableStatSpan);
 
-        let mergeableName = document.createElement("div");
-        let mergeableNameSpan = document.createElement("span");
+        let mergeableName = generateDiv(null, null);
+        let mergeableNameSpan = generateSpan(mergeable_pq.title);
         mergeableNameSpan.classList.add("mergeable-name");
-        mergeableNameSpan.textContent = mergeable_pq.title;
         mergeableName.appendChild(mergeableNameSpan);
 
-        let mergeableButton = document.createElement("div");
-        mergeableButton.classList.add("mergeable-button");
-
-
-        // add the action button to the poll element layout container
-        var mergeBtn = document.createElement("div");
-        mergeBtn.classList.add("link-button");
-        let mergeBtnSpan = document.createElement("span");
-        mergeBtnSpan.textContent = "Execute action";
-        mergeBtn.appendChild(mergeBtnSpan);
+        let mergeableButton = generateDiv("mergeable-button", null);
+        var mergeBtn = generateDiv("link-button", null);
+        mergeBtn.appendChild(generateSpan("Execute action"));
         mergeBtn.addEventListener("click", function () {
+            showLoader();
             if (proWeight > contraWeight) {
                 mergePullRequest(mergeable_pq["url"] + "/merge", mergeable_pq["head"]["sha"]).then(re => {
+                    hideLoader();
                     console.log(re);
                 });
             } else {
                 rejectPullRequest(mergeable_pq["url"]).then(re => {
+                    hideLoader();
                     console.log(re);
                 });
             }

@@ -1,4 +1,6 @@
 function addPoll(web3, public_key, private_key, data) {
+    showLoader();
+
     return new Promise((resolve, reject) => {
         contract.methods.addNewPoll(data["rpId"], data["pqId"], data["pqLink"], data["pqTitle"], data["value"], data["address"]).estimateGas({ from: public_key }).then(gas => {
 
@@ -16,9 +18,11 @@ function addPoll(web3, public_key, private_key, data) {
             signPromise.then((signedTx) => {
                 const sentTx = web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
                 sentTx.on("receipt", receipt => {
+                    hideLoader();
                     resolve(receipt);
                 });
                 sentTx.on("error", err => {
+                    hideLoader();
                     reject(err);
                 });
             }).catch(error => reject(error));
@@ -27,6 +31,8 @@ function addPoll(web3, public_key, private_key, data) {
 }
 
 function addVote(web3, public_key, private_key, data) {
+    showLoader();
+
     return new Promise((resolve, reject) => {
         contract.methods.vote(data["pollId"], data["decision"], data["value"], data["address"]).estimateGas({ from: public_key }).then(gas => {
 
@@ -44,9 +50,11 @@ function addVote(web3, public_key, private_key, data) {
             signPromise.then((signedTx) => {
                 const sentTx = web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
                 sentTx.on("receipt", receipt => {
+                    hideLoader();
                     resolve(receipt);
                 });
                 sentTx.on("error", err => {
+                    hideLoader();
                     reject(err);
                 });
             }).catch(error => reject(error));
