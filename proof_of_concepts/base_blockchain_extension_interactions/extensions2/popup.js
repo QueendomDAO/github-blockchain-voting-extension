@@ -19,11 +19,6 @@ web3 = new Web3(provider);
 contract = new this.web3.eth.Contract(manager_contract_abi, manager_contract_address);
 account = web3.eth.accounts.privateKeyToAccount(private_key);
 
-let sign = document.getElementById("sign");
-sign.addEventListener("click", function () {
-    var redirectUri = chrome.identity.getRedirectURL('http://localhost:3000');
-});
-
 let getpolls = document.getElementById("getpolls");
 getpolls.addEventListener("click", function () {
     contract.methods.getPollsLength().call().then(async res => {

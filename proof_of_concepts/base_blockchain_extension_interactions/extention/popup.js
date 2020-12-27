@@ -5,8 +5,9 @@ var public_address = '0x28CfbA097FF9bb9D904471c493b032Df45B9f953';
 var private_key = 'f1d57d756f7a47c3e70b740acf95b38611a26b81c7a0cff7de872ab306ae35d0';
 var provider = 'https://sokol.poa.network';
 var contract_address = '0xCa3a8f28f2190E297Ac50906310315aDD21E6303';
-var github_token = 'd2a43e5829945acdb73a8bcb404790f1dc9d9953';
-var username = "SerQuicky";
+var manager_contract_address = '0xB3590D2DFb1a3b576D3A7a1F34C258792578E2A3';
+var github_token = '';
+var username = '';
 
 
 //                                   init web3js
@@ -14,6 +15,8 @@ var username = "SerQuicky";
 
 web3 = new Web3(provider);
 contract = new this.web3.eth.Contract(contract_abi, contract_address);
+manager_contract = new this.web3.eth.Contract(manager_contract_abi, manager_contract_address);
+
 account = web3.eth.accounts.privateKeyToAccount(private_key);
 
 
@@ -21,22 +24,21 @@ account = web3.eth.accounts.privateKeyToAccount(private_key);
 //-------------------------------------------------------------------------------------------
 
 window.addEventListener("load", function () {
-    initLayout();
+    gotoCard(6);
 });
 
 function initLayout() {
     let keyMatrix = [
         { key: "pbk", id: "public-key", type: "span" },
         { key: "prk", id: "private-key", type: "span" },
-        { key: "username", id: "cred-username", type: "input" },
-        { key: "token", id: "cred-token", type: "input" }
+        /* { key: "username", id: "cred-username", type: "input" },
+        { key: "token", id: "cred-token", type: "input" } */
     ];
 
     // sync the key and account data from the chrome storage
     valideSyncStorageKey(keyMatrix).then(async _ => {
         showLoader();
 
-        username = document.getElementById("cred-username").value;
         let balance = await web3.eth.getBalance(getPublicKey());
         document.getElementById("account-balance").textContent = (parseInt(balance) / (10 ** 18)) + " ETH";
         gotoCard(0);
@@ -75,9 +77,9 @@ var cardArray = [
 
 // static view buttons (the buttons that are not generted dynamically)
 document.getElementById("gotoCredBtn").addEventListener("click", function () { gotoCard(5) });
-document.getElementById("cred-btn").addEventListener("click", function () { gotoCard(5) });
+//document.getElementById("cred-btn").addEventListener("click", function () { gotoCard(5) });
 document.getElementById("gotoWalletBtn").addEventListener("click", function () { initWalletView() });
-document.getElementById("wallet-btn").addEventListener("click", function () { initWalletView() });
+//document.getElementById("wallet-btn").addEventListener("click", function () { initWalletView() });
 
 
 document.getElementById("gotoRepoBtn").addEventListener("click", async function () {
@@ -159,12 +161,6 @@ async function genKeys() {
 
 document.getElementById("btn-gen-keys").addEventListener("click", () => {
     genKeys();
-})
-
-document.getElementById("save-btn").addEventListener("click", () => {
-    chrome.storage.sync.set({ username: document.getElementById("cred-username").value });
-    chrome.storage.sync.set({ token: document.getElementById("cred-token").value });
-    initLayout();
 })
 
 
