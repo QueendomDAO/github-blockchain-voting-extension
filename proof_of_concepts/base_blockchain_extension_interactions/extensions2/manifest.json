@@ -2,7 +2,7 @@
     "name": "Brr Brr 3000",
     "version": "1.0",
     "description": "Brr Brr Extension!",
-    "permissions": ["activeTab","<all_urls>","declarativeContent","storage"],
+    "permissions": ["activeTab","<all_urls>","declarativeContent","storage", "tabs", "identity"],
     "content_security_policy": "script-src 'self' 'unsafe-eval' ; object-src 'self'",
     "background":{
         "scripts": ["background.js"],

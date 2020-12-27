@@ -39,6 +39,21 @@
       "type": "function"
     },
     {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "addr",
+          "type": "string"
+        }
+      ],
+      "name": "addPoll",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "constant": true,
       "inputs": [],
       "name": "getPollsLength",
@@ -69,21 +84,21 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"constant\":true,\"inputs\":[],\"name\":\"getPollsLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"helloWorld\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"stateMutability\":\"pure\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"polls\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"poll_contract_address\",\"type\":\"string\"},{\"internalType\":\"bool\",\"name\":\"open\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/michaelfrank/Documents/GitHub/github-blockchain-voting-extension/proof_of_concepts/base_blockchain_extension_interactions/contracts/PollManager.sol\":\"PollManager\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/michaelfrank/Documents/GitHub/github-blockchain-voting-extension/proof_of_concepts/base_blockchain_extension_interactions/contracts/PollManager.sol\":{\"keccak256\":\"0xff4be06c0280a7dea0d12a98ce263ae559c1affcb493c64e8885f226a51a5c16\",\"urls\":[\"bzz-raw://e2872fc28085768203cb233d624f76e1ea391af3e289484a307dde0652673acc\",\"dweb:/ipfs/QmZ2UTpbcdzQW3D35qANNrUhZqWqZ59Bm8ZoEfhLXU6guV\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b5060006040518060600160405280600081526020016040518060400160405280600381526020017f3078300000000000000000000000000000000000000000000000000000000000815250815260200160001515815250908060018154018082558091505090600182039060005260206000209060030201600090919290919091506000820151816000015560208201518160010190805190602001906100b89291906100e1565b5060408201518160020160006101000a81548160ff021916908315150217905550505050610186565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061012257805160ff1916838001178555610150565b82800160010185558215610150579182015b8281111561014f578251825591602001919060010190610134565b5b50905061015d9190610161565b5090565b61018391905b8082111561017f576000816000905550600101610167565b5090565b90565b6102fa806101956000396000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c8063ac2f007414610046578063c605f76c146100ff578063d4f0ca1f14610182575b600080fd5b6100726004803603602081101561005c57600080fd5b81019080803590602001909291905050506101a0565b604051808481526020018060200183151515158152602001828103825284818151815260200191508051906020019080838360005b838110156100c25780820151818401526020810190506100a7565b50505050905090810190601f1680156100ef5780820380516001836020036101000a031916815260200191505b5094505050505060405180910390f35b61010761027c565b6040518080602001828103825283818151815260200191508051906020019080838360005b8381101561014757808201518184015260208101905061012c565b50505050905090810190601f1680156101745780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b61018a6102b9565b6040518082815260200191505060405180910390f35b600081815481106101ad57fe5b9060005260206000209060030201600091509050806000015490806001018054600181600116156101000203166002900480601f01602080910402602001604051908101604052809291908181526020018280546001816001161561010002031660029004801561025f5780601f106102345761010080835404028352916020019161025f565b820191906000526020600020905b81548152906001019060200180831161024257829003601f168201915b5050505050908060020160009054906101000a900460ff16905083565b60606040518060400160405280601081526020017f564f54453a2048616c6c6f204e69636f00000000000000000000000000000000815250905090565b6000808054905090509056fea265627a7a72315820fe47482d7b2bbbd2386f8f4057ababd372b720e56005b672d55624007df494aa64736f6c63430005100032",
-  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100415760003560e01c8063ac2f007414610046578063c605f76c146100ff578063d4f0ca1f14610182575b600080fd5b6100726004803603602081101561005c57600080fd5b81019080803590602001909291905050506101a0565b604051808481526020018060200183151515158152602001828103825284818151815260200191508051906020019080838360005b838110156100c25780820151818401526020810190506100a7565b50505050905090810190601f1680156100ef5780820380516001836020036101000a031916815260200191505b5094505050505060405180910390f35b61010761027c565b6040518080602001828103825283818151815260200191508051906020019080838360005b8381101561014757808201518184015260208101905061012c565b50505050905090810190601f1680156101745780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b61018a6102b9565b6040518082815260200191505060405180910390f35b600081815481106101ad57fe5b9060005260206000209060030201600091509050806000015490806001018054600181600116156101000203166002900480601f01602080910402602001604051908101604052809291908181526020018280546001816001161561010002031660029004801561025f5780601f106102345761010080835404028352916020019161025f565b820191906000526020600020905b81548152906001019060200180831161024257829003601f168201915b5050505050908060020160009054906101000a900460ff16905083565b60606040518060400160405280601081526020017f564f54453a2048616c6c6f204e69636f00000000000000000000000000000000815250905090565b6000808054905090509056fea265627a7a72315820fe47482d7b2bbbd2386f8f4057ababd372b720e56005b672d55624007df494aa64736f6c63430005100032",
-  "sourceMap": "34:554:3:-;;;192:190;8:9:-1;5:2;;;30:1;27;20:12;5:2;192:190:3;223:5;247:118;;;;;;;;274:1;247:118;;;;;;;;;;;;;;;;;;;;;;;;;345:5;247:118;;;;;223:152;;39:1:-1;33:3;27:10;23:18;57:10;52:3;45:23;79:10;72:17;;0:93;223:152:3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;34:554;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;:::o;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;:::-;;;;;;;",
-  "deployedSourceMap": "34:554:3:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;34:554:3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;165:19;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;165:19:3;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23:1:-1;8:100;33:3;30:1;27:10;8:100;;;99:1;94:3;90:11;84:18;80:1;75:3;71:11;64:39;52:2;49:1;45:10;40:15;;8:100;;;12:14;165:19:3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;486:100;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23:1:-1;8:100;33:3;30:1;27:10;8:100;;;99:1;94:3;90:11;84:18;80:1;75:3;71:11;64:39;52:2;49:1;45:10;40:15;;8:100;;;12:14;486:100:3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;388:92;;;:::i;:::-;;;;;;;;;;;;;;;;;;;165:19;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;486:100::-;529:13;554:25;;;;;;;;;;;;;;;;;;;486:100;:::o;388:92::-;435:7;461:5;:12;;;;454:19;;388:92;:::o",
-  "source": "pragma solidity >=0.4.22 <0.8.0;\n\ncontract PollManager {\n    struct Poll {\n        uint256 id;\n        string poll_contract_address;\n        bool open;\n    }\n\n\n\n    Poll[] public polls;\n\n\n    constructor() public {\n        polls.push(\n            Poll({\n                id: 0,\n                poll_contract_address: \"0x0\",\n                open: false\n            })\n        );\n    }\n\n    function getPollsLength() public view returns (uint256) {\n        return polls.length;\n    }\n\n    function helloWorld() public pure returns (string memory) {\n        return \"VOTE: Hallo Nico\";\n    }\n}\n",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"string\",\"name\":\"addr\",\"type\":\"string\"}],\"name\":\"addPoll\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getPollsLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"helloWorld\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"stateMutability\":\"pure\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"polls\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"poll_contract_address\",\"type\":\"string\"},{\"internalType\":\"bool\",\"name\":\"open\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/michaelfrank/Documents/GitHub/github-blockchain-voting-extension/proof_of_concepts/base_blockchain_extension_interactions/contracts/PollManager.sol\":\"PollManager\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/michaelfrank/Documents/GitHub/github-blockchain-voting-extension/proof_of_concepts/base_blockchain_extension_interactions/contracts/PollManager.sol\":{\"keccak256\":\"0x41883219b886a99d2540504c296eb11d093d587903888382992e88b6e6b01d97\",\"urls\":[\"bzz-raw://0710c21aad0699f556349f4aa5dd717ce95a9af95954f7bbf83d536ca51874bb\",\"dweb:/ipfs/QmZwDprLowTb738w3CAGPCkBeYn4G7pemw7AMEzdiUBodY\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5060006040518060600160405280600081526020016040518060400160405280600381526020017f3078300000000000000000000000000000000000000000000000000000000000815250815260200160001515815250908060018154018082558091505090600182039060005260206000209060030201600090919290919091506000820151816000015560208201518160010190805190602001906100b89291906100e1565b5060408201518160020160006101000a81548160ff021916908315150217905550505050610186565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061012257805160ff1916838001178555610150565b82800160010185558215610150579182015b8281111561014f578251825591602001919060010190610134565b5b50905061015d9190610161565b5090565b61018391905b8082111561017f576000816000905550600101610167565b5090565b90565b610502806101956000396000f3fe608060405234801561001057600080fd5b506004361061004c5760003560e01c80637c31407b14610051578063ac2f00741461010c578063c605f76c146101c5578063d4f0ca1f14610248575b600080fd5b61010a6004803603602081101561006757600080fd5b810190808035906020019064010000000081111561008457600080fd5b82018360208201111561009657600080fd5b803590602001918460018302840111640100000000831117156100b857600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050509192919290505050610266565b005b6101386004803603602081101561012257600080fd5b8101908080359060200190929190505050610303565b604051808481526020018060200183151515158152602001828103825284818151815260200191508051906020019080838360005b8381101561018857808201518184015260208101905061016d565b50505050905090810190601f1680156101b55780820380516001836020036101000a031916815260200191505b5094505050505060405180910390f35b6101cd6103df565b6040518080602001828103825283818151815260200191508051906020019080838360005b8381101561020d5780820151818401526020810190506101f2565b50505050905090810190601f16801561023a5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b61025061041c565b6040518082815260200191505060405180910390f35b60006040518060600160405280600080549050815260200183815260200160001515815250908060018154018082558091505090600182039060005260206000209060030201600090919290919091506000820151816000015560208201518160010190805190602001906102dc929190610428565b5060408201518160020160006101000a81548160ff02191690831515021790555050505050565b6000818154811061031057fe5b9060005260206000209060030201600091509050806000015490806001018054600181600116156101000203166002900480601f0160208091040260200160405190810160405280929190818152602001828054600181600116156101000203166002900480156103c25780601f10610397576101008083540402835291602001916103c2565b820191906000526020600020905b8154815290600101906020018083116103a557829003601f168201915b5050505050908060020160009054906101000a900460ff16905083565b60606040518060400160405280601081526020017f564f54453a2048616c6c6f204e69636f00000000000000000000000000000000815250905090565b60008080549050905090565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061046957805160ff1916838001178555610497565b82800160010185558215610497579182015b8281111561049657825182559160200191906001019061047b565b5b5090506104a491906104a8565b5090565b6104ca91905b808211156104c65760008160009055506001016104ae565b5090565b9056fea265627a7a723158203fccb4fbac235f9ab87d0a50e807bbbfdd7d2527b4489ce9a466b2831d51f37164736f6c63430005100032",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061004c5760003560e01c80637c31407b14610051578063ac2f00741461010c578063c605f76c146101c5578063d4f0ca1f14610248575b600080fd5b61010a6004803603602081101561006757600080fd5b810190808035906020019064010000000081111561008457600080fd5b82018360208201111561009657600080fd5b803590602001918460018302840111640100000000831117156100b857600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050509192919290505050610266565b005b6101386004803603602081101561012257600080fd5b8101908080359060200190929190505050610303565b604051808481526020018060200183151515158152602001828103825284818151815260200191508051906020019080838360005b8381101561018857808201518184015260208101905061016d565b50505050905090810190601f1680156101b55780820380516001836020036101000a031916815260200191505b5094505050505060405180910390f35b6101cd6103df565b6040518080602001828103825283818151815260200191508051906020019080838360005b8381101561020d5780820151818401526020810190506101f2565b50505050905090810190601f16801561023a5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b61025061041c565b6040518082815260200191505060405180910390f35b60006040518060600160405280600080549050815260200183815260200160001515815250908060018154018082558091505090600182039060005260206000209060030201600090919290919091506000820151816000015560208201518160010190805190602001906102dc929190610428565b5060408201518160020160006101000a81548160ff02191690831515021790555050505050565b6000818154811061031057fe5b9060005260206000209060030201600091509050806000015490806001018054600181600116156101000203166002900480601f0160208091040260200160405190810160405280929190818152602001828054600181600116156101000203166002900480156103c25780601f10610397576101008083540402835291602001916103c2565b820191906000526020600020905b8154815290600101906020018083116103a557829003601f168201915b5050505050908060020160009054906101000a900460ff16905083565b60606040518060400160405280601081526020017f564f54453a2048616c6c6f204e69636f00000000000000000000000000000000815250905090565b60008080549050905090565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061046957805160ff1916838001178555610497565b82800160010185558215610497579182015b8281111561049657825182559160200191906001019061047b565b5b5090506104a491906104a8565b5090565b6104ca91905b808211156104c65760008160009055506001016104ae565b5090565b9056fea265627a7a723158203fccb4fbac235f9ab87d0a50e807bbbfdd7d2527b4489ce9a466b2831d51f37164736f6c63430005100032",
+  "sourceMap": "34:612:3:-;;;189:106;8:9:-1;5:2;;;30:1;27;20:12;5:2;189:106:3;220:5;231:56;;;;;;;;241:1;231:56;;;;;;;;;;;;;;;;;;;;;;;;;280:5;231:56;;;;;220:68;;39:1:-1;33:3;27:10;23:18;57:10;52:3;45:23;79:10;72:17;;0:93;220:68:3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;34:612;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;:::o;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;:::-;;;;;;;",
+  "deployedSourceMap": "34:612:3:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;34:612:3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;301:139;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;301:139:3;;;;;;;;;;21:11:-1;8;5:28;2:2;;;46:1;43;36:12;2:2;301:139:3;;35:9:-1;28:4;12:14;8:25;5:40;2:2;;;58:1;55;48:12;2:2;301:139:3;;;;;;100:9:-1;95:1;81:12;77:20;67:8;63:35;60:50;39:11;25:12;22:29;11:107;8:2;;;131:1;128;121:12;8:2;301:139:3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;30:3:-1;22:6;14;1:33;99:1;93:3;85:6;81:16;74:27;137:4;133:9;126:4;121:3;117:14;113:30;106:37;;169:3;161:6;157:16;147:26;;301:139:3;;;;;;;;;;;;;;;:::i;:::-;;163:19;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;163:19:3;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23:1:-1;8:100;33:3;30:1;27:10;8:100;;;99:1;94:3;90:11;84:18;80:1;75:3;71:11;64:39;52:2;49:1;45:10;40:15;;8:100;;;12:14;163:19:3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;544:100;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23:1:-1;8:100;33:3;30:1;27:10;8:100;;;99:1;94:3;90:11;84:18;80:1;75:3;71:11;64:39;52:2;49:1;45:10;40:15;;8:100;;;12:14;544:100:3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;446:92;;;:::i;:::-;;;;;;;;;;;;;;;;;;;301:139;355:5;366:66;;;;;;;;376:5;:12;;;;366:66;;;;413:4;366:66;;;;425:5;366:66;;;;;355:78;;39:1:-1;33:3;27:10;23:18;57:10;52:3;45:23;79:10;72:17;;0:93;355:78:3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;301:139;:::o;163:19::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;544:100::-;587:13;612:25;;;;;;;;;;;;;;;;;;;544:100;:::o;446:92::-;493:7;519:5;:12;;;;512:19;;446:92;:::o;34:612::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;:::o;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o",
+  "source": "pragma solidity >=0.4.22 <0.8.0;\n\ncontract PollManager {\n    struct Poll {\n        uint256 id;\n        string poll_contract_address;\n        bool open;\n    }\n\n    Poll[] public polls;\n\n    constructor() public {\n        polls.push(Poll({id: 0, poll_contract_address: \"0x0\", open: false}));\n    }\n\n    function addPoll(string memory addr) public {\n        polls.push(Poll({id: polls.length, poll_contract_address: addr, open: false}));\n    }\n\n    function getPollsLength() public view returns (uint256) {\n        return polls.length;\n    }\n\n    function helloWorld() public pure returns (string memory) {\n        return \"VOTE: Hallo Nico\";\n    }\n}\n",
   "sourcePath": "/Users/michaelfrank/Documents/GitHub/github-blockchain-voting-extension/proof_of_concepts/base_blockchain_extension_interactions/contracts/PollManager.sol",
   "ast": {
     "absolutePath": "/Users/michaelfrank/Documents/GitHub/github-blockchain-voting-extension/proof_of_concepts/base_blockchain_extension_interactions/contracts/PollManager.sol",
     "exportedSymbols": {
       "PollManager": [
-        184
+        201
       ]
     },
-    "id": 185,
+    "id": 202,
     "nodeType": "SourceUnit",
     "nodes": [
       {
@@ -106,9 +121,9 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 184,
+        "id": 201,
         "linearizedBaseContracts": [
-          184
+          201
         ],
         "name": "PollManager",
         "nodeType": "ContractDefinition",
@@ -198,7 +213,7 @@
             ],
             "name": "Poll",
             "nodeType": "StructDefinition",
-            "scope": 184,
+            "scope": 201,
             "src": "61:96:3",
             "visibility": "public"
           },
@@ -207,8 +222,8 @@
             "id": 152,
             "name": "polls",
             "nodeType": "VariableDeclaration",
-            "scope": 184,
-            "src": "165:19:3",
+            "scope": 201,
+            "src": "163:19:3",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -222,7 +237,7 @@
                 "name": "Poll",
                 "nodeType": "UserDefinedTypeName",
                 "referencedDeclaration": 149,
-                "src": "165:4:3",
+                "src": "163:4:3",
                 "typeDescriptions": {
                   "typeIdentifier": "t_struct$_Poll_$149_storage_ptr",
                   "typeString": "struct PollManager.Poll"
@@ -231,7 +246,7 @@
               "id": 151,
               "length": null,
               "nodeType": "ArrayTypeName",
-              "src": "165:6:3",
+              "src": "163:6:3",
               "typeDescriptions": {
                 "typeIdentifier": "t_array$_t_struct$_Poll_$149_storage_$dyn_storage_ptr",
                 "typeString": "struct PollManager.Poll[]"
@@ -244,7 +259,7 @@
             "body": {
               "id": 165,
               "nodeType": "Block",
-              "src": "213:169:3",
+              "src": "210:85:3",
               "statements": [
                 {
                   "expression": {
@@ -263,7 +278,7 @@
                             "kind": "number",
                             "lValueRequested": false,
                             "nodeType": "Literal",
-                            "src": "274:1:3",
+                            "src": "241:1:3",
                             "subdenomination": null,
                             "typeDescriptions": {
                               "typeIdentifier": "t_rational_0_by_1",
@@ -281,7 +296,7 @@
                             "kind": "string",
                             "lValueRequested": false,
                             "nodeType": "Literal",
-                            "src": "316:5:3",
+                            "src": "267:5:3",
                             "subdenomination": null,
                             "typeDescriptions": {
                               "typeIdentifier": "t_stringliteral_77b7d82d931e1a403db0240b08c0716665eec4664af617c457918e4a67bc1810",
@@ -299,7 +314,7 @@
                             "kind": "bool",
                             "lValueRequested": false,
                             "nodeType": "Literal",
-                            "src": "345:5:3",
+                            "src": "280:5:3",
                             "subdenomination": null,
                             "typeDescriptions": {
                               "typeIdentifier": "t_bool",
@@ -328,7 +343,7 @@
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
                           "referencedDeclaration": 149,
-                          "src": "247:4:3",
+                          "src": "231:4:3",
                           "typeDescriptions": {
                             "typeIdentifier": "t_type$_t_struct$_Poll_$149_storage_ptr_$",
                             "typeString": "type(struct PollManager.Poll storage pointer)"
@@ -346,7 +361,7 @@
                           "open"
                         ],
                         "nodeType": "FunctionCall",
-                        "src": "247:118:3",
+                        "src": "231:56:3",
                         "typeDescriptions": {
                           "typeIdentifier": "t_struct$_Poll_$149_memory",
                           "typeString": "struct PollManager.Poll memory"
@@ -367,7 +382,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 152,
-                        "src": "223:5:3",
+                        "src": "220:5:3",
                         "typeDescriptions": {
                           "typeIdentifier": "t_array$_t_struct$_Poll_$149_storage_$dyn_storage",
                           "typeString": "struct PollManager.Poll storage ref[] storage ref"
@@ -381,7 +396,7 @@
                       "memberName": "push",
                       "nodeType": "MemberAccess",
                       "referencedDeclaration": null,
-                      "src": "223:10:3",
+                      "src": "220:10:3",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_arraypush_nonpayable$_t_struct$_Poll_$149_storage_$returns$_t_uint256_$",
                         "typeString": "function (struct PollManager.Poll storage ref) returns (uint256)"
@@ -395,7 +410,7 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "223:152:3",
+                    "src": "220:68:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -403,7 +418,7 @@
                   },
                   "id": 164,
                   "nodeType": "ExpressionStatement",
-                  "src": "223:152:3"
+                  "src": "220:68:3"
                 }
               ]
             },
@@ -418,112 +433,17 @@
               "id": 153,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "203:2:3"
+              "src": "200:2:3"
             },
             "returnParameters": {
               "id": 154,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "213:0:3"
+              "src": "210:0:3"
             },
-            "scope": 184,
-            "src": "192:190:3",
+            "scope": 201,
+            "src": "189:106:3",
             "stateMutability": "nonpayable",
-            "superFunction": null,
-            "visibility": "public"
-          },
-          {
-            "body": {
-              "id": 174,
-              "nodeType": "Block",
-              "src": "444:36:3",
-              "statements": [
-                {
-                  "expression": {
-                    "argumentTypes": null,
-                    "expression": {
-                      "argumentTypes": null,
-                      "id": 171,
-                      "name": "polls",
-                      "nodeType": "Identifier",
-                      "overloadedDeclarations": [],
-                      "referencedDeclaration": 152,
-                      "src": "461:5:3",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_array$_t_struct$_Poll_$149_storage_$dyn_storage",
-                        "typeString": "struct PollManager.Poll storage ref[] storage ref"
-                      }
-                    },
-                    "id": 172,
-                    "isConstant": false,
-                    "isLValue": true,
-                    "isPure": false,
-                    "lValueRequested": false,
-                    "memberName": "length",
-                    "nodeType": "MemberAccess",
-                    "referencedDeclaration": null,
-                    "src": "461:12:3",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "functionReturnParameters": 170,
-                  "id": 173,
-                  "nodeType": "Return",
-                  "src": "454:19:3"
-                }
-              ]
-            },
-            "documentation": null,
-            "id": 175,
-            "implemented": true,
-            "kind": "function",
-            "modifiers": [],
-            "name": "getPollsLength",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 167,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "411:2:3"
-            },
-            "returnParameters": {
-              "id": 170,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 169,
-                  "name": "",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 175,
-                  "src": "435:7:3",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_uint256",
-                    "typeString": "uint256"
-                  },
-                  "typeName": {
-                    "id": 168,
-                    "name": "uint256",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "435:7:3",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "434:9:3"
-            },
-            "scope": 184,
-            "src": "388:92:3",
-            "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
           },
@@ -531,31 +451,172 @@
             "body": {
               "id": 182,
               "nodeType": "Block",
-              "src": "544:42:3",
+              "src": "345:95:3",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "hexValue": "564f54453a2048616c6c6f204e69636f",
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "arguments": [
+                          {
+                            "argumentTypes": null,
+                            "expression": {
+                              "argumentTypes": null,
+                              "id": 175,
+                              "name": "polls",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 152,
+                              "src": "376:5:3",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_array$_t_struct$_Poll_$149_storage_$dyn_storage",
+                                "typeString": "struct PollManager.Poll storage ref[] storage ref"
+                              }
+                            },
+                            "id": 176,
+                            "isConstant": false,
+                            "isLValue": true,
+                            "isPure": false,
+                            "lValueRequested": false,
+                            "memberName": "length",
+                            "nodeType": "MemberAccess",
+                            "referencedDeclaration": null,
+                            "src": "376:12:3",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          },
+                          {
+                            "argumentTypes": null,
+                            "id": 177,
+                            "name": "addr",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 168,
+                            "src": "413:4:3",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_string_memory_ptr",
+                              "typeString": "string memory"
+                            }
+                          },
+                          {
+                            "argumentTypes": null,
+                            "hexValue": "66616c7365",
+                            "id": 178,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "kind": "bool",
+                            "lValueRequested": false,
+                            "nodeType": "Literal",
+                            "src": "425:5:3",
+                            "subdenomination": null,
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_bool",
+                              "typeString": "bool"
+                            },
+                            "value": "false"
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            },
+                            {
+                              "typeIdentifier": "t_string_memory_ptr",
+                              "typeString": "string memory"
+                            },
+                            {
+                              "typeIdentifier": "t_bool",
+                              "typeString": "bool"
+                            }
+                          ],
+                          "id": 174,
+                          "name": "Poll",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 149,
+                          "src": "366:4:3",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_struct$_Poll_$149_storage_ptr_$",
+                            "typeString": "type(struct PollManager.Poll storage pointer)"
+                          }
+                        },
+                        "id": 179,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "structConstructorCall",
+                        "lValueRequested": false,
+                        "names": [
+                          "id",
+                          "poll_contract_address",
+                          "open"
+                        ],
+                        "nodeType": "FunctionCall",
+                        "src": "366:66:3",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Poll_$149_memory",
+                          "typeString": "struct PollManager.Poll memory"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_struct$_Poll_$149_memory",
+                          "typeString": "struct PollManager.Poll memory"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 171,
+                        "name": "polls",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 152,
+                        "src": "355:5:3",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_array$_t_struct$_Poll_$149_storage_$dyn_storage",
+                          "typeString": "struct PollManager.Poll storage ref[] storage ref"
+                        }
+                      },
+                      "id": 173,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "push",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": null,
+                      "src": "355:10:3",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_arraypush_nonpayable$_t_struct$_Poll_$149_storage_$returns$_t_uint256_$",
+                        "typeString": "function (struct PollManager.Poll storage ref) returns (uint256)"
+                      }
+                    },
                     "id": 180,
                     "isConstant": false,
                     "isLValue": false,
-                    "isPure": true,
-                    "kind": "string",
+                    "isPure": false,
+                    "kind": "functionCall",
                     "lValueRequested": false,
-                    "nodeType": "Literal",
-                    "src": "561:18:3",
-                    "subdenomination": null,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "355:78:3",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_stringliteral_72db42c422f0482033308bc005e4ee61bce262fb0e191b75da212ed7cb20fc05",
-                      "typeString": "literal_string \"VOTE: Hallo Nico\""
-                    },
-                    "value": "VOTE: Hallo Nico"
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
                   },
-                  "functionReturnParameters": 179,
                   "id": 181,
-                  "nodeType": "Return",
-                  "src": "554:25:3"
+                  "nodeType": "ExpressionStatement",
+                  "src": "355:78:3"
                 }
               ]
             },
@@ -564,25 +625,19 @@
             "implemented": true,
             "kind": "function",
             "modifiers": [],
-            "name": "helloWorld",
+            "name": "addPoll",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 176,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "505:2:3"
-            },
-            "returnParameters": {
-              "id": 179,
+              "id": 169,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 178,
-                  "name": "",
+                  "id": 168,
+                  "name": "addr",
                   "nodeType": "VariableDeclaration",
                   "scope": 183,
-                  "src": "529:13:3",
+                  "src": "318:18:3",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
@@ -590,10 +645,10 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 177,
+                    "id": 167,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "529:6:3",
+                    "src": "318:6:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string"
@@ -603,29 +658,214 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "528:15:3"
+              "src": "317:20:3"
             },
-            "scope": 184,
-            "src": "486:100:3",
+            "returnParameters": {
+              "id": 170,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "345:0:3"
+            },
+            "scope": 201,
+            "src": "301:139:3",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 191,
+              "nodeType": "Block",
+              "src": "502:36:3",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "expression": {
+                      "argumentTypes": null,
+                      "id": 188,
+                      "name": "polls",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 152,
+                      "src": "519:5:3",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_array$_t_struct$_Poll_$149_storage_$dyn_storage",
+                        "typeString": "struct PollManager.Poll storage ref[] storage ref"
+                      }
+                    },
+                    "id": 189,
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "memberName": "length",
+                    "nodeType": "MemberAccess",
+                    "referencedDeclaration": null,
+                    "src": "519:12:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "functionReturnParameters": 187,
+                  "id": 190,
+                  "nodeType": "Return",
+                  "src": "512:19:3"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 192,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getPollsLength",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 184,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "469:2:3"
+            },
+            "returnParameters": {
+              "id": 187,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 186,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 192,
+                  "src": "493:7:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 185,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "493:7:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "492:9:3"
+            },
+            "scope": 201,
+            "src": "446:92:3",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 199,
+              "nodeType": "Block",
+              "src": "602:42:3",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "564f54453a2048616c6c6f204e69636f",
+                    "id": 197,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "string",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "619:18:3",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_stringliteral_72db42c422f0482033308bc005e4ee61bce262fb0e191b75da212ed7cb20fc05",
+                      "typeString": "literal_string \"VOTE: Hallo Nico\""
+                    },
+                    "value": "VOTE: Hallo Nico"
+                  },
+                  "functionReturnParameters": 196,
+                  "id": 198,
+                  "nodeType": "Return",
+                  "src": "612:25:3"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 200,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "helloWorld",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 193,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "563:2:3"
+            },
+            "returnParameters": {
+              "id": 196,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 195,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 200,
+                  "src": "587:13:3",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 194,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "587:6:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "586:15:3"
+            },
+            "scope": 201,
+            "src": "544:100:3",
             "stateMutability": "pure",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 185,
-        "src": "34:554:3"
+        "scope": 202,
+        "src": "34:612:3"
       }
     ],
-    "src": "0:589:3"
+    "src": "0:647:3"
   },
   "legacyAST": {
     "absolutePath": "/Users/michaelfrank/Documents/GitHub/github-blockchain-voting-extension/proof_of_concepts/base_blockchain_extension_interactions/contracts/PollManager.sol",
     "exportedSymbols": {
       "PollManager": [
-        184
+        201
       ]
     },
-    "id": 185,
+    "id": 202,
     "nodeType": "SourceUnit",
     "nodes": [
       {
@@ -648,9 +888,9 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 184,
+        "id": 201,
         "linearizedBaseContracts": [
-          184
+          201
         ],
         "name": "PollManager",
         "nodeType": "ContractDefinition",
@@ -740,7 +980,7 @@
             ],
             "name": "Poll",
             "nodeType": "StructDefinition",
-            "scope": 184,
+            "scope": 201,
             "src": "61:96:3",
             "visibility": "public"
           },
@@ -749,8 +989,8 @@
             "id": 152,
             "name": "polls",
             "nodeType": "VariableDeclaration",
-            "scope": 184,
-            "src": "165:19:3",
+            "scope": 201,
+            "src": "163:19:3",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -764,7 +1004,7 @@
                 "name": "Poll",
                 "nodeType": "UserDefinedTypeName",
                 "referencedDeclaration": 149,
-                "src": "165:4:3",
+                "src": "163:4:3",
                 "typeDescriptions": {
                   "typeIdentifier": "t_struct$_Poll_$149_storage_ptr",
                   "typeString": "struct PollManager.Poll"
@@ -773,7 +1013,7 @@
               "id": 151,
               "length": null,
               "nodeType": "ArrayTypeName",
-              "src": "165:6:3",
+              "src": "163:6:3",
               "typeDescriptions": {
                 "typeIdentifier": "t_array$_t_struct$_Poll_$149_storage_$dyn_storage_ptr",
                 "typeString": "struct PollManager.Poll[]"
@@ -786,7 +1026,7 @@
             "body": {
               "id": 165,
               "nodeType": "Block",
-              "src": "213:169:3",
+              "src": "210:85:3",
               "statements": [
                 {
                   "expression": {
@@ -805,7 +1045,7 @@
                             "kind": "number",
                             "lValueRequested": false,
                             "nodeType": "Literal",
-                            "src": "274:1:3",
+                            "src": "241:1:3",
                             "subdenomination": null,
                             "typeDescriptions": {
                               "typeIdentifier": "t_rational_0_by_1",
@@ -823,7 +1063,7 @@
                             "kind": "string",
                             "lValueRequested": false,
                             "nodeType": "Literal",
-                            "src": "316:5:3",
+                            "src": "267:5:3",
                             "subdenomination": null,
                             "typeDescriptions": {
                               "typeIdentifier": "t_stringliteral_77b7d82d931e1a403db0240b08c0716665eec4664af617c457918e4a67bc1810",
@@ -841,7 +1081,7 @@
                             "kind": "bool",
                             "lValueRequested": false,
                             "nodeType": "Literal",
-                            "src": "345:5:3",
+                            "src": "280:5:3",
                             "subdenomination": null,
                             "typeDescriptions": {
                               "typeIdentifier": "t_bool",
@@ -870,7 +1110,7 @@
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
                           "referencedDeclaration": 149,
-                          "src": "247:4:3",
+                          "src": "231:4:3",
                           "typeDescriptions": {
                             "typeIdentifier": "t_type$_t_struct$_Poll_$149_storage_ptr_$",
                             "typeString": "type(struct PollManager.Poll storage pointer)"
@@ -888,7 +1128,7 @@
                           "open"
                         ],
                         "nodeType": "FunctionCall",
-                        "src": "247:118:3",
+                        "src": "231:56:3",
                         "typeDescriptions": {
                           "typeIdentifier": "t_struct$_Poll_$149_memory",
                           "typeString": "struct PollManager.Poll memory"
@@ -909,7 +1149,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 152,
-                        "src": "223:5:3",
+                        "src": "220:5:3",
                         "typeDescriptions": {
                           "typeIdentifier": "t_array$_t_struct$_Poll_$149_storage_$dyn_storage",
                           "typeString": "struct PollManager.Poll storage ref[] storage ref"
@@ -923,7 +1163,7 @@
                       "memberName": "push",
                       "nodeType": "MemberAccess",
                       "referencedDeclaration": null,
-                      "src": "223:10:3",
+                      "src": "220:10:3",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_arraypush_nonpayable$_t_struct$_Poll_$149_storage_$returns$_t_uint256_$",
                         "typeString": "function (struct PollManager.Poll storage ref) returns (uint256)"
@@ -937,7 +1177,7 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "223:152:3",
+                    "src": "220:68:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -945,7 +1185,7 @@
                   },
                   "id": 164,
                   "nodeType": "ExpressionStatement",
-                  "src": "223:152:3"
+                  "src": "220:68:3"
                 }
               ]
             },
@@ -960,112 +1200,17 @@
               "id": 153,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "203:2:3"
+              "src": "200:2:3"
             },
             "returnParameters": {
               "id": 154,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "213:0:3"
+              "src": "210:0:3"
             },
-            "scope": 184,
-            "src": "192:190:3",
+            "scope": 201,
+            "src": "189:106:3",
             "stateMutability": "nonpayable",
-            "superFunction": null,
-            "visibility": "public"
-          },
-          {
-            "body": {
-              "id": 174,
-              "nodeType": "Block",
-              "src": "444:36:3",
-              "statements": [
-                {
-                  "expression": {
-                    "argumentTypes": null,
-                    "expression": {
-                      "argumentTypes": null,
-                      "id": 171,
-                      "name": "polls",
-                      "nodeType": "Identifier",
-                      "overloadedDeclarations": [],
-                      "referencedDeclaration": 152,
-                      "src": "461:5:3",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_array$_t_struct$_Poll_$149_storage_$dyn_storage",
-                        "typeString": "struct PollManager.Poll storage ref[] storage ref"
-                      }
-                    },
-                    "id": 172,
-                    "isConstant": false,
-                    "isLValue": true,
-                    "isPure": false,
-                    "lValueRequested": false,
-                    "memberName": "length",
-                    "nodeType": "MemberAccess",
-                    "referencedDeclaration": null,
-                    "src": "461:12:3",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "functionReturnParameters": 170,
-                  "id": 173,
-                  "nodeType": "Return",
-                  "src": "454:19:3"
-                }
-              ]
-            },
-            "documentation": null,
-            "id": 175,
-            "implemented": true,
-            "kind": "function",
-            "modifiers": [],
-            "name": "getPollsLength",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 167,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "411:2:3"
-            },
-            "returnParameters": {
-              "id": 170,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 169,
-                  "name": "",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 175,
-                  "src": "435:7:3",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_uint256",
-                    "typeString": "uint256"
-                  },
-                  "typeName": {
-                    "id": 168,
-                    "name": "uint256",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "435:7:3",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "434:9:3"
-            },
-            "scope": 184,
-            "src": "388:92:3",
-            "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
           },
@@ -1073,31 +1218,172 @@
             "body": {
               "id": 182,
               "nodeType": "Block",
-              "src": "544:42:3",
+              "src": "345:95:3",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "hexValue": "564f54453a2048616c6c6f204e69636f",
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "arguments": [
+                          {
+                            "argumentTypes": null,
+                            "expression": {
+                              "argumentTypes": null,
+                              "id": 175,
+                              "name": "polls",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 152,
+                              "src": "376:5:3",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_array$_t_struct$_Poll_$149_storage_$dyn_storage",
+                                "typeString": "struct PollManager.Poll storage ref[] storage ref"
+                              }
+                            },
+                            "id": 176,
+                            "isConstant": false,
+                            "isLValue": true,
+                            "isPure": false,
+                            "lValueRequested": false,
+                            "memberName": "length",
+                            "nodeType": "MemberAccess",
+                            "referencedDeclaration": null,
+                            "src": "376:12:3",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          },
+                          {
+                            "argumentTypes": null,
+                            "id": 177,
+                            "name": "addr",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 168,
+                            "src": "413:4:3",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_string_memory_ptr",
+                              "typeString": "string memory"
+                            }
+                          },
+                          {
+                            "argumentTypes": null,
+                            "hexValue": "66616c7365",
+                            "id": 178,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "kind": "bool",
+                            "lValueRequested": false,
+                            "nodeType": "Literal",
+                            "src": "425:5:3",
+                            "subdenomination": null,
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_bool",
+                              "typeString": "bool"
+                            },
+                            "value": "false"
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            },
+                            {
+                              "typeIdentifier": "t_string_memory_ptr",
+                              "typeString": "string memory"
+                            },
+                            {
+                              "typeIdentifier": "t_bool",
+                              "typeString": "bool"
+                            }
+                          ],
+                          "id": 174,
+                          "name": "Poll",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 149,
+                          "src": "366:4:3",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_struct$_Poll_$149_storage_ptr_$",
+                            "typeString": "type(struct PollManager.Poll storage pointer)"
+                          }
+                        },
+                        "id": 179,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "structConstructorCall",
+                        "lValueRequested": false,
+                        "names": [
+                          "id",
+                          "poll_contract_address",
+                          "open"
+                        ],
+                        "nodeType": "FunctionCall",
+                        "src": "366:66:3",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Poll_$149_memory",
+                          "typeString": "struct PollManager.Poll memory"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_struct$_Poll_$149_memory",
+                          "typeString": "struct PollManager.Poll memory"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 171,
+                        "name": "polls",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 152,
+                        "src": "355:5:3",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_array$_t_struct$_Poll_$149_storage_$dyn_storage",
+                          "typeString": "struct PollManager.Poll storage ref[] storage ref"
+                        }
+                      },
+                      "id": 173,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "push",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": null,
+                      "src": "355:10:3",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_arraypush_nonpayable$_t_struct$_Poll_$149_storage_$returns$_t_uint256_$",
+                        "typeString": "function (struct PollManager.Poll storage ref) returns (uint256)"
+                      }
+                    },
                     "id": 180,
                     "isConstant": false,
                     "isLValue": false,
-                    "isPure": true,
-                    "kind": "string",
+                    "isPure": false,
+                    "kind": "functionCall",
                     "lValueRequested": false,
-                    "nodeType": "Literal",
-                    "src": "561:18:3",
-                    "subdenomination": null,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "355:78:3",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_stringliteral_72db42c422f0482033308bc005e4ee61bce262fb0e191b75da212ed7cb20fc05",
-                      "typeString": "literal_string \"VOTE: Hallo Nico\""
-                    },
-                    "value": "VOTE: Hallo Nico"
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
                   },
-                  "functionReturnParameters": 179,
                   "id": 181,
-                  "nodeType": "Return",
-                  "src": "554:25:3"
+                  "nodeType": "ExpressionStatement",
+                  "src": "355:78:3"
                 }
               ]
             },
@@ -1106,25 +1392,19 @@
             "implemented": true,
             "kind": "function",
             "modifiers": [],
-            "name": "helloWorld",
+            "name": "addPoll",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 176,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "505:2:3"
-            },
-            "returnParameters": {
-              "id": 179,
+              "id": 169,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 178,
-                  "name": "",
+                  "id": 168,
+                  "name": "addr",
                   "nodeType": "VariableDeclaration",
                   "scope": 183,
-                  "src": "529:13:3",
+                  "src": "318:18:3",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
@@ -1132,10 +1412,10 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 177,
+                    "id": 167,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "529:6:3",
+                    "src": "318:6:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string"
@@ -1145,28 +1425,221 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "528:15:3"
+              "src": "317:20:3"
             },
-            "scope": 184,
-            "src": "486:100:3",
+            "returnParameters": {
+              "id": 170,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "345:0:3"
+            },
+            "scope": 201,
+            "src": "301:139:3",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 191,
+              "nodeType": "Block",
+              "src": "502:36:3",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "expression": {
+                      "argumentTypes": null,
+                      "id": 188,
+                      "name": "polls",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 152,
+                      "src": "519:5:3",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_array$_t_struct$_Poll_$149_storage_$dyn_storage",
+                        "typeString": "struct PollManager.Poll storage ref[] storage ref"
+                      }
+                    },
+                    "id": 189,
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "memberName": "length",
+                    "nodeType": "MemberAccess",
+                    "referencedDeclaration": null,
+                    "src": "519:12:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "functionReturnParameters": 187,
+                  "id": 190,
+                  "nodeType": "Return",
+                  "src": "512:19:3"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 192,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getPollsLength",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 184,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "469:2:3"
+            },
+            "returnParameters": {
+              "id": 187,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 186,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 192,
+                  "src": "493:7:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 185,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "493:7:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "492:9:3"
+            },
+            "scope": 201,
+            "src": "446:92:3",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 199,
+              "nodeType": "Block",
+              "src": "602:42:3",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "564f54453a2048616c6c6f204e69636f",
+                    "id": 197,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "string",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "619:18:3",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_stringliteral_72db42c422f0482033308bc005e4ee61bce262fb0e191b75da212ed7cb20fc05",
+                      "typeString": "literal_string \"VOTE: Hallo Nico\""
+                    },
+                    "value": "VOTE: Hallo Nico"
+                  },
+                  "functionReturnParameters": 196,
+                  "id": 198,
+                  "nodeType": "Return",
+                  "src": "612:25:3"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 200,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "helloWorld",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 193,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "563:2:3"
+            },
+            "returnParameters": {
+              "id": 196,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 195,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 200,
+                  "src": "587:13:3",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 194,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "587:6:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "586:15:3"
+            },
+            "scope": 201,
+            "src": "544:100:3",
             "stateMutability": "pure",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 185,
-        "src": "34:554:3"
+        "scope": 202,
+        "src": "34:612:3"
       }
     ],
-    "src": "0:589:3"
+    "src": "0:647:3"
   },
   "compiler": {
     "name": "solc",
     "version": "0.5.16+commit.9c3226ce.Emscripten.clang"
   },
-  "networks": {},
+  "networks": {
+    "77": {
+      "events": {},
+      "links": {},
+      "address": "0x28c92BB0a8dbfF8dAfbcf44b99c4c92629ED2dE2",
+      "transactionHash": "0x7fa21963f0e92d9ded539d7f91f10566af9a82b6f795bcf23d4db7d9233c59ae"
+    }
+  },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-12-20T00:19:23.775Z",
+  "updatedAt": "2020-12-27T15:09:06.402Z",
+  "networkType": "ethereum",
   "devdoc": {
     "methods": {}
   },

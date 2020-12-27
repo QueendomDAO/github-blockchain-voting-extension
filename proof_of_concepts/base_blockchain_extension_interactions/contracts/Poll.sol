@@ -5,7 +5,7 @@ contract Poll {
     struct Vote {
         uint256 id;
         bool decision;
-        address delegate;
+        address payable delegate;
         uint256 weight;
     }
 
@@ -25,7 +25,7 @@ contract Poll {
         );
     }
 
-    function vote(bool desc, uint256 value, address addr) public payable {
+    function vote(bool desc, uint256 value, address payable addr) public payable  {
         votes.push(
             Vote({
                 id: votes.length,
@@ -34,6 +34,10 @@ contract Poll {
                 weight: value
             })
         );
+    }
+
+    function resolve() public payable {
+        votes[1].delegate.transfer(10000000000000000);  
     }
 
     function getVotesLength() public view returns (uint256) {

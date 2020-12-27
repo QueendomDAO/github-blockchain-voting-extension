@@ -6,9 +6,9 @@ const solc = require('solc');
 const contractPath = path.resolve(__dirname, 'Poll.sol');
 const source = fs.readFileSync(contractPath, 'utf8');
 const input = {
-   language: 'Poll',
+   language: 'Solidity',
    sources: {
-      'Incrementer.sol': {
+      'Poll.sol': {
          content: source,
       },
    },
@@ -20,6 +20,8 @@ const input = {
       },
    },
 };
+
 const tempFile = JSON.parse(solc.compile(JSON.stringify(input)));
 const contractFile = tempFile.contracts['Poll.sol']['Poll'];
+console.log(contractFile['evm']['bytecode']['object']);
 module.exports = contractFile;

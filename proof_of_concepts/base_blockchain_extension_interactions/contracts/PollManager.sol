@@ -7,19 +7,14 @@ contract PollManager {
         bool open;
     }
 
-
-
     Poll[] public polls;
 
-
     constructor() public {
-        polls.push(
-            Poll({
-                id: 0,
-                poll_contract_address: "0x0",
-                open: false
-            })
-        );
+        polls.push(Poll({id: 0, poll_contract_address: "0x0", open: false}));
+    }
+
+    function addPoll(string memory addr) public {
+        polls.push(Poll({id: polls.length, poll_contract_address: addr, open: false}));
     }
 
     function getPollsLength() public view returns (uint256) {

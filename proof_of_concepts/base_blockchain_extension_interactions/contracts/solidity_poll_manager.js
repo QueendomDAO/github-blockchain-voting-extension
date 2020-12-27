@@ -3,12 +3,12 @@ const fs = require('fs');
 const solc = require('solc');
 
 // Compile contract
-const contractPath = path.resolve(__dirname, 'Incrementer.sol');
+const contractPath = path.resolve(__dirname, 'PollManager.sol');
 const source = fs.readFileSync(contractPath, 'utf8');
 const input = {
    language: 'Solidity',
    sources: {
-      'Incrementer.sol': {
+      'PollManager.sol': {
          content: source,
       },
    },
@@ -21,5 +21,5 @@ const input = {
    },
 };
 const tempFile = JSON.parse(solc.compile(JSON.stringify(input)));
-const contractFile = tempFile.contracts['Incrementer.sol']['Incrementer'];
+const contractFile = tempFile.contracts['PollManager.sol']['PollManager'];
 module.exports = contractFile;
