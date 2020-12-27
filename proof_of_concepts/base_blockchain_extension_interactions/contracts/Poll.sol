@@ -10,11 +10,8 @@ contract Poll {
     }
 
     Vote[] public votes;
-    string timestamp;
 
-    constructor(string memory _timestamp) public {
-        timestamp = _timestamp;
-
+    constructor() public {
         votes.push(
             Vote({
                 id: 0,
