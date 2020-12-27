@@ -16,9 +16,8 @@
         var address = '0x28CfbA097FF9bb9D904471c493b032Df45B9f953';
         var privKey = 'f1d57d756f7a47c3e70b740acf95b38611a26b81c7a0cff7de872ab306ae35d0';
         var provider = 'https://sokol.poa.network';
-        var contract_address = '0xcd7971056187899a43E13c273766097c3c543B00';
-        let abi = '[{"constant":false,"inputs":[{"name":"value","type":"uint256"}],"name":"update_quantity","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"get_quantity","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"}]'
-        let abi2 = [
+        var contract_address = '0xDC43c58C6921BCCad02eb4269ae10605a11c030E';
+        var contract_abi = [
             {
                 "inputs": [],
                 "payable": false,
@@ -81,41 +80,44 @@
             }
         ];
 
-        let bytecode = '608060405234801561001057600080fd5b50600260008190555061010e806100286000396000f3fe6080604052348015600f57600080fd5b506004361060465760003560e01c80637cf5dab014604b5780638381f58a146076578063d4f0ca1f146092578063d826f88f1460ae575b600080fd5b607460048036036020811015605f57600080fd5b810190808035906020019092919050505060b6565b005b607c60c0565b6040518082815260200191505060405180910390f35b609860c6565b6040518082815260200191505060405180910390f35b60b460cf565b005b8060008190555050565b60005481565b60008054905090565b6000808190555056fea2646970667358221220d1c21d747e4073efca3e4bb7068594017dbb237247f5950e7a8e08ed3894b24464736f6c63430007010033';
-
         /* -------------------------------------------------------------------------------------------
         *                                   init web3js
         ------------------------------------------------------------------------------------------- */
 
         web3 = new Web3(provider);
-        //contract = new this.web3.eth.Contract(contract_abi, contract_address);
-        web3.eth.getAccounts().then(res => {
-            console.log(res);
+        contract = new this.web3.eth.Contract(contract_abi, contract_address);
 
-            const account = web3.eth.accounts.privateKeyToAccount('0x' + privKey);
-            web3.eth.accounts.wallet.add(account);
-            web3.eth.defaultAccount = account.address;
+        /* const account = web3.eth.accounts.privateKeyToAccount('0x' + privKey);
+        web3.eth.accounts.wallet.add(account);
+        web3.eth.defaultAccount = account.address; */
 
-
-            let deploy_contract = new web3.eth.Contract(JSON.parse(JSON.stringify(abi2)));
-
-            let payload = {
-                data: bytecode
-            }
-
-            let parameter = {
-                from: address,
-                gas: web3.utils.toHex(12475600),
-                gasPrice: web3.utils.toHex(web3.utils.toWei('30', 'gwei'))
-            }
-
-            deploy_contract.deploy(payload).send(parameter, (err, transactionHash) => {
-                console.log('Transaction Hash :', transactionHash);
-            }).on('confirmation', () => { }).then((newContractInstance) => {
-                console.log(newContractInstance)
-                console.log('Deployed Contract Address : ', newContractInstance.options.address);
-            })
+        contract.methods.getPollsLength().call().then(res => {
+            alert(res);
         });
+
+        contract.methods.increment(6).estimateGas({ from: address }).then(gas => {
+            alert(gas)
+            const tx = {
+                to: contract_address,
+                from: address,
+                gas: gas + 1000000,
+                data: contract.methods.increment(6).encodeABI()
+            };
+
+            const signPromise = web3.eth.accounts.signTransaction(tx, privKey);
+
+            signPromise.then((signedTx) => {
+                const sentTx = web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
+                sentTx.on("receipt", receipt => {
+                    alert("wtf")
+                    console.log(receipt);
+                });
+                sentTx.on("error", err => {
+                    console.log(err);
+                });
+            }).catch(error => console.log(error));
+        }).catch(error => console.log(error));
+
 
     </script>
 </body>

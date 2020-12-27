@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+    <h1 id="text">Counter state</h1>
+    <button id="btn-add-poll">Add new poll</button>
+    <button id="btn-gen-keys">Generate keys</button>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script>
+
+        /* -------------------------------------------------------------------------------------------
+        *                                   env settings
+        ------------------------------------------------------------------------------------------- */
+        var address = '0x28CfbA097FF9bb9D904471c493b032Df45B9f953';
+        var privKey = 'f1d57d756f7a47c3e70b740acf95b38611a26b81c7a0cff7de872ab306ae35d0';
+        var provider = 'https://sokol.poa.network';
+        var contract_address = '0x332FA6E16F3f0cc43d65461911C0B2967F9F442d';
+        let abi = '[{"constant":false,"inputs":[{"name":"value","type":"uint256"}],"name":"update_quantity","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"get_quantity","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"}]'
+        let bytecode = '608060405234801561001057600080fd5b50606460008190555060ca806100276000396000f3fe6080604052348015600f57600080fd5b506004361060325760003560e01c806380219655146037578063ed0109a5146062575b600080fd5b606060048036036020811015604b57600080fd5b8101908080359060200190929190505050607e565b005b6068608c565b6040518082815260200191505060405180910390f35b806000540160008190555050565b6000805490509056fea265627a7a7230582002f975dfd70c1b1f649671805826a83fc9b92457fe7dd245527f56b7776d043464736f6c634300050a0032';
+
+        /* -------------------------------------------------------------------------------------------
+        *                                   init web3js
+        ------------------------------------------------------------------------------------------- */
+
+        web3 = new Web3(provider);
+        //contract = new this.web3.eth.Contract(contract_abi, contract_address);
+        web3.eth.getAccounts().then(res => {
+            console.log(res);
+
+            const account = web3.eth.accounts.privateKeyToAccount('0x' + privKey);
+            web3.eth.accounts.wallet.add(account);
+            web3.eth.defaultAccount = account.address;
+
+
+            let deploy_contract = new web3.eth.Contract(JSON.parse(abi));
+
+            let payload = {
+                data: bytecode
+            }
+
+            let parameter = {
+                from: address,
+                gas: web3.utils.toHex(12475600),
+                gasPrice: web3.utils.toHex(web3.utils.toWei('30', 'gwei'))
+            }
+
+            deploy_contract.deploy(payload).send(parameter, (err, transactionHash) => {
+                console.log('Transaction Hash :', transactionHash);
+            }).on('confirmation', () => { }).then((newContractInstance) => {
+                console.log(newContractInstance)
+                console.log('Deployed Contract Address : ', newContractInstance.options.address);
+            })
+        });
+
+    </script>
+</body>
+
+</html>
