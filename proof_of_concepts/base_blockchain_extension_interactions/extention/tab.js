@@ -7,11 +7,7 @@ window.onload = function () {
             'url': 'https://github.com/login/oauth/authorize?client_id=' + client_id + "&scope=repo", 'interactive': true
         },
             function (redirect_url) {
-                console.log(redirect_url);
                 let urlParams = new URL(redirect_url.toString());
-                console.log(urlParams);
-                console.log(urlParams.searchParams.get("code"));
-
                 let code = urlParams.searchParams.get("code");
 
                 let request = new XMLHttpRequest();
@@ -38,8 +34,12 @@ function init() {
             github_token = token;
             username = res['login'];
 
-            console.log(github_token);
-            console.log(username);
-            initLayout();
+            const account = web3.eth.accounts.privateKeyToAccount('0x' + private_key);
+            web3.eth.accounts.wallet.add(account);
+            web3.eth.defaultAccount = account.address;
+
+            setTimeout(() => {
+                initLayout();
+            }, 750);
         });
 }

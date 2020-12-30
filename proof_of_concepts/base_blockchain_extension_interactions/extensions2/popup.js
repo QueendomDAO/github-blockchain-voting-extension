@@ -71,10 +71,6 @@ closepoll.addEventListener("click", async function () {
 
 function createContract() {
     return new Promise((resolve, reject) => {
-        const account = web3.eth.accounts.privateKeyToAccount('0x' + private_key);
-        web3.eth.accounts.wallet.add(account);
-        web3.eth.defaultAccount = account.address;
-
         let deploy_contract = new web3.eth.Contract(JSON.parse(JSON.stringify(poll_contract_abi)));
 
         let payload = {
@@ -126,7 +122,7 @@ function addContract(address) {
     });
 }
 
-function addVote(address, stake) {
+/* function addVote(address, stake) {
     return new Promise((resolve, reject) => {
 
         let single_poll_contract = new this.web3.eth.Contract(poll_contract_abi, address);
@@ -157,7 +153,7 @@ function addVote(address, stake) {
             }).catch(error => reject(error));
         }).catch(error => reject(error));
     });
-}
+} */
 
 function transferResult(address) {
     return new Promise((resolve, reject) => {
