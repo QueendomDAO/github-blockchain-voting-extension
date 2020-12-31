@@ -29,7 +29,7 @@ function createContract() {
             createTransaction.rawTransaction
         );
 
-        console.log(createReceipt)
+        console.log("Poll contract deployed: ", "Contract address " + createReceipt.contractAddress)
         resolve(createReceipt.contractAddress);
     });
 }
@@ -52,11 +52,11 @@ function addContract(address, data) {
             signPromise.then((signedTx) => {
                 const sentTx = web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
                 sentTx.on("receipt", receipt => {
-                    console.log("JA Contract erstellt");
+                    console.log("Poll registered: ", "Registered Poll " + receipt.contractAddress + " under the contract " + manager_contract_address);
                     resolve(receipt);
                 });
                 sentTx.on("error", err => {
-                    console.log("FEHLER beim Contract erstellen");
+                    console.log("Poll could not be registered: ", receipt.contractAddress + " could not be registered under " + manager_contract_address);
                     reject(err);
                 });
             }).catch(error => reject(error));
@@ -103,11 +103,11 @@ function addVote(address, stake, descision) {
             signPromise.then((signedTx) => {
                 const sentTx = web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
                 sentTx.on("receipt", receipt => {
-                    console.log("JA GEVOTED");
+                    console.log("Vote was successfull: ", "Voted " + descision + " for the poll under " + address);
                     resolve(receipt);
                 });
                 sentTx.on("error", err => {
-                    console.log("FEHLER OH NEIN");
+                    console.log("Vote has failed: ", "Could not vote " + descision + " for the poll under " + address);
                     reject(err);
                 });
             }).catch(error => reject(error));
@@ -133,11 +133,11 @@ function closePoll(index) {
             signPromise.then((signedTx) => {
                 const sentTx = web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
                 sentTx.on("receipt", receipt => {
-                    console.log("JA Contract abgeschlossen");
+                    console.log("Poll was closed: ", "The poll was closed");
                     resolve(receipt);
                 });
                 sentTx.on("error", err => {
-                    console.log("FEHLER beim Contract abschliessen");
+                    console.log("Poll was not closed: ", "The poll could be closed because of an error");
                     reject(err);
                 });
             }).catch(error => reject(error));
@@ -167,11 +167,11 @@ function resolvePoll(address, index, value, delegate) {
                 const sentTx = web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
                 sentTx.on("receipt", receipt => {
 
-                    console.log("JA MAN TRANSFERED " + delegate);
+                    console.log("Stake was transfered: ", "The winnerstake of " + value + " was transfered to " + delegate);
                     resolve(receipt);
                 });
                 sentTx.on("error", err => {
-                    console.log("VERDAMMT " + delegate);
+                    console.log("Stake was not transfered: ", "The winnerstake of " + value + " could not be transfered to " + delegate);
                     reject(err);
                 });
             }).catch(error => reject(error));
