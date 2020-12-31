@@ -36,7 +36,7 @@ contract Poll {
         );
     }
 
-    function transferStakes(uint256 index, uint stake) public payable {
+    function transferStakes(uint256 index, uint256 stake) public payable {
         votes[index].delegate.transfer(stake);
     }
 

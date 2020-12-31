@@ -104,12 +104,12 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"constant\":true,\"inputs\":[],\"name\":\"getVotesLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"stake\",\"type\":\"uint256\"}],\"name\":\"transferStakes\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"bool\",\"name\":\"desc\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"},{\"internalType\":\"address payable\",\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"vote\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"votes\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"decision\",\"type\":\"bool\"},{\"internalType\":\"address payable\",\"name\":\"delegate\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"weight\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/michaelfrank/Documents/GitHub/github-blockchain-voting-extension/proof_of_concepts/base_blockchain_extension_interactions/contracts/Poll.sol\":\"Poll\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/michaelfrank/Documents/GitHub/github-blockchain-voting-extension/proof_of_concepts/base_blockchain_extension_interactions/contracts/Poll.sol\":{\"keccak256\":\"0xae028982a9f0b19b328b84ccf61df62c49063cd0b9ac3e258447c63b3b7c36bb\",\"urls\":[\"bzz-raw://c66cd7afa973561f4084256c0481326ddf66ab168581c3fbfb329a01c00faf12\",\"dweb:/ipfs/QmXqhB27NvX7x7qrinkG4mdvqgcxTubBLKDKe72yKeSN2E\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b5060006040518060800160405280600081526020016001151581526020017328cfba097ff9bb9d904471c493b032df45b9f95373ffffffffffffffffffffffffffffffffffffffff1681526020016000815250908060018154018082558091505090600182039060005260206000209060030201600090919290919091506000820151816000015560208201518160010160006101000a81548160ff02191690831515021790555060408201518160010160016101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550606082015181600201555050506103b78061011b6000396000f3fe60806040526004361061003f5760003560e01c8063267e6529146100445780635ab77cb31461006f5780635df81330146100a757806361ebccfd1461013b575b600080fd5b34801561005057600080fd5b50610059610195565b6040518082815260200191505060405180910390f35b6100a56004803603604081101561008557600080fd5b8101908080359060200190929190803590602001909291905050506101a1565b005b3480156100b357600080fd5b506100e0600480360360208110156100ca57600080fd5b810190808035906020019092919050505061022a565b60405180858152602001841515151581526020018373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200194505050505060405180910390f35b6101936004803603606081101561015157600080fd5b8101908080351515906020019092919080359060200190929190803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610294565b005b60008080549050905090565b600082815481106101ae57fe5b906000526020600020906003020160010160019054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166108fc829081150290604051600060405180830381858888f19350505050158015610225573d6000803e3d6000fd5b505050565b6000818154811061023757fe5b90600052602060002090600302016000915090508060000154908060010160009054906101000a900460ff16908060010160019054906101000a900473ffffffffffffffffffffffffffffffffffffffff16908060020154905084565b60006040518060800160405280600080549050815260200185151581526020018373ffffffffffffffffffffffffffffffffffffffff16815260200184815250908060018154018082558091505090600182039060005260206000209060030201600090919290919091506000820151816000015560208201518160010160006101000a81548160ff02191690831515021790555060408201518160010160016101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506060820151816002015550505050505056fea265627a7a723158208ea625f7a786b47a3ea51a6bc1b7e67cf9e4a1d0995076adf58470ab076eccab64736f6c63430005100032",
-  "deployedBytecode": "0x60806040526004361061003f5760003560e01c8063267e6529146100445780635ab77cb31461006f5780635df81330146100a757806361ebccfd1461013b575b600080fd5b34801561005057600080fd5b50610059610195565b6040518082815260200191505060405180910390f35b6100a56004803603604081101561008557600080fd5b8101908080359060200190929190803590602001909291905050506101a1565b005b3480156100b357600080fd5b506100e0600480360360208110156100ca57600080fd5b810190808035906020019092919050505061022a565b60405180858152602001841515151581526020018373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200194505050505060405180910390f35b6101936004803603606081101561015157600080fd5b8101908080351515906020019092919080359060200190929190803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610294565b005b60008080549050905090565b600082815481106101ae57fe5b906000526020600020906003020160010160019054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166108fc829081150290604051600060405180830381858888f19350505050158015610225573d6000803e3d6000fd5b505050565b6000818154811061023757fe5b90600052602060002090600302016000915090508060000154908060010160009054906101000a900460ff16908060010160019054906101000a900473ffffffffffffffffffffffffffffffffffffffff16908060020154905084565b60006040518060800160405280600080549050815260200185151581526020018373ffffffffffffffffffffffffffffffffffffffff16815260200184815250908060018154018082558091505090600182039060005260206000209060030201600090919290919091506000820151816000015560208201518160010160006101000a81548160ff02191690831515021790555060408201518160010160016101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506060820151816002015550505050505056fea265627a7a723158208ea625f7a786b47a3ea51a6bc1b7e67cf9e4a1d0995076adf58470ab076eccab64736f6c63430005100032",
-  "sourceMap": "34:955:2:-;;;206:244;8:9:-1;5:2;;;30:1;27;20:12;5:2;206:244:2;237:5;261:172;;;;;;;;288:1;261:172;;;;317:4;261:172;;;;;;349:42;261:172;;;;;;417:1;261:172;;;237:206;;39:1:-1;33:3;27:10;23:18;57:10;52:3;45:23;79:10;72:17;;0:93;237:206:2;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;34:955;;;;;;",
-  "deployedSourceMap": "34:955:2:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;895:92;;8:9:-1;5:2;;;30:1;27;20:12;5:2;895:92:2;;;:::i;:::-;;;;;;;;;;;;;;;;;;;769:120;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;769:120:2;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;180:19;;8:9:-1;5:2;;;30:1;27;20:12;5:2;180:19:2;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;180:19:2;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;456:307;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;456:307:2;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;895:92;942:7;968:5;:12;;;;961:19;;895:92;:::o;769:120::-;845:5;851;845:12;;;;;;;;;;;;;;;;;;:21;;;;;;;;;;;;:30;;:37;876:5;845:37;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;845:37:2;769:120;;:::o;180:19::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;456:307::-;573:5;597:149;;;;;;;;624:5;:12;;;;597:149;;;;664:4;597:149;;;;;;696:4;597:149;;;;;;726:5;597:149;;;573:183;;39:1:-1;33:3;27:10;23:18;57:10;52:3;45:23;79:10;72:17;;0:93;573:183:2;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;456:307;;;:::o",
-  "source": "pragma solidity >=0.4.22 <0.8.0;\n\ncontract Poll {\n    struct Vote {\n        uint256 id;\n        bool decision;\n        address payable delegate;\n        uint256 weight;\n    }\n\n    Vote[] public votes;\n\n    constructor() public {\n        votes.push(\n            Vote({\n                id: 0,\n                decision: true,\n                delegate: 0x28CfbA097FF9bb9D904471c493b032Df45B9f953,\n                weight: 0\n            })\n        );\n    }\n\n    function vote(\n        bool desc,\n        uint256 value,\n        address payable addr\n    ) public payable {\n        votes.push(\n            Vote({\n                id: votes.length,\n                decision: desc,\n                delegate: addr,\n                weight: value\n            })\n        );\n    }\n\n    function transferStakes(uint256 index, uint stake) public payable {\n        votes[index].delegate.transfer(stake);\n    }\n\n    function getVotesLength() public view returns (uint256) {\n        return votes.length;\n    }\n}\n",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"constant\":true,\"inputs\":[],\"name\":\"getVotesLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"stake\",\"type\":\"uint256\"}],\"name\":\"transferStakes\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"bool\",\"name\":\"desc\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"},{\"internalType\":\"address payable\",\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"vote\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"votes\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"decision\",\"type\":\"bool\"},{\"internalType\":\"address payable\",\"name\":\"delegate\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"weight\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/michaelfrank/Documents/GitHub/github-blockchain-voting-extension/proof_of_concepts/base_blockchain_extension_interactions/contracts/Poll.sol\":\"Poll\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/michaelfrank/Documents/GitHub/github-blockchain-voting-extension/proof_of_concepts/base_blockchain_extension_interactions/contracts/Poll.sol\":{\"keccak256\":\"0xccca601ff4c7b3147eb810b2d25b6ef1a46bdb6dd9b796d37f1b5891dc878dfc\",\"urls\":[\"bzz-raw://d865ad83c753891552b3a99dd8073a530b425a466347c37c464e02e0b3b4c635\",\"dweb:/ipfs/QmPr3XY3UwzcDKLYvdsB7JMNgNdzmM5qQbZnFqjABEhqAv\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5060006040518060800160405280600081526020016001151581526020017328cfba097ff9bb9d904471c493b032df45b9f95373ffffffffffffffffffffffffffffffffffffffff1681526020016000815250908060018154018082558091505090600182039060005260206000209060030201600090919290919091506000820151816000015560208201518160010160006101000a81548160ff02191690831515021790555060408201518160010160016101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550606082015181600201555050506103b78061011b6000396000f3fe60806040526004361061003f5760003560e01c8063267e6529146100445780635ab77cb31461006f5780635df81330146100a757806361ebccfd1461013b575b600080fd5b34801561005057600080fd5b50610059610195565b6040518082815260200191505060405180910390f35b6100a56004803603604081101561008557600080fd5b8101908080359060200190929190803590602001909291905050506101a1565b005b3480156100b357600080fd5b506100e0600480360360208110156100ca57600080fd5b810190808035906020019092919050505061022a565b60405180858152602001841515151581526020018373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200194505050505060405180910390f35b6101936004803603606081101561015157600080fd5b8101908080351515906020019092919080359060200190929190803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610294565b005b60008080549050905090565b600082815481106101ae57fe5b906000526020600020906003020160010160019054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166108fc829081150290604051600060405180830381858888f19350505050158015610225573d6000803e3d6000fd5b505050565b6000818154811061023757fe5b90600052602060002090600302016000915090508060000154908060010160009054906101000a900460ff16908060010160019054906101000a900473ffffffffffffffffffffffffffffffffffffffff16908060020154905084565b60006040518060800160405280600080549050815260200185151581526020018373ffffffffffffffffffffffffffffffffffffffff16815260200184815250908060018154018082558091505090600182039060005260206000209060030201600090919290919091506000820151816000015560208201518160010160006101000a81548160ff02191690831515021790555060408201518160010160016101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506060820151816002015550505050505056fea265627a7a723158201c3376261477f3c7a22778f0d50d55d56ec186f4e4ffe78599e85b3b2c03f72364736f6c63430005100032",
+  "deployedBytecode": "0x60806040526004361061003f5760003560e01c8063267e6529146100445780635ab77cb31461006f5780635df81330146100a757806361ebccfd1461013b575b600080fd5b34801561005057600080fd5b50610059610195565b6040518082815260200191505060405180910390f35b6100a56004803603604081101561008557600080fd5b8101908080359060200190929190803590602001909291905050506101a1565b005b3480156100b357600080fd5b506100e0600480360360208110156100ca57600080fd5b810190808035906020019092919050505061022a565b60405180858152602001841515151581526020018373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200194505050505060405180910390f35b6101936004803603606081101561015157600080fd5b8101908080351515906020019092919080359060200190929190803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610294565b005b60008080549050905090565b600082815481106101ae57fe5b906000526020600020906003020160010160019054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166108fc829081150290604051600060405180830381858888f19350505050158015610225573d6000803e3d6000fd5b505050565b6000818154811061023757fe5b90600052602060002090600302016000915090508060000154908060010160009054906101000a900460ff16908060010160019054906101000a900473ffffffffffffffffffffffffffffffffffffffff16908060020154905084565b60006040518060800160405280600080549050815260200185151581526020018373ffffffffffffffffffffffffffffffffffffffff16815260200184815250908060018154018082558091505090600182039060005260206000209060030201600090919290919091506000820151816000015560208201518160010160006101000a81548160ff02191690831515021790555060408201518160010160016101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506060820151816002015550505050505056fea265627a7a723158201c3376261477f3c7a22778f0d50d55d56ec186f4e4ffe78599e85b3b2c03f72364736f6c63430005100032",
+  "sourceMap": "34:958:2:-;;;206:244;8:9:-1;5:2;;;30:1;27;20:12;5:2;206:244:2;237:5;261:172;;;;;;;;288:1;261:172;;;;317:4;261:172;;;;;;349:42;261:172;;;;;;417:1;261:172;;;237:206;;39:1:-1;33:3;27:10;23:18;57:10;52:3;45:23;79:10;72:17;;0:93;237:206:2;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;34:958;;;;;;",
+  "deployedSourceMap": "34:958:2:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;898:92;;8:9:-1;5:2;;;30:1;27;20:12;5:2;898:92:2;;;:::i;:::-;;;;;;;;;;;;;;;;;;;769:123;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;769:123:2;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;180:19;;8:9:-1;5:2;;;30:1;27;20:12;5:2;180:19:2;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;180:19:2;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;456:307;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;456:307:2;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;898:92;945:7;971:5;:12;;;;964:19;;898:92;:::o;769:123::-;848:5;854;848:12;;;;;;;;;;;;;;;;;;:21;;;;;;;;;;;;:30;;:37;879:5;848:37;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;848:37:2;769:123;;:::o;180:19::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;456:307::-;573:5;597:149;;;;;;;;624:5;:12;;;;597:149;;;;664:4;597:149;;;;;;696:4;597:149;;;;;;726:5;597:149;;;573:183;;39:1:-1;33:3;27:10;23:18;57:10;52:3;45:23;79:10;72:17;;0:93;573:183:2;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;456:307;;;:::o",
+  "source": "pragma solidity >=0.4.22 <0.8.0;\n\ncontract Poll {\n    struct Vote {\n        uint256 id;\n        bool decision;\n        address payable delegate;\n        uint256 weight;\n    }\n\n    Vote[] public votes;\n\n    constructor() public {\n        votes.push(\n            Vote({\n                id: 0,\n                decision: true,\n                delegate: 0x28CfbA097FF9bb9D904471c493b032Df45B9f953,\n                weight: 0\n            })\n        );\n    }\n\n    function vote(\n        bool desc,\n        uint256 value,\n        address payable addr\n    ) public payable {\n        votes.push(\n            Vote({\n                id: votes.length,\n                decision: desc,\n                delegate: addr,\n                weight: value\n            })\n        );\n    }\n\n    function transferStakes(uint256 index, uint256 stake) public payable {\n        votes[index].delegate.transfer(stake);\n    }\n\n    function getVotesLength() public view returns (uint256) {\n        return votes.length;\n    }\n}\n",
   "sourcePath": "/Users/michaelfrank/Documents/GitHub/github-blockchain-voting-extension/proof_of_concepts/base_blockchain_extension_interactions/contracts/Poll.sol",
   "ast": {
     "absolutePath": "/Users/michaelfrank/Documents/GitHub/github-blockchain-voting-extension/proof_of_concepts/base_blockchain_extension_interactions/contracts/Poll.sol",
@@ -812,7 +812,7 @@
             "body": {
               "id": 137,
               "nodeType": "Block",
-              "src": "835:54:2",
+              "src": "838:54:2",
               "statements": [
                 {
                   "expression": {
@@ -825,7 +825,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 126,
-                        "src": "876:5:2",
+                        "src": "879:5:2",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -850,7 +850,7 @@
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
                             "referencedDeclaration": 85,
-                            "src": "845:5:2",
+                            "src": "848:5:2",
                             "typeDescriptions": {
                               "typeIdentifier": "t_array$_t_struct$_Vote_$82_storage_$dyn_storage",
                               "typeString": "struct Poll.Vote storage ref[] storage ref"
@@ -864,7 +864,7 @@
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
                             "referencedDeclaration": 124,
-                            "src": "851:5:2",
+                            "src": "854:5:2",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -875,7 +875,7 @@
                           "isPure": false,
                           "lValueRequested": false,
                           "nodeType": "IndexAccess",
-                          "src": "845:12:2",
+                          "src": "848:12:2",
                           "typeDescriptions": {
                             "typeIdentifier": "t_struct$_Vote_$82_storage",
                             "typeString": "struct Poll.Vote storage ref"
@@ -889,7 +889,7 @@
                         "memberName": "delegate",
                         "nodeType": "MemberAccess",
                         "referencedDeclaration": 79,
-                        "src": "845:21:2",
+                        "src": "848:21:2",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address_payable",
                           "typeString": "address payable"
@@ -903,7 +903,7 @@
                       "memberName": "transfer",
                       "nodeType": "MemberAccess",
                       "referencedDeclaration": null,
-                      "src": "845:30:2",
+                      "src": "848:30:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_transfer_nonpayable$_t_uint256_$returns$__$",
                         "typeString": "function (uint256)"
@@ -917,7 +917,7 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "845:37:2",
+                    "src": "848:37:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
@@ -925,7 +925,7 @@
                   },
                   "id": 136,
                   "nodeType": "ExpressionStatement",
-                  "src": "845:37:2"
+                  "src": "848:37:2"
                 }
               ]
             },
@@ -972,7 +972,7 @@
                   "name": "stake",
                   "nodeType": "VariableDeclaration",
                   "scope": 138,
-                  "src": "808:10:2",
+                  "src": "808:13:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -981,9 +981,9 @@
                   },
                   "typeName": {
                     "id": 125,
-                    "name": "uint",
+                    "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "808:4:2",
+                    "src": "808:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -993,16 +993,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "792:27:2"
+              "src": "792:30:2"
             },
             "returnParameters": {
               "id": 128,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "835:0:2"
+              "src": "838:0:2"
             },
             "scope": 148,
-            "src": "769:120:2",
+            "src": "769:123:2",
             "stateMutability": "payable",
             "superFunction": null,
             "visibility": "public"
@@ -1011,7 +1011,7 @@
             "body": {
               "id": 146,
               "nodeType": "Block",
-              "src": "951:36:2",
+              "src": "954:36:2",
               "statements": [
                 {
                   "expression": {
@@ -1023,7 +1023,7 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 85,
-                      "src": "968:5:2",
+                      "src": "971:5:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_array$_t_struct$_Vote_$82_storage_$dyn_storage",
                         "typeString": "struct Poll.Vote storage ref[] storage ref"
@@ -1037,7 +1037,7 @@
                     "memberName": "length",
                     "nodeType": "MemberAccess",
                     "referencedDeclaration": null,
-                    "src": "968:12:2",
+                    "src": "971:12:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1046,7 +1046,7 @@
                   "functionReturnParameters": 142,
                   "id": 145,
                   "nodeType": "Return",
-                  "src": "961:19:2"
+                  "src": "964:19:2"
                 }
               ]
             },
@@ -1061,7 +1061,7 @@
               "id": 139,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "918:2:2"
+              "src": "921:2:2"
             },
             "returnParameters": {
               "id": 142,
@@ -1073,7 +1073,7 @@
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "scope": 147,
-                  "src": "942:7:2",
+                  "src": "945:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1084,7 +1084,7 @@
                     "id": 140,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "942:7:2",
+                    "src": "945:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1094,20 +1094,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "941:9:2"
+              "src": "944:9:2"
             },
             "scope": 148,
-            "src": "895:92:2",
+            "src": "898:92:2",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
           }
         ],
         "scope": 149,
-        "src": "34:955:2"
+        "src": "34:958:2"
       }
     ],
-    "src": "0:990:2"
+    "src": "0:993:2"
   },
   "legacyAST": {
     "absolutePath": "/Users/michaelfrank/Documents/GitHub/github-blockchain-voting-extension/proof_of_concepts/base_blockchain_extension_interactions/contracts/Poll.sol",
@@ -1810,7 +1810,7 @@
             "body": {
               "id": 137,
               "nodeType": "Block",
-              "src": "835:54:2",
+              "src": "838:54:2",
               "statements": [
                 {
                   "expression": {
@@ -1823,7 +1823,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 126,
-                        "src": "876:5:2",
+                        "src": "879:5:2",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -1848,7 +1848,7 @@
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
                             "referencedDeclaration": 85,
-                            "src": "845:5:2",
+                            "src": "848:5:2",
                             "typeDescriptions": {
                               "typeIdentifier": "t_array$_t_struct$_Vote_$82_storage_$dyn_storage",
                               "typeString": "struct Poll.Vote storage ref[] storage ref"
@@ -1862,7 +1862,7 @@
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
                             "referencedDeclaration": 124,
-                            "src": "851:5:2",
+                            "src": "854:5:2",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -1873,7 +1873,7 @@
                           "isPure": false,
                           "lValueRequested": false,
                           "nodeType": "IndexAccess",
-                          "src": "845:12:2",
+                          "src": "848:12:2",
                           "typeDescriptions": {
                             "typeIdentifier": "t_struct$_Vote_$82_storage",
                             "typeString": "struct Poll.Vote storage ref"
@@ -1887,7 +1887,7 @@
                         "memberName": "delegate",
                         "nodeType": "MemberAccess",
                         "referencedDeclaration": 79,
-                        "src": "845:21:2",
+                        "src": "848:21:2",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address_payable",
                           "typeString": "address payable"
@@ -1901,7 +1901,7 @@
                       "memberName": "transfer",
                       "nodeType": "MemberAccess",
                       "referencedDeclaration": null,
-                      "src": "845:30:2",
+                      "src": "848:30:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_transfer_nonpayable$_t_uint256_$returns$__$",
                         "typeString": "function (uint256)"
@@ -1915,7 +1915,7 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "845:37:2",
+                    "src": "848:37:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
@@ -1923,7 +1923,7 @@
                   },
                   "id": 136,
                   "nodeType": "ExpressionStatement",
-                  "src": "845:37:2"
+                  "src": "848:37:2"
                 }
               ]
             },
@@ -1970,7 +1970,7 @@
                   "name": "stake",
                   "nodeType": "VariableDeclaration",
                   "scope": 138,
-                  "src": "808:10:2",
+                  "src": "808:13:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1979,9 +1979,9 @@
                   },
                   "typeName": {
                     "id": 125,
-                    "name": "uint",
+                    "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "808:4:2",
+                    "src": "808:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1991,16 +1991,16 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "792:27:2"
+              "src": "792:30:2"
             },
             "returnParameters": {
               "id": 128,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "835:0:2"
+              "src": "838:0:2"
             },
             "scope": 148,
-            "src": "769:120:2",
+            "src": "769:123:2",
             "stateMutability": "payable",
             "superFunction": null,
             "visibility": "public"
@@ -2009,7 +2009,7 @@
             "body": {
               "id": 146,
               "nodeType": "Block",
-              "src": "951:36:2",
+              "src": "954:36:2",
               "statements": [
                 {
                   "expression": {
@@ -2021,7 +2021,7 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 85,
-                      "src": "968:5:2",
+                      "src": "971:5:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_array$_t_struct$_Vote_$82_storage_$dyn_storage",
                         "typeString": "struct Poll.Vote storage ref[] storage ref"
@@ -2035,7 +2035,7 @@
                     "memberName": "length",
                     "nodeType": "MemberAccess",
                     "referencedDeclaration": null,
-                    "src": "968:12:2",
+                    "src": "971:12:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2044,7 +2044,7 @@
                   "functionReturnParameters": 142,
                   "id": 145,
                   "nodeType": "Return",
-                  "src": "961:19:2"
+                  "src": "964:19:2"
                 }
               ]
             },
@@ -2059,7 +2059,7 @@
               "id": 139,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "918:2:2"
+              "src": "921:2:2"
             },
             "returnParameters": {
               "id": 142,
@@ -2071,7 +2071,7 @@
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "scope": 147,
-                  "src": "942:7:2",
+                  "src": "945:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2082,7 +2082,7 @@
                     "id": 140,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "942:7:2",
+                    "src": "945:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2092,20 +2092,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "941:9:2"
+              "src": "944:9:2"
             },
             "scope": 148,
-            "src": "895:92:2",
+            "src": "898:92:2",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
           }
         ],
         "scope": 149,
-        "src": "34:955:2"
+        "src": "34:958:2"
       }
     ],
-    "src": "0:990:2"
+    "src": "0:993:2"
   },
   "compiler": {
     "name": "solc",
@@ -2115,12 +2115,12 @@
     "77": {
       "events": {},
       "links": {},
-      "address": "0x82677abC293FC753A7A1819EF483c677c037529b",
-      "transactionHash": "0x88d9e683754da23432ad285f010391b1a83c12cc58a41854c328ba69a8063768"
+      "address": "0x16fBAd544f257BD20216e8Be36AD1c67BAdcEf6C",
+      "transactionHash": "0x41490f5b1d14cf6dc4c2a46cfa65b5f533fe773cbd024cac72006387551d3f54"
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-12-30T22:14:50.991Z",
+  "updatedAt": "2020-12-31T00:19:20.989Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}
