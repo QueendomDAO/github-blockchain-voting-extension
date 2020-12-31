@@ -5,7 +5,7 @@ var public_address = '0x28CfbA097FF9bb9D904471c493b032Df45B9f953';
 var private_key = 'f1d57d756f7a47c3e70b740acf95b38611a26b81c7a0cff7de872ab306ae35d0';
 var provider = 'https://sokol.poa.network';
 var contract_address = '0xCa3a8f28f2190E297Ac50906310315aDD21E6303';
-var manager_contract_address = '0x22C51ebc737484dEfc8649350A26309255Ee0303';
+var manager_contract_address = '0x1648D0315C13e76678D2Ef4163BE14C6542E5B16';
 let bytecode = '608060405234801561001057600080fd5b5060006040518060800160405280600081526020016001151581526020017328cfba097ff9bb9d904471c493b032df45b9f95373ffffffffffffffffffffffffffffffffffffffff168152602001600081525090806001815401808255809150506001900390600052602060002090600302016000909190919091506000820151816000015560208201518160010160006101000a81548160ff02191690831515021790555060408201518160010160016101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555060608201518160020155505061039d806101186000396000f3fe60806040526004361061003f5760003560e01c8063267e6529146100445780635ab77cb31461006f5780635df81330146100a757806361ebccfd14610123575b600080fd5b34801561005057600080fd5b5061005961017d565b6040518082815260200191505060405180910390f35b6100a56004803603604081101561008557600080fd5b810190808035906020019092919080359060200190929190505050610189565b005b3480156100b357600080fd5b506100e0600480360360208110156100ca57600080fd5b8101908080359060200190929190505050610212565b6040518085815260200184151581526020018373ffffffffffffffffffffffffffffffffffffffff16815260200182815260200194505050505060405180910390f35b61017b6004803603606081101561013957600080fd5b8101908080351515906020019092919080359060200190929190803573ffffffffffffffffffffffffffffffffffffffff16906020019092919050505061027c565b005b60008080549050905090565b6000828154811061019657fe5b906000526020600020906003020160010160019054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166108fc829081150290604051600060405180830381858888f1935050505015801561020d573d6000803e3d6000fd5b505050565b6000818154811061021f57fe5b90600052602060002090600302016000915090508060000154908060010160009054906101000a900460ff16908060010160019054906101000a900473ffffffffffffffffffffffffffffffffffffffff16908060020154905084565b60006040518060800160405280600080549050815260200185151581526020018373ffffffffffffffffffffffffffffffffffffffff1681526020018481525090806001815401808255809150506001900390600052602060002090600302016000909190919091506000820151816000015560208201518160010160006101000a81548160ff02191690831515021790555060408201518160010160016101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555060608201518160020155505050505056fea2646970667358221220a2e63af99aae6a38190a0a194bce878f250938496b597e4fbcb80b800cab721b64736f6c63430007010033';
 var github_token = '';
 var developer_token = '';
@@ -257,13 +257,13 @@ function UIupdateForVote(element_id, buttons_id, decision, repository, contract)
 
     let sendButton = generateButton("link-button", null, "./assets/send.png");
     sendButton.addEventListener("click", function () {
-        if((parseFloat(votingInput.value) / (10 ** 18)) >= 0.01) {
+        if(parseInt(votingInput.value) >= 50000000000000 && parseInt(votingInput.value) < 5000000000000000) {
             addVote(contract['poll_contract_address'], votingInput.value, decision).then(response => {
                 hideLoader();
                 goToPollsEvent(repository, 0);
             });
         } else {
-            alert("The minimum stake-amount should be over 0.01 ETH");
+            alert("The minimum stake-amount should be over 0.00005 and the maximum under 0.005 ETH");
         }
     });
 
@@ -323,7 +323,7 @@ function UIappendPollable(pollables, repository) {
         var pollBtn = generateDiv("link-button", null);
         pollBtn.appendChild(generateSpan("Create poll"));
         pollBtn.addEventListener("click", function () {
-            addPoll({"rpId": repository.id, "pqId": pollable_pq['id'], "value": 500000, "time": generatePollEnd(2) }).then(response => {
+            addPoll({"rpId": repository.id, "pqId": pollable_pq['id'], "value": 0, "time": generatePollEnd(3) }).then(response => {
                 goToPollsEvent(repository, 0);
             }).catch(err => {
                 console.log("blockchain_error", err);
@@ -364,13 +364,14 @@ function UIappendMergeables(mergeables, repository) {
         let mergeableButton = generateDiv("mergeable-button", null);
         var mergeBtn = generateDiv("link-button", null);
         mergeBtn.appendChild(generateSpan("Execute action"));
-        mergeBtn.addEventListener("click", function () {
+        mergeBtn.addEventListener("click", async function () {
             showLoader();
-            resolveContractStakes(mergeable_pq, proWeight > contraWeight, proWeight > contraWeight ? proWeight : contraWeight,  proWeight + contraWeight);
-            /* closePoll(mergeable_pq["id"]).then(async _ => {
-
+            await resolveContractStakes(mergeable_pq, proWeight > contraWeight, proWeight > contraWeight ? proWeight.toFixed(5) : contraWeight.toFixed(5),  (proWeight + contraWeight).toFixed(5));
+            closePoll(mergeable_pq["id"]).then(async _ => {
                 finishPullRequest(proWeight, contraWeight, mergeable_pq, repository);
-            }); */
+            }).catch(_ => {
+                goToPollsEvent(repository, 0);
+            });
         });
 
 
@@ -506,6 +507,7 @@ function calcVoteWeights(mergeables) {
 
 function resolveContractStakes(mergeable_pq, result, partStake, completeStake) {
     console.log(mergeable_pq)
+
     return new Promise(async (resolve, reject) => {
 
         let single_poll_contract = new web3.eth.Contract(poll_contract_abi, mergeable_pq["poll_contract_address"]);
@@ -514,10 +516,12 @@ function resolveContractStakes(mergeable_pq, result, partStake, completeStake) {
         for(let a = 0; a < votes_length; a++) {
             await single_poll_contract.methods.votes(a).call().then(async vote => {
                 if(a != 0) {
+                    console.log(completeStake);
+                    console.log(partStake);
                     console.log(vote);
 
                     if(result == vote['decision']) {
-                        const weight = Math.round(((parseInt(vote['weight']) / partStake) * completeStake) / 10);
+                        const weight = Math.round(((parseInt(vote['weight']) / partStake) * completeStake));
                         console.log(weight);
                         await resolvePoll(mergeable_pq["poll_contract_address"], vote['id'], weight, vote['delegate']);
                     }
