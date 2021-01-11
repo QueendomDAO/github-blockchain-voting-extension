@@ -40,10 +40,12 @@ function initLayout() {
     valideSyncStorageKey(keyMatrix).then(async _ => {
         showLoader();
 
-        let balance = await web3.eth.getBalance(getPublicKey());
-        document.getElementById("account-balance").textContent = (parseInt(balance) / (10 ** 18)) + " ETH";
-        gotoCard(0);
+        if(getPublicKey()) {
+            let balance = await web3.eth.getBalance(getPublicKey());
+            document.getElementById("account-balance").textContent = (parseInt(balance) / (10 ** 18)) + " ETH";
+        }
 
+        gotoCard(0);
         hideLoader();
 
     }).catch(err => {
@@ -152,8 +154,8 @@ async function genKeys() {
     // save adress and private key in the persistant storage
     document.getElementById("public-key").textContent = acc['address'];
     document.getElementById("private-key").textContent = acc['privateKey'];
-    chrome.storage.sync.set({ pbk: acc['address'] });
-    chrome.storage.sync.set({ prk: acc['privateKey'] });
+    await chrome.storage.sync.set({ "pbk": acc['address'] });
+    await chrome.storage.sync.set({ "prk": acc['privateKey'] });
     await initWalletWithGas(web3, public_address, acc['address'], private_key);
     document.getElementById("account-balance").textContent = await getWalletBalance(web3, getPublicKey());
 
