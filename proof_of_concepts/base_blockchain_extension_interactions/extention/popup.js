@@ -94,6 +94,29 @@ document.getElementById("gotoRepoBtn").addEventListener("click", async function 
         UIapppendRepo(repository);
     });
 
+    // console.log(acc['privateKey']);
+    // console.log(acc['address']);
+    console.log(document.getElementById("public-key").textContent);
+    console.log(document.getElementById("private-key").textContent);
+
+    console.log(developer_token);
+
+    var tempBalance = await getWalletBalance(web3, getPublicKey());
+    console.log(tempBalance);
+    var tempPk = document.getElementById("public-key").textContent;
+    var tempSk = document.getElementById("private-key").textContent;
+    
+    await chrome.storage.sync.get("token", function (data) {
+        developer_token=data.token;
+        console.log(developer_token);
+        console.log(developer_token.length);
+         if(tempBalance<0.1 || tempPk.length <=0 || tempSk.length <=0 || developer_token.length <=0){//TODO correct length
+            alert("Fehler: Fehlende Daten oder nicht genug ETH");
+            gotoCard(0);
+         }
+     });
+
+
     hideLoader();
 });
 
@@ -168,7 +191,8 @@ document.getElementById("btn-gen-keys").addEventListener("click", () => {
 
 document.getElementById("save-btn").addEventListener("click", () => {
     showLoader();
-    chrome.storage.sync.set({ token: document.getElementById("cred-token").value });
+    developer_token = document.getElementById("cred-token").value;
+    chrome.storage.sync.set({ token: developer_token });
     gotoCard(0);
     hideLoader();
 })
@@ -206,7 +230,15 @@ function UIaddPoll(time, name, url, index, repository, contract) {
 
     // poll date view
     let pollDate = generateDiv("poll-date", null);
-    pollDate.appendChild(generateSpan(formateTime(time)));
+    var day = time.substring(6,8);
+    var month = time.substring(4,6);
+    var year = time.substring(0,4);
+    var hours = time.substring(time.length-4,time.length-2);
+    var minutes = time.substring(time.length-2,time.length);
+    console.log(time);
+    console.log(hours);
+    console.log(year)
+    pollDate.appendChild(generateSpan(day+"."+month+"."+year+" "+hours+":"+minutes));
 
     // poll name view
     let pollName = generateDiv("poll-name", null);
@@ -255,12 +287,15 @@ function UIupdateForVote(element_id, buttons_id, decision, repository, contract)
     let element = document.getElementById(element_id);
 
     let votingElement = generateDiv("poll-voting", null);
-    let votingInput = generateInput(null, element_id + "-intput", "number");
+    let votingInput = generateInput(null, element_id + "-input", "number");
+    
 
     let sendButton = generateButton("link-button", null, "./assets/send.png");
     sendButton.addEventListener("click", function () {
-        if(parseInt(votingInput.value) >= 50000000000000 && parseInt(votingInput.value) < 5000000000000000) {
-            addVote(contract['poll_contract_address'], votingInput.value, decision).then(response => {
+        votingInputVal=Number(votingInput.value*0.01);
+        //if(Number(votingInput.value) >= 50000000000000 && Number(votingInput.value) < 5000000000000000) {
+        if(Number(votingInputVal) >= 0.000005 && Number(votingInputVal) < 0.005) {
+            addVote(contract['poll_contract_address'], Number(votingInputVal)*1000000000000000000, decision).then(response => {//TODO note for *100 multiplier?
                 hideLoader();
                 goToPollsEvent(repository, 0);
             });
@@ -280,7 +315,7 @@ function UIupdateForVote(element_id, buttons_id, decision, repository, contract)
     element.appendChild(votingElement);
 }
 
-//           generate dynamic number for possible pollable and mergeable polss
+//           generate dynamic number for possible pollable and mergeable polls
 //-------------------------------------------------------------------------------------------
 
 function UIsetPollableAndMergeableNumber(pollables, mergeables, repository) {
@@ -325,7 +360,7 @@ function UIappendPollable(pollables, repository) {
         var pollBtn = generateDiv("link-button", null);
         pollBtn.appendChild(generateSpan("Create poll"));
         pollBtn.addEventListener("click", function () {
-            addPoll({"rpId": repository.id, "pqId": pollable_pq['id'], "value": 0, "time": generatePollEnd(3) }).then(response => {
+            addPoll({"rpId": repository.id, "pqId": pollable_pq['id'], "value": 0, "time": generatePollEnd(9) }).then(response => {
                 goToPollsEvent(repository, 0);
             }).catch(err => {
                 console.log("blockchain_error", err);
@@ -346,17 +381,25 @@ function UIappendMergeables(mergeables, repository) {
     document.getElementById("mergeableHeader").textContent = "Mergeable pull-requests of " + formateName(repository.name);
 
     mergeables.forEach(mergeable_pq => {
-        let proWeight = mergeable_pq["proWeight"] / (10 ** 18);
+        let proWeight = mergeable_pq["proWeight"] / (10 ** 18);//TODO shorten?
         let contraWeight = mergeable_pq["contraWeight"] / (10 ** 18);
 
         // Layout generation of the grid-poll-element
         var mergeableElement = generateDiv("mergeable-element", null);
+        let mergeableTextWrap = generateDiv(null, null);
 
         let mergeableStat = generateDiv(null, null);
-        let mergeableStatSpan = generateSpan(proWeight + " ETH vs " + contraWeight + " ETH");
-        mergeableStatSpan.classList.add("mergeable-stats");
-        mergeableStatSpan.classList.add((proWeight > contraWeight) ? "pro-merge" : "contra-merge");
-        mergeableStat.appendChild(mergeableStatSpan);
+        let mergeableStatSpanPro = generateSpan(proWeight + " ETH PRO ");
+        let mergeableStatSpanCon = generateSpan(contraWeight + " ETH CON");
+        mergeableStatSpanPro.classList.add("mergeable-stats");
+        mergeableStatSpanCon.classList.add("mergeable-stats");
+
+        mergeableStatSpanPro.classList.add((proWeight > contraWeight) ? "pro-merge" : "contra-merge");
+        mergeableStatSpanCon.classList.add((proWeight > contraWeight) ? "pro-merge" : "contra-merge");
+
+        mergeableStat.appendChild(mergeableStatSpanPro);
+        mergeableStat.appendChild(document.createElement("BR"));
+        mergeableStat.appendChild(mergeableStatSpanCon);
 
         let mergeableName = generateDiv(null, null);
         let mergeableNameSpan = generateSpan(mergeable_pq.pqTitle);
@@ -378,8 +421,9 @@ function UIappendMergeables(mergeables, repository) {
 
 
         mergeableButton.appendChild(mergeBtn);
-        mergeableElement.appendChild(mergeableStat);
-        mergeableElement.appendChild(mergeableName);
+        mergeableTextWrap.appendChild(mergeableStat);
+        mergeableTextWrap.appendChild(mergeableName);
+        mergeableElement.appendChild(mergeableTextWrap);
         mergeableElement.appendChild(mergeableButton);
 
         mergeList.appendChild(mergeableElement);

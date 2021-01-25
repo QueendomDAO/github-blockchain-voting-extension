@@ -5,9 +5,19 @@ function formateTime(str) {
 function generatePollEnd(minutes) {
     let initial_date = new Date;
     let today = new Date(initial_date.getTime() + (minutes*60*1000));
+
+
+    var tempDay = ""+appendZeroForDate(today.getDate());
+    var tempMonth= ""+today.getMonth() + 1;
+    if(tempDay.length<=1){
+        tempDay = "0"+tempDay;
+    }
+    if(tempMonth.length<=1){
+        tempMonth = "0"+tempMonth;
+    }
     return today.getFullYear() + "" 
-        + (today.getMonth() + 1) + "" 
-        + appendZeroForDate(today.getDate()) + "" 
+        + tempMonth + "" 
+        + tempDay + "" 
         + appendZeroForDate(today.getHours()) + "" 
         + appendZeroForDate(today.getMinutes());
 }
@@ -18,10 +28,20 @@ function formateName(str) {
 
 function getCurrentDate() {
     let today = new Date();
+    var tempDay = ""+appendZeroForDate(today.getDate());
+    var tempMonth= ""+today.getMonth() + 1;
+    if(tempDay.length<=1){
+        tempDay = "0"+tempDay;
+    }
+    if(tempMonth.length<=1){
+        tempMonth = "0"+tempMonth;
+    }
+    console.log(tempDay);
+    console.log(tempMonth);
     return parseInt(
         today.getFullYear() + "" 
-        + (today.getMonth() + 1) + "" 
-        + appendZeroForDate(today.getDate()) + "" 
+        + tempMonth + "" 
+        + tempDay + "" 
         + appendZeroForDate(today.getHours()) + "" 
         + appendZeroForDate(today.getMinutes()));
 }
