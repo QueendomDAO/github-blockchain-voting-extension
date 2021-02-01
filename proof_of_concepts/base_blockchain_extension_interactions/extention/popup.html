@@ -117,8 +117,8 @@
 
     <!------------------------------------------ Issue List ------------------------------------------>
 
-    <div id="issueCard" class="card">
-      <div class="issue-container">
+    <div id="issuesCard" class="card">
+      <div class="issues-container">
 
         <div class="header-container header-container-fixed">
           <div>
@@ -129,7 +129,44 @@
           </div>
         </div>
 
-        <div id="issueList" class="issue-list">
+        <div id="issuesList" class="issues-list">
+
+        </div>
+        <div>
+          <div class="dark-btn backBtn">
+            <span>Back</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!------------------------------------------ Issue List ------------------------------------------>
+
+    <div id="issueActionCard" class="card">
+      <div class="issues-container">
+
+        <div class="header-container header-container-fixed">
+          <div>
+            <img src="./assets/repository.png">
+          </div>
+          <div>
+            <h2 id="issueHeader" class="header">Issues</h2>
+          </div>
+        </div>
+
+        <div class="repository-settings-actions">
+          <div id="createBountyBtn" class="dark-btn">
+            <span>Create Bounty-Pool</span>
+          </div>
+
+          <div id="stakeBountyBtn" class="dark-btn">
+            <span>Stake in Bounty-Pool</span>
+          </div>
+
+          <div id="claimIssueBtn" class="dark-btn">
+            <span>Claim Issue</span>
+          </div>
+        </div>
 
         </div>
         <div>
@@ -296,13 +333,23 @@
 
   </div>
 
-  <script src="entities/issue.github.entity.js"></script>
+  <script src="entities/issue.entity.js"></script>
   <script src="entities/user.entity.js"></script>
+
   <script src="web3.min.js"> </script>
   <script src="helper.js"></script>
   <script src="contract.js"></script>
   <script src="github.js"></script>
   <script src="blockchain.js"></script>
+  <script src="services/issue.service.js"></script>
+
+  <script src="component/issue.component.js"></script>
+
+  <script src="page/repository.settings.page.js"></script>
+  <script src="page/issue.list.page.js"></script>
+  <script src="page/issue.action.page.js"></script>
+
+
   <script src="popup.js"></script>
   <script src="tab.js"></script>
 </body>

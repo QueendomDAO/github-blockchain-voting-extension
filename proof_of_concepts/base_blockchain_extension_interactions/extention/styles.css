@@ -147,14 +147,14 @@ span {
 
 /* ------------------------ ISSUE CONTEXT ---------------------------- */
 
-.issue-container {
+.issues-container {
     width: 100%;
     height: 100%;
     display: grid;
     grid-template-rows: 12.5% 1fr 15%;
 }
 
-.issue-list {
+.issues-list {
     width: 100%;
     height: 300px;
     overflow-y: scroll;

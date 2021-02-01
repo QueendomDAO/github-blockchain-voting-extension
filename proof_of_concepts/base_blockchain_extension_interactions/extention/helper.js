@@ -36,8 +36,6 @@ function getCurrentDate() {
     if(tempMonth.length<=1){
         tempMonth = "0"+tempMonth;
     }
-    console.log(tempDay);
-    console.log(tempMonth);
     return parseInt(
         today.getFullYear() + "" 
         + tempMonth + "" 
