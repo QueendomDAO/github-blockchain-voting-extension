@@ -3,7 +3,7 @@ function getRequest(url) {
         method: 'GET', // *GET, POST, PUT, DELETE, etc.
         headers: new Headers({
             'User-agent': 'Mozilla/4.0 Custom User Agent',
-            "Authorization": "Bearer " + github_token,
+            "Authorization": "Bearer " + user.getToken(),
         }),
     })
     .then(response => response.json()) //Converting the response to a JSON object

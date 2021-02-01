@@ -1,8 +1,8 @@
-// const client_id = "Iv1.07743fea85c47be2";
-// const client_secret = "8136df7bf962a19ff7557759974e86669ce121a9";
+ const client_id = "Iv1.07743fea85c47be2";
+ const client_secret = "8136df7bf962a19ff7557759974e86669ce121a9";
 
-const client_id = "Iv1.6b86b6e53dd67414";
-const client_secret = "8c4eabc09c8b2bc504b50b795c7f8308453650c6";
+//const client_id = "Iv1.6b86b6e53dd67414";
+//const client_secret = "8c4eabc09c8b2bc504b50b795c7f8308453650c6";
 
 window.onload = function () {
 
@@ -39,18 +39,15 @@ function init() {
         .then(response => response.json())
         .then(res => {
             github_token = token;
-            console.log(res);
             username = res['login'];
+            user = new User(res['login'], '', false);
 
             const account = web3.eth.accounts.privateKeyToAccount('0x' + private_key);
             web3.eth.accounts.wallet.add(account);
             web3.eth.defaultAccount = account.address;
 
-            console.log("AHHHH");
             setTimeout(() => {
-                console.log(web3);
                 initLayout();
-                console.log("dasasdadsasd");
             }, 750);
         });
 }

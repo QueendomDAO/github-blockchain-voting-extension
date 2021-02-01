@@ -83,6 +83,63 @@
       </div>
     </div>
 
+    <!------------------------------------------ Repository Information Menu ------------------------------------------>
+
+    <div id="repoInfoCard" class="card">
+      <div class="repository-settings-container">
+
+        <div class="header-container header-container-fixed">
+          <div>
+            <img src="./assets/repository.png">
+          </div>
+          <div>
+            <h2 class="header">Repository actions</h2>
+          </div>
+        </div>
+
+        <div class="repository-settings-actions">
+          <div id="showIssuesBtn" class="dark-btn">
+            <span>Issues</span>
+          </div>
+
+          <div id="showPullsBtn" class="dark-btn">
+            <span>Pull-Requests</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="dark-btn backBtn">
+            <span>Back</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!------------------------------------------ Issue List ------------------------------------------>
+
+    <div id="issueCard" class="card">
+      <div class="issue-container">
+
+        <div class="header-container header-container-fixed">
+          <div>
+            <img src="./assets/repository.png">
+          </div>
+          <div>
+            <h2 id="issueHeader" class="header">Issues</h2>
+          </div>
+        </div>
+
+        <div id="issueList" class="issue-list">
+
+        </div>
+        <div>
+          <div class="dark-btn backBtn">
+            <span>Back</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!------------------------------------------ Polls List ------------------------------------------>
 
     <!-- Polls Requests -->
@@ -154,30 +211,30 @@
     </div>
 
 
-        <!------------------------------------------ Pollable List ------------------------------------------>
+    <!------------------------------------------ Pollable List ------------------------------------------>
 
-        <div id="mergeCard" class="card">
-          <div class="mergeable-container">
-    
-            <div class="header-container header-container-variable">
-              <div>
-                <img src="./assets/github.png">
-              </div>
-              <div>
-                <h2 id="mergeableHeader" class="header">Mergeable Requests</h2>
-              </div>
-            </div>
-    
-            <div id="mergeList" class="mergeable-list">
-    
-            </div>
-            <div>
-              <div class="dark-btn backBtn">
-                <span>Back</span>
-              </div>
-            </div>
+    <div id="mergeCard" class="card">
+      <div class="mergeable-container">
+
+        <div class="header-container header-container-variable">
+          <div>
+            <img src="./assets/github.png">
+          </div>
+          <div>
+            <h2 id="mergeableHeader" class="header">Mergeable Requests</h2>
           </div>
         </div>
+
+        <div id="mergeList" class="mergeable-list">
+
+        </div>
+        <div>
+          <div class="dark-btn backBtn">
+            <span>Back</span>
+          </div>
+        </div>
+      </div>
+    </div>
 
 
     <!------------------------------------------ Wallet ------------------------------------------>
@@ -239,7 +296,8 @@
 
   </div>
 
-
+  <script src="entities/issue.github.entity.js"></script>
+  <script src="entities/user.entity.js"></script>
   <script src="web3.min.js"> </script>
   <script src="helper.js"></script>
   <script src="contract.js"></script>

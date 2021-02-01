@@ -8,9 +8,9 @@ var contract_address = '0xCa3a8f28f2190E297Ac50906310315aDD21E6303';
 var manager_contract_address = '0xFf2cCF705A3083E302BF8fc9Edb86980AD0687dc';
 let bytecode = '608060405234801561001057600080fd5b5060006040518060800160405280600081526020016001151581526020017328cfba097ff9bb9d904471c493b032df45b9f95373ffffffffffffffffffffffffffffffffffffffff168152602001600081525090806001815401808255809150506001900390600052602060002090600302016000909190919091506000820151816000015560208201518160010160006101000a81548160ff02191690831515021790555060408201518160010160016101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555060608201518160020155505061039d806101186000396000f3fe60806040526004361061003f5760003560e01c8063267e6529146100445780635ab77cb31461006f5780635df81330146100a757806361ebccfd14610123575b600080fd5b34801561005057600080fd5b5061005961017d565b6040518082815260200191505060405180910390f35b6100a56004803603604081101561008557600080fd5b810190808035906020019092919080359060200190929190505050610189565b005b3480156100b357600080fd5b506100e0600480360360208110156100ca57600080fd5b8101908080359060200190929190505050610212565b6040518085815260200184151581526020018373ffffffffffffffffffffffffffffffffffffffff16815260200182815260200194505050505060405180910390f35b61017b6004803603606081101561013957600080fd5b8101908080351515906020019092919080359060200190929190803573ffffffffffffffffffffffffffffffffffffffff16906020019092919050505061027c565b005b60008080549050905090565b6000828154811061019657fe5b906000526020600020906003020160010160019054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166108fc829081150290604051600060405180830381858888f1935050505015801561020d573d6000803e3d6000fd5b505050565b6000818154811061021f57fe5b90600052602060002090600302016000915090508060000154908060010160009054906101000a900460ff16908060010160019054906101000a900473ffffffffffffffffffffffffffffffffffffffff16908060020154905084565b60006040518060800160405280600080549050815260200185151581526020018373ffffffffffffffffffffffffffffffffffffffff1681526020018481525090806001815401808255809150506001900390600052602060002090600302016000909190919091506000820151816000015560208201518160010160006101000a81548160ff02191690831515021790555060408201518160010160016101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555060608201518160020155505050505056fea2646970667358221220a2e63af99aae6a38190a0a194bce878f250938496b597e4fbcb80b800cab721b64736f6c63430007010033';
 var github_token = '';
-var developer_token = '';
 var username = '';
 
+var user;
 
 //                                   init web3js
 //-------------------------------------------------------------------------------------------
@@ -57,6 +57,7 @@ function initLayout() {
 var reposList = document.getElementById("repoList");
 var pollsList = document.getElementById("pollsList");
 var pullList = document.getElementById("pullList");
+var issueList = document.getElementById("issueList");
 var mergeList = document.getElementById("mergeList");
 
 // references to all the back buttons
@@ -75,7 +76,9 @@ var cardArray = [
     document.getElementById("walletCard"),
     document.getElementById("credCard"),
     document.getElementById("loginCard"),
-    document.getElementById("mergeCard")
+    document.getElementById("mergeCard"),
+    document.getElementById("repoInfoCard"),
+    document.getElementById("issueCard"),
 ];
 
 // static view buttons (the buttons that are not generted dynamically)
@@ -99,7 +102,6 @@ document.getElementById("gotoRepoBtn").addEventListener("click", async function 
     console.log(document.getElementById("public-key").textContent);
     console.log(document.getElementById("private-key").textContent);
 
-    console.log(developer_token);
 
     var tempBalance = await getWalletBalance(web3, getPublicKey());
     console.log(tempBalance);
@@ -107,13 +109,11 @@ document.getElementById("gotoRepoBtn").addEventListener("click", async function 
     var tempSk = document.getElementById("private-key").textContent;
     
     await chrome.storage.sync.get("token", function (data) {
-        developer_token=data.token;
-        console.log(developer_token);
-        console.log(developer_token.length);
-         if(tempBalance<0.1 || tempPk.length <=0 || tempSk.length <=0 || developer_token.length <=0){//TODO correct length
+
+         /* if(tempBalance<0.1 || tempPk.length <=0 || tempSk.length <=0 || developer_token.length <=0){//TODO correct length
             alert("Fehler: Fehlende Daten oder nicht genug ETH");
             gotoCard(0);
-         }
+         } */
      });
 
 
@@ -146,6 +146,54 @@ async function initWalletView() {
 
 //                          Events (generate, get, build up, ... something)
 //-------------------------------------------------------------------------------------------
+
+// load or reloard the polls list (the poll elements)
+async function goToRepositorySettings(repository, index) {
+    showLoader();
+
+    document.getElementById("pollsHeader").innerHTML = "Polls of " + formateName(repository.name);
+    const response = await getRequest('https://api.github.com/repos/' + repository['owner']['login'] + '/' + repository['name'] + '/collaborators');
+
+    user.setAdmin(
+        response.some(entry => entry['login'] == username) ?
+        response.find(entry => entry['login'] == username)['permissions']['admin']
+        : false
+    );
+
+    console.log(user);
+
+    gotoCard(index);
+
+    let showIssuesBtn = document.getElementById("showIssuesBtn");
+    showIssuesBtn.addEventListener("click", async function () {
+        showLoader();
+        gotoCard(9);
+
+        issueList.textContent = '';
+        document.getElementById("issueHeader").textContent = "Open issues of " + formateName(repository.name);
+
+        const issues_response = await getRequest('https://api.github.com/repos/' + repository['owner']['login'] + '/' + repository['name'] + '/issues');
+        console.log(issues_response);
+        for(let i = 0; i < issues_response.length; i++) {
+            if(issues_response[0]['state']) {
+                const issue = new IssueGithub(issues_response[0]['id'], issues_response[0]['title'], issues_response[0]['url']);
+                UIappendIssues(issue, repository);
+            }
+        }
+        hideLoader();
+    });
+
+    let showPullsBtn = document.getElementById("showPullsBtn");
+    showPullsBtn.addEventListener("click", function () {
+        alert('yo');
+        gotoCard(3);
+        UIappendPollable(pollables, repository);
+    });
+
+    hideLoader();
+}
+
+
 
 // load or reloard the polls list (the poll elements)
 async function goToPollsEvent(repository, index) {
@@ -191,8 +239,8 @@ document.getElementById("btn-gen-keys").addEventListener("click", () => {
 
 document.getElementById("save-btn").addEventListener("click", () => {
     showLoader();
-    developer_token = document.getElementById("cred-token").value;
-    chrome.storage.sync.set({ token: developer_token });
+/*     developer_token = document.getElementById("cred-token").value;
+    chrome.storage.sync.set({ token: developer_token }); */
     gotoCard(0);
     hideLoader();
 })
@@ -209,7 +257,8 @@ function UIapppendRepo(repository) {
 
     repoElement.classList.add("repository-element");
     repoElement.addEventListener("click", function () {
-        goToPollsEvent(repository, 1);
+        goToRepositorySettings(repository, 8)
+        //goToPollsEvent(repository, 1);
     });
 
     repoElement.appendChild(repoName);
@@ -235,9 +284,6 @@ function UIaddPoll(time, name, url, index, repository, contract) {
     var year = time.substring(0,4);
     var hours = time.substring(time.length-4,time.length-2);
     var minutes = time.substring(time.length-2,time.length);
-    console.log(time);
-    console.log(hours);
-    console.log(year)
     pollDate.appendChild(generateSpan(day+"."+month+"."+year+" "+hours+":"+minutes));
 
     // poll name view
@@ -292,15 +338,15 @@ function UIupdateForVote(element_id, buttons_id, decision, repository, contract)
 
     let sendButton = generateButton("link-button", null, "./assets/send.png");
     sendButton.addEventListener("click", function () {
-        votingInputVal=Number(votingInput.value*0.01);
+        votingInputVal=Number(votingInput.value * 0.001);
         //if(Number(votingInput.value) >= 50000000000000 && Number(votingInput.value) < 5000000000000000) {
-        if(Number(votingInputVal) >= 0.000005 && Number(votingInputVal) < 0.005) {
+        if(Number(votingInput.value) >= 1 && Number(votingInput.value) <= 10) {
             addVote(contract['poll_contract_address'], Number(votingInputVal)*1000000000000000000, decision).then(response => {//TODO note for *100 multiplier?
                 hideLoader();
                 goToPollsEvent(repository, 0);
             });
         } else {
-            alert("The minimum stake-amount should be over 0.00005 and the maximum under 0.005 ETH");
+            alert("The minimum stake-amount should be over 0.001 and the maximum under 0.01 ETH");
         }
     });
 
@@ -344,6 +390,22 @@ function UIsetPollableAndMergeableNumber(pollables, mergeables, repository) {
 //                   generate dynamic poll-vote elements (gas input view)
 //-------------------------------------------------------------------------------------------
 
+function UIappendIssues(issue, repository) {
+    let issueElement = document.createElement("div");
+    let issueTitle = generateSpan(formateName(issue.getTitle()));
+
+    issueElement.classList.add("issue-element");
+    issueElement.addEventListener("click", function () {
+        goToRepositorySettings(repository, 8)
+        //goToPollsEvent(repository, 1);
+    });
+
+    issueElement.appendChild(issueTitle);
+    issueList.appendChild(issueElement);
+}
+
+
+
 function UIappendPollable(pollables, repository) {
     pullList.textContent = '';
     document.getElementById("pollableHeader").textContent = "Pollable pull-requests of " + formateName(repository.name);
@@ -360,7 +422,7 @@ function UIappendPollable(pollables, repository) {
         var pollBtn = generateDiv("link-button", null);
         pollBtn.appendChild(generateSpan("Create poll"));
         pollBtn.addEventListener("click", function () {
-            addPoll({"rpId": repository.id, "pqId": pollable_pq['id'], "value": 0, "time": generatePollEnd(9) }).then(response => {
+            addPoll({"rpId": repository.id, "pqId": pollable_pq['id'], "value": 0, "time": generatePollEnd(3) }).then(response => {
                 goToPollsEvent(repository, 0);
             }).catch(err => {
                 console.log("blockchain_error", err);
