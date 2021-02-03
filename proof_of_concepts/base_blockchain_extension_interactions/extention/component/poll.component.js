@@ -5,10 +5,9 @@ function generatePollComponent(poll, repository) {
     let pollElement = document.createElement("div");
     let pollTitle = generateSpan(formateName(poll.getTitle()), "");
     
-    pollElement.classList.add("poll-element");
+    pollElement.classList.add("repository-element");
     pollElement.addEventListener("click", function () {
         initPollAction(poll, repository);
-        //initPollAction(poll, repository);
     });
     
     pollElement.appendChild(pollTitle);

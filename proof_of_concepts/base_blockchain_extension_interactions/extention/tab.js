@@ -38,7 +38,6 @@ function init() {
     })
         .then(response => response.json())
         .then(res => {
-            github_token = token;
             username = res['login'];
             user = new User(res['login'], '', false);
 
