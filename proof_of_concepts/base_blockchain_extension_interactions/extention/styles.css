@@ -119,7 +119,7 @@ span {
 
 .repository-element {
     display: grid;
-    grid-template-columns: 80% 20%;
+    grid-template-columns: 1fr;
     background: #24292e;
     color: white;
     width: 80%;
@@ -133,16 +133,6 @@ span {
     font-size: 12px;
     font-weight: 200;
     padding-top: 12px;
-}
-
-.repository-element > div {
-    border-radius: 50%;
-    background: #e11f1f;
-    width: 60%;
-    height: 55%;
-    padding-top: 9px;
-    margin-top: 4px;
-    display: block;
 }
 
 /* ------------------------ ISSUE CONTEXT ---------------------------- */

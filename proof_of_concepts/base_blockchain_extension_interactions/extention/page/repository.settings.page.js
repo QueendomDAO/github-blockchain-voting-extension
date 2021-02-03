@@ -22,8 +22,6 @@ async function initRepositorySettings(repository) {
     showPullsBtn.removeEventListener("click", () =>{});
     showPullsBtn.addEventListener("click", function () {
         initPollList(repository);
-        //gotoCard(3);
-        //UIappendPollable(pollables, repository);
     });
 
     hideLoader();
