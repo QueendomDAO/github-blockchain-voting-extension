@@ -6,8 +6,6 @@ async function initPollList(repository) {
         pollsList.removeChild(pollsList.lastChild);
     }
 
-    document.getElementById("pollsHeader").innerHTML = "Polls of " + formateName(repository.name);
-
     const polls = await getPolls(repository);
     console.log(polls);
     polls.forEach(poll => {

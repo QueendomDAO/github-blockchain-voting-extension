@@ -2,7 +2,6 @@ async function initRepositorySettings(repository) {
     showLoader();
     
     gotoCard(7);
-    //document.getElementById("pollsHeader").innerHTML = "Polls of " + formateName(repository.name);
     const response = await getRequest('https://api.github.com/repos/' + repository['owner']['login'] + '/' + repository['name'] + '/collaborators');
 
     user.setAdmin(

@@ -6,7 +6,6 @@ async function initIssueList(repository) {
         issuesList.removeChild(issuesList.lastChild);
     }
 
-    document.getElementById("issueHeader").textContent = "Open issues of " + formateName(repository.name);
     const issues = await getIssues(repository);
     console.log(issues);
     issues.forEach(issue => {

@@ -140,9 +140,7 @@ async function initWalletView() {
 async function goToPollsEvent(repository, index) {
     showLoader();
 
-    document.getElementById("pollsHeader").innerHTML = "Polls of " + formateName(repository.name);
     gotoCard(index);
-
     let response = await initContractPollsAndPollables(repository);
     UIsetPollableAndMergeableNumber(response.pollables, response.mergeables, repository);
 
