@@ -1,7 +1,7 @@
 async function initRepositorySettings(repository) {
     showLoader();
     
-    gotoCard(7);
+    openNewView(document.getElementById("repoInfoCard"));
     const response = await getRequest('https://api.github.com/repos/' + repository['owner']['login'] + '/' + repository['name'] + '/collaborators');
 
     user.setAdmin(

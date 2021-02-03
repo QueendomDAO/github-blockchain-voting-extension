@@ -1,6 +1,6 @@
 async function initPollList(repository) {
     showLoader();
-    gotoCard(1);
+    openNewView(document.getElementById("pollsCard"));
 
     while (pollsList.firstChild) {
         pollsList.removeChild(pollsList.lastChild);

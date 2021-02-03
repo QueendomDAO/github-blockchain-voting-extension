@@ -1,5 +1,5 @@
 async function initPollAction(poll, repository) { 
-    gotoCard(10);
+    openNewView(document.getElementById("pollActionCard"));
 
     let single_poll_contract = new web3.eth.Contract(poll_contract_abi, poll.getContract());
     let claimer = await single_poll_contract.methods.claimer().call();

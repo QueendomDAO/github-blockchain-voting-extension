@@ -21,7 +21,7 @@ account = web3.eth.accounts.privateKeyToAccount(private_key);
 //-------------------------------------------------------------------------------------------
 
 window.addEventListener("load", function () {
-    gotoCard(5);
+    openNewView(document.getElementById("loginCard"));
 });
 
 function initLayout() {
@@ -40,11 +40,11 @@ function initLayout() {
             document.getElementById("account-balance").textContent = (parseInt(balance) / (10 ** 18)) + " ETH";
         }
 
-        gotoCard(0);
+        openNewView(document.getElementById("menuCard"));
         hideLoader();
 
     }).catch(err => {
-        gotoCard(5);
+        openNewView(document.getElementById("loginCard"));
     });
 }
 
@@ -57,7 +57,6 @@ var mergeList = document.getElementById("mergeList");
 // references to all the back buttons
 var backBtns = document.getElementsByClassName("backBtn");
 
-
 //                          layout-setting
 //-------------------------------------------------------------------------------------------
 
@@ -69,7 +68,6 @@ var cardArray = [
     document.getElementById("walletCard"),
     document.getElementById("credCard"),
     document.getElementById("loginCard"),
-    document.getElementById("mergeCard"),
     document.getElementById("repoInfoCard"),
     document.getElementById("issuesCard"),
     document.getElementById("issueActionCard"),
@@ -77,26 +75,29 @@ var cardArray = [
 ];
 
 // static view buttons (the buttons that are not generted dynamically)
-document.getElementById("gotoCredBtn").addEventListener("click", function () { gotoCard(4) });
-//document.getElementById("cred-btn").addEventListener("click", function () { gotoCard(5) });
+document.getElementById("gotoCredBtn").addEventListener("click", function () { openNewView(document.getElementById("credCard")) });
 document.getElementById("gotoWalletBtn").addEventListener("click", function () { initWalletView() });
-//document.getElementById("wallet-btn").addEventListener("click", function () { initWalletView() });
-
 
 document.getElementById("gotoRepoBtn").addEventListener("click", async function () {
     showLoader();
 
-    gotoCard(2);
-    let repositories = await getRequest('https://api.github.com/users/' + user.getUsername() + '/starred');
-    repositories.forEach(repository => {
-        UIapppendRepo(repository);
-    });
+    let balance = await web3.eth.getBalance(getPublicKey());
+    if(balance > 100000000000000000 ) {
+        openNewView(document.getElementById("repoCard"));
+        let repositories = await getRequest('https://api.github.com/users/' + user.getUsername() + '/starred');
+        repositories.forEach(repository => {
+            UIapppendRepo(repository);
+        });
+    } else {
+        hideLoader();
+        alert("Your account balance is under 0.1 ETH, please add more ETH to your balance!");
+    }
     
     await chrome.storage.sync.get("token", function (data) {
 
          /* if(tempBalance<0.1 || tempPk.length <=0 || tempSk.length <=0 || developer_token.length <=0){//TODO correct length
             alert("Fehler: Fehlende Daten oder nicht genug ETH");
-            gotoCard(0);
+            openNewView(document.getElementById("menuCard"));
          } */
      });
 
@@ -107,7 +108,7 @@ document.getElementById("gotoRepoBtn").addEventListener("click", async function 
 
 // go back to the last (currently first page of the extension)
 for (let i = 0; i < backBtns.length; i++) {
-    backBtns[i].addEventListener("click", function () { gotoCard(0) });
+    backBtns[i].addEventListener("click", function () { openNewView(document.getElementById("menuCard")) });
 }
 
 // generic navigation function
@@ -130,29 +131,10 @@ async function initWalletView() {
     showLoader();
 
     document.getElementById("account-balance").textContent = await getWalletBalance(web3, getPublicKey());
-    gotoCard(3);
+    openNewView(document.getElementById("walletCard"));
 
     hideLoader();
 }
-
-//                          Events (generate, get, build up, ... something)
-//-------------------------------------------------------------------------------------------
-
-// load or reloard the polls list (the poll elements)
-async function goToPollsEvent(repository, index) {
-    showLoader();
-
-    gotoCard(index);
-    let response = await initContractPollsAndPollables(repository);
-    UIsetPollableAndMergeableNumber(response.pollables, response.mergeables, repository);
-
-    for (let i = 0; i < response.contracts.length; i++) {
-        UIaddPoll(response.contracts[i]["timestamp"], response.contracts[i]["pqTitle"], response.contracts[i]["pqLink"], i, repository, response.contracts[i]);
-    }
-
-    hideLoader();
-}
-
 
 //                          wallet management
 //-------------------------------------------------------------------------------------------
@@ -182,7 +164,7 @@ document.getElementById("save-btn").addEventListener("click", () => {
     showLoader();
 /*     developer_token = document.getElementById("cred-token").value;
     chrome.storage.sync.set({ token: developer_token }); */
-    gotoCard(0);
+    openNewView(document.getElementById("menuCard"));
     hideLoader();
 })
 

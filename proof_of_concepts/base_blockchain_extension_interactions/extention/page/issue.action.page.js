@@ -9,8 +9,8 @@ async function initIssueAction(issue, repository) {
         document.getElementById('claimIssueBtn').style.display = "block";
     }
 
-    gotoCard(9);
-
+    openNewView(document.getElementById("issueActionCard"));
+    
     document.getElementById('createBountyBtn').addEventListener("click", async function() {
         showLoader();
         const published_contract = await createIssueContract();
