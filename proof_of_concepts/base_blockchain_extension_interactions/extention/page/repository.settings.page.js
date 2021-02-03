@@ -1,10 +1,8 @@
-var issueHandler = function(repository) { initIssueList(repository) };
-
-async function initRepositorySettings(repository, index) {
+async function initRepositorySettings(repository) {
     showLoader();
     
-    gotoCard(index);
-    document.getElementById("pollsHeader").innerHTML = "Polls of " + formateName(repository.name);
+    gotoCard(7);
+    //document.getElementById("pollsHeader").innerHTML = "Polls of " + formateName(repository.name);
     const response = await getRequest('https://api.github.com/repos/' + repository['owner']['login'] + '/' + repository['name'] + '/collaborators');
 
     user.setAdmin(
@@ -14,14 +12,18 @@ async function initRepositorySettings(repository, index) {
     );
 
     console.log(user);
-    let showIssuesBtn = document.getElementById("showIssuesBtn");
-    showIssuesBtn.addEventListener("click", issueHandler(repository), false);
+    var showIssuesBtn = document.getElementById("showIssuesBtn");
+    showIssuesBtn.removeEventListener("click", () => {console.log("Listerner removed")});
+    showIssuesBtn.addEventListener("click", function() {
+        initIssueList(repository);
+    });
 
     let showPullsBtn = document.getElementById("showPullsBtn");
     showPullsBtn.removeEventListener("click", () =>{});
     showPullsBtn.addEventListener("click", function () {
-        gotoCard(3);
-        UIappendPollable(pollables, repository);
+        initPollList(repository);
+        //gotoCard(3);
+        //UIappendPollable(pollables, repository);
     });
 
     hideLoader();

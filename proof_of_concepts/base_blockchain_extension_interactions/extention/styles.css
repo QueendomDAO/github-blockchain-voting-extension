@@ -219,120 +219,6 @@ span {
 
 .poll-element {
     display: grid;
-    grid-template-columns: 50% 50%;
-    grid-template-rows: 35% 1fr;
-    background: #24292e;
-    color: white;
-    width: 90%;
-    height: 60px;
-    margin: 5px auto;
-    border-radius: 10px;
-}
-
-.poll-date {
-    grid-area: 1 / 1 / 2 / 3;
-    text-align: left;
-    display: block;
-    padding-left: 20px;
-    color: #ff6464;
-}
-
-.poll-date > span {
-    display: block;
-    padding-top: 2.5px;
-}
-
-.poll-name {
-    grid-area: 2 / 1 / 3 / 2;
-}
-
-.poll-name > span {
-    display: block;
-    padding-top: 7.5px;
-}
-
-.poll-buttons {
-    grid-area: 2 / 2 / 3 / 3;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    row-gap: 5px;
-}
-
-.poll-buttons > div {
-    width: 80%;
-    height: 80%;
-    border-radius: 5px;
-    margin-top: 3px;
-}
-
-.poll-buttons > div > img {
-    width: 20px;
-    height: 20px;
-    display: block;
-    margin: 0px auto;
-    padding-top: 7px;
-}
-
-.poll-voting {
-    grid-area: 2 / 2 / 3 / 3;
-    display: grid;
-    grid-template-columns: 50% 1fr 1fr;
-    row-gap: 5px;
-}
-
-.poll-voting > div {
-    width: 80%;
-    height: 80%;
-    border-radius: 5px;
-    margin-top: 3px;
-}
-
-.poll-voting > div > img {
-    width: 20px;
-    height: 20px;
-    display: block;
-    margin: 0px auto;
-    padding-top: 7px;
-}
-
-.poll-voting > input {
-    height: 60%;
-    width: 80%;
-    margin: 4px auto;
-}
-
-.accept-button {
-    background: #4aec2f;
-    color: white;
-}
-
-.decline-button {
-    background: #e11f1f;
-    color: white;
-}
-
-.link-button {
-    background: #999e98;
-    color: white;
-}
-
-/* ------------------------ Pollable CONTEXT ---------------------------- */
-
-.pollable-container {
-    width: 100%;
-    height: 100%;
-    display: grid;
-    grid-template-rows: 15% 1fr 20%;
-}
-
-.pollable-list {
-    width: 100%;
-    height: 300px;
-    overflow-y: scroll;
-}
-
-.pollable-element {
-    display: grid;
     grid-template-columns: 1fr 1fr;
     background: #24292e;
     color: white;
@@ -342,12 +228,12 @@ span {
     border-radius: 10px;
 }
 
-.pollable-element > div > span {
+.poll-element > div > span {
     display: block;
     padding-top: 20px;
 }
 
-.pollable-element > div > div {
+.poll-element > div > div {
     width: 70%;
     height: 50%;
     margin: 15px auto;
@@ -355,7 +241,7 @@ span {
     border-radius: 5px;
 }
 
-.pollable-element > div > div > span {
+.poll-element > div > div > span {
     display: block;
     padding-top: 7.5px;
 }

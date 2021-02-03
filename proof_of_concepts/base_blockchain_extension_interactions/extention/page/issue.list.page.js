@@ -1,6 +1,6 @@
 async function initIssueList(repository) {
     showLoader();
-    gotoCard(9);
+    gotoCard(8);
 
     while (issuesList.firstChild) {
         issuesList.removeChild(issuesList.lastChild);

@@ -103,7 +103,7 @@
           </div>
 
           <div id="showPullsBtn" class="dark-btn">
-            <span>Pull-Requests</span>
+            <span>Polls</span>
           </div>
         </div>
 
@@ -140,7 +140,7 @@
       </div>
     </div>
 
-    <!------------------------------------------ Issue List ------------------------------------------>
+    <!------------------------------------------ Issue Action ------------------------------------------>
 
     <div id="issueActionCard" class="card">
       <div class="issues-container">
@@ -168,11 +168,10 @@
           </div>
         </div>
 
-        </div>
-        <div>
-          <div class="dark-btn backBtn">
-            <span>Back</span>
-          </div>
+      </div>
+      <div>
+        <div class="dark-btn backBtn">
+          <span>Back</span>
         </div>
       </div>
     </div>
@@ -183,51 +182,7 @@
     <div id="pollsCard" class="card">
       <div class="poll-container">
 
-        <div class="header-container header-container-variable">
-          <div>
-            <img src="./assets/poll.png">
-          </div>
-          <div>
-            <h2 id="pollsHeader" class="header"></h2>
-          </div>
-        </div>
-
-        <div id="pollsList" class="poll-list"></div>
-
-        <div>
-          <div id="showPollsBtn" class="dark-btn show-polls-btn">
-            <span>
-              Show pollable pull-requests
-            </span>
-            <div>
-              0
-            </div>
-          </div>
-
-          <div id="showMergeBtn" class="dark-btn show-polls-btn">
-            <span>
-              Show mergeable pull-requests
-            </span>
-            <div>
-              0
-            </div>
-          </div>
-
-          <div class="dark-btn backBtn">
-            <span>
-              Back
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!------------------------------------------ Pollable List ------------------------------------------>
-
-    <div id="pullCard" class="card">
-      <div class="pollable-container">
-
-        <div class="header-container header-container-variable">
+        <div id="pollsHeader" class="header-container header-container-variable">
           <div>
             <img src="./assets/pollable.png">
           </div>
@@ -236,13 +191,46 @@
           </div>
         </div>
 
-        <div id="pullList" class="pollable-list">
+        <div id="pollsList" class="poll-list">
 
         </div>
         <div>
           <div class="dark-btn backBtn">
             <span>Back</span>
           </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!------------------------------------------ Poll Action ------------------------------------------>
+
+    <div id="pollActionCard" class="card">
+      <div class="poll-container">
+
+        <div class="header-container header-container-fixed">
+          <div>
+            <img src="./assets/repository.png">
+          </div>
+          <div>
+            <h2 id="pollHeader" class="header">Poll-Overview</h2>
+          </div>
+        </div>
+
+        <div class="repository-settings-actions">
+          <div id="submitPullRequestBtn" class="dark-btn">
+            <span>Submit Pull Request</span>
+          </div>
+
+          <div id="votePullRequestBtn" class="dark-btn">
+            <span>Voting on Pull-Request</span>
+          </div>
+        </div>
+
+      </div>
+      <div>
+        <div class="dark-btn backBtn">
+          <span>Back</span>
         </div>
       </div>
     </div>
@@ -333,6 +321,7 @@
 
   </div>
 
+  <script src="entities/poll.entity.js"></script>
   <script src="entities/issue.entity.js"></script>
   <script src="entities/user.entity.js"></script>
 
@@ -345,11 +334,15 @@
   <script src="services/issue.service.js"></script>
   <script src="services/poll.service.js"></script>
 
+  <script src="component/poll.component.js"></script>
   <script src="component/issue.component.js"></script>
 
   <script src="page/repository.settings.page.js"></script>
   <script src="page/issue.list.page.js"></script>
   <script src="page/issue.action.page.js"></script>
+  <script src="page/poll.list.page.js"></script>
+  <script src="page/poll.action.page.js"></script>
+
 
 
   <script src="popup.js"></script>

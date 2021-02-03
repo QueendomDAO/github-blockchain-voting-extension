@@ -3,13 +3,10 @@ function getIssues(repository) {
         let issues = [];
         let issues_blockchain = [];
         const issues_github = await getRequest('https://api.github.com/repos/' + repository['owner']['login'] + '/' + repository['name'] + '/issues');
-        console.log(issues_github);
         const issue_length = await manager_contract.methods.getPollsLength().call();
-        console.log(issue_length);
 
         for (let i = 0; i < issue_length; i++) {
             await manager_contract.methods.polls(i).call().then(poll => {
-                console.log(poll);
                 issues_blockchain.push(poll);
             });
         }
@@ -64,14 +61,14 @@ function createIssueContract() {
 
 function appendIssueContract(address, issue, repository, deliveryTime, votingTime) {
     return new Promise((resolve, reject) => {
-        manager_contract.methods.addPoll(1, issue.getId(), 1, address, "123", "234").estimateGas({ from: getPublicKey() }).then(gas => {
+        manager_contract.methods.addPoll(1, issue.getId(), 0, address, "123", "234").estimateGas({ from: getPublicKey() }).then(gas => {
 
             const tx = {
                 from: getPublicKey(),
                 to: manager_contract_address,
                 contractAddress: manager_contract_address,
                 gas: gas,
-                data: manager_contract.methods.addPoll(1, issue.getId(), 1, address, "123", "234").encodeABI()
+                data: manager_contract.methods.addPoll(1, issue.getId(), 0, address, "123", "234").encodeABI()
             };
 
             const signPromise = web3.eth.accounts.signTransaction(tx, getPrivateKey());

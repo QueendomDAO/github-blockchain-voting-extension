@@ -9,7 +9,7 @@ async function initIssueAction(issue, repository) {
         document.getElementById('claimIssueBtn').style.display = "block";
     }
 
-    gotoCard(10);
+    gotoCard(9);
 
     document.getElementById('createBountyBtn').addEventListener("click", async function() {
         showLoader();
