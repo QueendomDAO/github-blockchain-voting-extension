@@ -1,3 +1,5 @@
+var issueHandler = function(repository) { initIssueList(repository) };
+
 async function initRepositorySettings(repository, index) {
     showLoader();
     
@@ -13,11 +15,10 @@ async function initRepositorySettings(repository, index) {
 
     console.log(user);
     let showIssuesBtn = document.getElementById("showIssuesBtn");
-    showIssuesBtn.addEventListener("click", async function () {
-        initIssueList(repository);
-    });
+    showIssuesBtn.addEventListener("click", issueHandler(repository), false);
 
     let showPullsBtn = document.getElementById("showPullsBtn");
+    showPullsBtn.removeEventListener("click", () =>{});
     showPullsBtn.addEventListener("click", function () {
         gotoCard(3);
         UIappendPollable(pollables, repository);

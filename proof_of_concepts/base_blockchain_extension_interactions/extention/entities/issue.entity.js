@@ -1,10 +1,12 @@
 class Issue {
-    constructor(id, title, url, saveable, contract) {
+    constructor(id, pollId, title, url, saveable, contract) {
         this.id = id;
+        this.pollId = pollId;
         this.title = title;
         this.url = url;
         this.saveable = saveable;
         this.contract = contract;
+
     }
 
     setId(id) {
@@ -13,6 +15,14 @@ class Issue {
 
     getId() {
         return this.id;
+    }
+
+    setPollId(pollId) {
+        this.pollId = pollId;
+    }
+
+    getPollId() {
+        return this.pollId;
     }
 
     setTitle(title) {

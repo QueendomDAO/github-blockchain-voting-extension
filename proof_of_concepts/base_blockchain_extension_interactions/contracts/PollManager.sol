@@ -22,8 +22,8 @@ contract PollManager {
         polls.push(Poll({id: polls.length, rpId: _rpId, issueId: _issueId, pqId: _pqId, poll_contract_address: addr, state: 1, deliverTimestamp: _deliverTimestamp, votingTimestamp: _votingTimestamp}));
     }
 
-    function closePoll(uint256 index) public {
-        polls[index].state = 0;
+    function updatePoll(uint256 index, uint256 state) public {
+        polls[index].state = state;
     }
 
     function getPollsLength() public view returns (uint256) {

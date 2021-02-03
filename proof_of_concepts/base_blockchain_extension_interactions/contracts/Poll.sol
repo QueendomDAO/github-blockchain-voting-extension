@@ -3,6 +3,7 @@ pragma solidity >=0.4.22 <0.8.0;
 contract Poll {
     struct Claimer {
         address payable claimer;
+        string username;
         uint256 weight;
     }
 
@@ -63,8 +64,8 @@ contract Poll {
         bounties.push(Bounty({staker: addr, weight: value}));
     }
 
-    function claimIssue(address payable addr, uint256 value) public payable {
-        claimer = Claimer({claimer: addr, weight: value});
+    function claimIssue(address payable addr, string memory name, uint256 value) public payable {
+        claimer = Claimer({claimer: addr, username: name, weight: value});
     }
 
     function getVotesLength() public view returns (uint256) {
