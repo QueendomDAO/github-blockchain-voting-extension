@@ -372,11 +372,13 @@ span {
     margin: 25px auto;
 }
 
+/* ------------------------ Overlay  ---------------------------- */
+
 .overlay {
     height: 100%;
     width: 100%;
     position: fixed;
-    z-index: 1;
+    z-index: 2;
     left: 0;
     top: 0;
     background-color: rgb(0, 0, 0);
@@ -391,6 +393,199 @@ span {
     display: block;
     padding-top: 40%;
 }
+
+/* ------------------------ Request Modal  ---------------------------- */
+
+.modal {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.9);
+    overflow-x: hidden;
+    transition: 0.5s;
+}
+
+.modal > span {
+    color: white;
+    font-size: 25px;
+    display: block;
+    padding-top: 40%;
+}
+
+
+.request-modal {
+    width: 80%;
+    height: 200px;
+
+    position: fixed;
+    z-index: 2;
+    top: 75px;
+    left: 40px;
+    background: white;
+
+    display: grid;
+    grid-template-rows: 30% 1fr 30%;
+}
+
+.modal-actions {
+    display: grid;
+    grid-template-columns: 1fr 25% 25%;
+}
+
+.request-modal-body > input {
+    width: 80%;
+    display: block;
+    padding: 12px 20px;
+    margin: 8px auto;
+    box-sizing: border-box;
+}
+
+.modal-actions > #cancel-request-modal-btn {
+    grid-area: 1 / 2 / 2 / 3;
+    background: #aeaeb2;
+    height: 30px;
+}
+
+#cancel-request-modal-btn > span {
+    padding-top: 8px;
+}
+
+.modal-actions > #submit-request-modal-btn {
+    grid-area: 1 / 3 / 2 / 4;
+    background: #30d158;
+    height: 30px;
+}
+
+#submit-request-modal-btn > span {
+    padding-top: 8px;
+}
+
+/* ------------------------ Voting Modal  ---------------------------- */
+
+.voting-modal {
+    width: 80%;
+    height: 275px;
+
+    position: fixed;
+    z-index: 2;
+    top: 60px;
+    left: 40px;
+    background: white;
+
+    display: grid;
+    grid-template-rows: 25% 1fr 30%;
+}
+
+.modal-actions {
+    display: grid;
+    grid-template-columns: 1fr 25% 25%;
+}
+
+.voting-modal-body > input {
+    width: 80%;
+    display: block;
+    padding: 12px 20px;
+    margin: 8px auto;
+    box-sizing: border-box;
+}
+
+.modal-actions > #cancel-voting-modal-btn {
+    grid-area: 1 / 2 / 2 / 3;
+    background: #aeaeb2;
+    height: 30px;
+}
+
+#cancel-voting-modal-btn > span {
+    padding-top: 8px;
+}
+
+.modal-actions > #submit-voting-modal-btn {
+    grid-area: 1 / 3 / 2 / 4;
+    background: #30d158;
+    height: 30px;
+}
+
+#submit-voting-modal-btn > span {
+    padding-top: 8px;
+}
+
+
+/* ------------------------ Checkbox  ---------------------------- */
+
+/* The container */
+.container {
+    width: 65%;
+    margin: 0 auto;
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* Hide the browser's default checkbox */
+  .container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+  
+  /* Create a custom checkbox */
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+  }
+  
+  /* On mouse-over, add a grey background color */
+  .container:hover input ~ .checkmark {
+    background-color: #ccc;
+  }
+  
+  /* When the checkbox is checked, add a blue background */
+  .container input:checked ~ .checkmark {
+    background-color: #2196F3;
+  }
+  
+  /* Create the checkmark/indicator (hidden when not checked) */
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  
+  /* Show the checkmark when checked */
+  .container input:checked ~ .checkmark:after {
+    display: block;
+  }
+  
+  /* Style the checkmark/indicator */
+  .container .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+
 
 .card {
     display: none;

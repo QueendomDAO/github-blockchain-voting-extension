@@ -46,20 +46,66 @@ function setPollStateInManager(index, state) {
             const signPromise = web3.eth.accounts.signTransaction(tx, getPrivateKey());
 
             signPromise.then(async (signedTx) => {
-                const sentTx = web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
+                const sentTx = await web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
 
                 console.log(sentTx);
-                console.log('yooo4');
+                resolve(sentTx);
+            }).catch(error => reject(error));
+        }).catch(error => reject(error));
+    });
+}
+
+function submitPullRequest(index, pqId) {
+    return new Promise((resolve, reject) => {
+        manager_contract.methods.submitPullRequest(index, pqId).estimateGas({ from: getPublicKey() }).then(gas => {
+
+            const tx = {
+                from: getPublicKey(),
+                to: manager_contract_address,
+                contractAddress: manager_contract_address,
+                gas: gas,
+                data: manager_contract.methods.submitPullRequest(index, pqId).encodeABI()
+            };
+
+            const signPromise = web3.eth.accounts.signTransaction(tx, getPrivateKey());
+
+            signPromise.then(async (signedTx) => {
+                const sentTx = await web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
+
+                console.log(sentTx);
+                resolve(sentTx);
+            }).catch(error => reject(error));
+        }).catch(error => reject(error));
+    });
+}
+
+
+function addVote(address, stake, descision) {
+    showLoader();
+
+    return new Promise((resolve, reject) => {
+
+        let single_poll_contract = new web3.eth.Contract(poll_contract_abi, address);
+
+        single_poll_contract.methods.vote(descision, stake, getPublicKey()).estimateGas({ from: getPublicKey() }).then(gas => {
+
+            const tx = {
+                from: getPublicKey(),
+                to: address,
+                contractAddress: address,
+                gas: gas,
+                value: stake,
+                data: single_poll_contract.methods.vote(descision, stake, getPublicKey()).encodeABI()
+            };
+
+            const signPromise = web3.eth.accounts.signTransaction(tx, getPrivateKey());
+
+            signPromise.then(async (signedTx) => {
+                const sentTx = await web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
+
+                console.log(sentTx);
                 resolve(sentTx);
 
-                /* sentTx.on("receipt", receipt => {
-                    console.log("Updated the poll with the id " + index + " to the state " + state);
-                    resolve(receipt);
-                });
-                sentTx.on("error", err => {
-                    console.log("Could not update the poll with the id " + index + " to the state " + state);
-                    reject(err);
-                }); */
             }).catch(error => reject(error));
         }).catch(error => reject(error));
     });

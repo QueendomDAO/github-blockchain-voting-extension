@@ -26,6 +26,10 @@ contract PollManager {
         polls[index].state = state;
     }
 
+    function submitPullRequest(uint256 index, uint256 pqId) public {
+        polls[index].pqId = pqId;
+    }
+
     function getPollsLength() public view returns (uint256) {
         return polls.length;
     }

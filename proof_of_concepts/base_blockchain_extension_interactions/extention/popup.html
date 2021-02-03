@@ -7,7 +7,7 @@
 
 <body>
 
-  <div>
+  <div id="deVote-container">
     <!-- Login -->
     <div id="loginCard" class="card">
       <div class="login-container">
@@ -319,6 +319,50 @@
     </div>
 
 
+    <!-- <div class="modal-window overlay">
+      <div class="request-modal">
+        <div class="request-modal-title">
+          <h2>Submit Pull-Request</h2>
+        </div>
+        <div class="request-modal-body">
+          <input type="number" placeholder="Pull-Request Id">
+        </div>
+        <div class="modal-actions">
+          <div id="cancel-request-modal-btn" class="dark-btn">
+            <span>Cancel</span>
+          </div>
+          <div id="submit-request-modal-btn" class="dark-btn">
+            <span>Submit</span>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+    <!-- <div class="modal-window overlay">
+      <div class="voting-modal">
+        <div class="voting-modal-title">
+          <h2>Pull-Request Voting</h2>
+        </div>
+        <div class="voting-modal-body">
+          <input type="number" placeholder="Staking amount">
+          <input type="text" placeholder="Comment">
+          <label class="container">For this pull request
+            <input type="checkbox" checked="checked">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+        <div class="modal-actions">
+          <div id="cancel-voting-modal-btn" class="dark-btn">
+            <span>Cancel</span>
+          </div>
+          <div id="submit-voting-modal-btn" class="dark-btn">
+            <span>Submit</span>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+
   </div>
 
   <script src="entities/poll.entity.js"></script>
@@ -336,6 +380,8 @@
 
   <script src="component/poll.component.js"></script>
   <script src="component/issue.component.js"></script>
+  <script src="component/submit.request.modal.js"></script>
+  <script src="component/voting.modal.js"></script>
 
   <script src="page/repository.settings.page.js"></script>
   <script src="page/issue.list.page.js"></script>

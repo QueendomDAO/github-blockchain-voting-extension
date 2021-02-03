@@ -39,3 +39,17 @@ function rejectPullRequest(url) {
     })
     .then(response => response.json())
 }
+
+function createIssueComment(url, comment) {
+    return fetch(url, {
+        method: 'POST',
+        headers: new Headers({
+            'User-agent': 'Mozilla/4.0 Custom User Agent',
+            "Authorization": "Bearer " + user.getToken(),
+        }),
+        body: JSON.stringify({
+            "body": comment
+        })
+    })
+    .then(response => response.json())
+}

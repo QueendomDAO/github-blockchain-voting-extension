@@ -107,9 +107,14 @@ async function setEmptyStorageData(key) {
 }
 
 
-function generateSpan(text) {
+function generateSpan(text, classList) {
     let element = document.createElement("span");
     element.textContent = text;
+
+    if(classList) {
+        element.classList.add(classList);
+    }
+
     return element;
 }
 
@@ -146,7 +151,7 @@ function generateButton(classList, id, src) {
 }
 
 
-function generateInput(classList, id, type) {
+function generateInput(classList, id, type, placeholder) {
     let element = document.createElement("input");
     
     if(classList) {
@@ -161,5 +166,28 @@ function generateInput(classList, id, type) {
         element.setAttribute("type", type);
     }
 
+    if(placeholder) {
+        element.setAttribute("placeholder", placeholder);
+    }
+
     return element;
 }
+
+function generateH2(text) {
+    let element = document.createElement("h2");
+    element.textContent = text;
+    return element;
+}
+
+function generateLabel(text, classList) {
+    let element = document.createElement("label");
+    element.textContent = text;
+
+    if(classList) {
+        element.classList.add(classList);
+    }
+
+    return element;
+}
+
+//TODO: Refactor the string generators
