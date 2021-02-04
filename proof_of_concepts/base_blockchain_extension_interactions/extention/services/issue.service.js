@@ -167,3 +167,23 @@ function claimIssue(issue, username, stake) {
         }).catch(error => reject(error));
     });
 }
+
+function getBounty(issue) {
+    return new Promise(async (resolve) => {
+        let bountySum = 0;
+
+        let single_poll_contract = new web3.eth.Contract(poll_contract_abi, issue.getContract());
+
+        const bounty_length = await single_poll_contract.methods.getBountiesLength().call();
+        console.log(bounty_length)
+
+        for (let i = 0; i < bounty_length; i++) {
+            await single_poll_contract.methods.bounties(i).call().then(bounty => {
+                bountySum += parseInt(bounty['weight']) / (10 ** 18);
+                console.log(bounty);
+            });
+        }
+
+        resolve(bountySum);
+    });
+}

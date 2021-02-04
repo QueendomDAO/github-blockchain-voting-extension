@@ -71,4 +71,8 @@ contract Poll {
     function getVotesLength() public view returns (uint256) {
         return votes.length;
     }
+
+    function getBountiesLength() public view returns (uint256) {
+        return bounties.length;
+    }
 }

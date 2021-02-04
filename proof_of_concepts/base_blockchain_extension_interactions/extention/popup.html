@@ -154,7 +154,16 @@
           </div>
         </div>
 
-        <div class="repository-settings-actions">
+        <div id="issue-info-actions" class="issue-info-actions">
+          <div id="issue-title-container" class="issue-title-container">
+            <span id="issue-title" class="issue-title">Hallo boys</span>
+          </div>
+          <div id="issue-stake-container" class="issue-stake-container">
+            <span id="issue-stake" class="issue-stake">Bounty: 0.11 ETH</span>
+          </div>
+        </div>
+
+        <div class="issue-settings-actions">
           <div id="createBountyBtn" class="dark-btn">
             <span>Create Bounty-Pool</span>
           </div>
@@ -168,10 +177,10 @@
           </div>
         </div>
 
-      </div>
-      <div>
-        <div class="dark-btn backBtn">
-          <span>Back</span>
+        <div>
+          <div class="dark-btn backBtn">
+            <span>Back</span>
+          </div>
         </div>
       </div>
     </div>
@@ -206,7 +215,7 @@
     <!------------------------------------------ Poll Action ------------------------------------------>
 
     <div id="pollActionCard" class="card">
-      <div class="poll-container">
+      <div class="issues-actions">
 
         <div class="header-container header-container-fixed">
           <div>
@@ -217,7 +226,14 @@
           </div>
         </div>
 
-        <div class="repository-settings-actions">
+        <div id="issue-info-actions" class="issue-info-actions">
+          <div id="poll-title-container" class="poll-title-container">
+            <span id="poll-title"></span>
+          </div>
+          <div id="poll-time-container" class="poll-time-container"></div>
+        </div>
+
+        <div class="issue-settings-actions">
           <div id="submitPullRequestBtn" class="dark-btn">
             <span>Submit Pull Request</span>
           </div>
@@ -355,6 +371,7 @@
   <script src="component/issue.component.js"></script>
   <script src="component/submit.request.modal.js"></script>
   <script src="component/voting.modal.js"></script>
+  <script src="component/bounty.component.js"></script>
 
   <script src="page/repository.settings.page.js"></script>
   <script src="page/issue.list.page.js"></script>
