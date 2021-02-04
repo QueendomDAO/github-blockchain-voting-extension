@@ -6,7 +6,7 @@ async function generateVotingModal() {
     let votingModalTitleH2 = generateH2("Pull-Request Voting");
 
     let votingModalBody = generateDiv("voting-modal-body");
-    let votingModalBodyStake = generateInput("", "voting-modal-staking-amount", "number", "Staking amount");
+    let votingModalBodyStake = generateInput("", "voting-modal-staking-amount", "number", "Staking amount (1 = 1e9)");
     let votingModalBodyComment = generateInput("", "voting-modal-comment", "text", "GitHub Comment");
     let votingModalLabelCheckBox= generateLabel("For this pull request", "container");
     let votingModalInputCheckBox= generateInput("", "voting-checkbox", "checkbox", "");

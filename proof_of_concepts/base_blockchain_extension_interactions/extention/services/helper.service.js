@@ -6,15 +6,17 @@ function generatePollEnd(minutes) {
     let initial_date = new Date;
     let today = new Date(initial_date.getTime() + (minutes*60*1000));
 
+    var tempDay = "" + appendZeroForDate(today.getDate());
+    var tempMonth = "" + (today.getMonth() + 1);
 
-    var tempDay = ""+appendZeroForDate(today.getDate());
-    var tempMonth= ""+today.getMonth() + 1;
-    if(tempDay.length<=1){
-        tempDay = "0"+tempDay;
+    if(tempDay.length <= 1){
+        tempDay = "0" + tempDay;
     }
-    if(tempMonth.length<=1){
-        tempMonth = "0"+tempMonth;
+
+    if(tempMonth.length <= 1){
+        tempMonth = "0" + tempMonth;
     }
+
     return today.getFullYear() + "" 
         + tempMonth + "" 
         + tempDay + "" 
@@ -23,18 +25,18 @@ function generatePollEnd(minutes) {
 }
 
 function formateName(str) {
-    return str.length > 15 ? str.substr(0, 15) + "..." : str;
+    return str.length > 30 ? str.substr(0, 30) + "..." : str;
 }
 
 function getCurrentDate() {
     let today = new Date();
-    var tempDay = ""+appendZeroForDate(today.getDate());
-    var tempMonth= ""+today.getMonth() + 1;
-    if(tempDay.length<=1){
-        tempDay = "0"+tempDay;
+    var tempDay = "" + appendZeroForDate(today.getDate());
+    var tempMonth= "" + today.getMonth() + 1;
+    if(tempDay.length <= 1){
+        tempDay = "0" + tempDay;
     }
-    if(tempMonth.length<=1){
-        tempMonth = "0"+tempMonth;
+    if(tempMonth.length <= 1){
+        tempMonth = "0" + tempMonth;
     }
     return parseInt(
         today.getFullYear() + "" 

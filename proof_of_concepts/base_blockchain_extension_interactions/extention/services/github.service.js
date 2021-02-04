@@ -7,6 +7,7 @@ function getRequest(url) {
         }),
     })
     .then(response => response.json()) //Converting the response to a JSON object
+    
 }
 
 function mergePullRequest(url, sha) {

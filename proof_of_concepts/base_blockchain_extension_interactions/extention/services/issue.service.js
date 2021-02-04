@@ -61,14 +61,14 @@ function createIssueContract() {
 
 function appendIssueContract(address, issue, repository, deliveryTime, votingTime) {
     return new Promise((resolve, reject) => {
-        manager_contract.methods.addPoll(1, issue.getId(), 0, address, "123", "234").estimateGas({ from: getPublicKey() }).then(gas => {
+        manager_contract.methods.addPoll(repository['id'], issue.getId(), 0, address, deliveryTime, votingTime).estimateGas({ from: getPublicKey() }).then(gas => {
 
             const tx = {
                 from: getPublicKey(),
                 to: manager_contract_address,
                 contractAddress: manager_contract_address,
                 gas: gas,
-                data: manager_contract.methods.addPoll(1, issue.getId(), 0, address, "123", "234").encodeABI()
+                data: manager_contract.methods.addPoll(1, issue.getId(), 0, address, deliveryTime, votingTime).encodeABI()
             };
 
             const signPromise = web3.eth.accounts.signTransaction(tx, getPrivateKey());

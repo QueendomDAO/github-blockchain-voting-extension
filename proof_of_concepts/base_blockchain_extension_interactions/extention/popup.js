@@ -17,6 +17,7 @@ web3 = new Web3(provider);
 manager_contract = new this.web3.eth.Contract(manager_contract_abi, manager_contract_address);
 account = web3.eth.accounts.privateKeyToAccount(private_key);
 
+
 //                                  init layout settings
 //-------------------------------------------------------------------------------------------
 
@@ -35,9 +36,14 @@ function initLayout() {
     valideSyncStorageKey(keyMatrix).then(async _ => {
         showLoader();
 
-        if(getPublicKey()) {
+        if (getPublicKey()) {
             let balance = await web3.eth.getBalance(getPublicKey());
             document.getElementById("account-balance").textContent = (parseInt(balance) / (10 ** 18)) + " ETH";
+        }
+
+        const developer_token = document.getElementById("cred-token").value;
+        if (developer_token) {
+            user.setToken(developer_token)
         }
 
         openNewView(document.getElementById("menuCard"));
@@ -52,7 +58,6 @@ function initLayout() {
 var reposList = document.getElementById("repoList");
 var pollsList = document.getElementById("pollsList");
 var issuesList = document.getElementById("issuesList");
-var mergeList = document.getElementById("mergeList");
 
 // references to all the back buttons
 var backBtns = document.getElementsByClassName("backBtn");
@@ -82,25 +87,25 @@ document.getElementById("gotoRepoBtn").addEventListener("click", async function 
     showLoader();
 
     let balance = await web3.eth.getBalance(getPublicKey());
-    if(balance > 100000000000000000 ) {
-        openNewView(document.getElementById("repoCard"));
+    if (balance > 100000000000000000) {
         let repositories = await getRequest('https://api.github.com/users/' + user.getUsername() + '/starred');
-        repositories.forEach(repository => {
-            UIapppendRepo(repository);
-        });
+
+        while (reposList.firstChild) {
+            reposList.removeChild(reposList.lastChild);
+        }
+
+        if (!repositories['message']) {
+            openNewView(document.getElementById("repoCard"));
+            repositories.forEach(repository => {
+                UIappendRepo(repository);
+            });
+        } else {
+            alert("Bad credentials (developer token) or no access to this data!")
+        }
     } else {
         hideLoader();
         alert("Your account balance is under 0.1 ETH, please add more ETH to your balance!");
     }
-    
-    await chrome.storage.sync.get("token", function (data) {
-
-         /* if(tempBalance<0.1 || tempPk.length <=0 || tempSk.length <=0 || developer_token.length <=0){//TODO correct length
-            alert("Fehler: Fehlende Daten oder nicht genug ETH");
-            openNewView(document.getElementById("menuCard"));
-         } */
-     });
-
 
     hideLoader();
 });
@@ -112,14 +117,7 @@ for (let i = 0; i < backBtns.length; i++) {
 }
 
 // generic navigation function
-function gotoCard(index) {
-    cardArray.forEach(element => {
-        element.style.display = "none";
-    });
-    cardArray[index].style.display = "block";
-}
-
-function openNewView(reference){
+function openNewView(reference) {
     cardArray.forEach(element => {
         element.style.display = "none";
     });
@@ -162,8 +160,9 @@ document.getElementById("btn-gen-keys").addEventListener("click", () => {
 
 document.getElementById("save-btn").addEventListener("click", () => {
     showLoader();
-/*     developer_token = document.getElementById("cred-token").value;
-    chrome.storage.sync.set({ token: developer_token }); */
+    developer_token = document.getElementById("cred-token").value;
+    chrome.storage.sync.set({ token: developer_token });
+    user.setToken(developer_token);
     openNewView(document.getElementById("menuCard"));
     hideLoader();
 })
@@ -171,7 +170,7 @@ document.getElementById("save-btn").addEventListener("click", () => {
 //                          generate dynamic repository elements
 //-------------------------------------------------------------------------------------------
 
-function UIapppendRepo(repository) {
+function UIappendRepo(repository) {
     let repoElement = document.createElement("div");
     let repoName = generateSpan(formateName(repository.name), "");
 

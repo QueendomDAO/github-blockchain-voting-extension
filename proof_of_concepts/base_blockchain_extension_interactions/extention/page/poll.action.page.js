@@ -52,7 +52,7 @@ async function initPollAction(poll, repository) {
 
             if(stake > 0 && comment) {
                 showLoader();
-                await addVote(poll.getContract(), stake * 100000000, checked);
+                await addVote(poll.getContract(), stake * 1000000000, checked);
                 await createIssueComment("https://api.github.com/repos/SerQuicky/Example-Cryptosystem/issues/5/comments", comment);
                 document.getElementById("voting-modal").remove();
                 hideLoader();

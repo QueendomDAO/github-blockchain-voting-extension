@@ -11,17 +11,29 @@ async function initRepositorySettings(repository) {
     );
 
     console.log(user);
-    var showIssuesBtn = document.getElementById("showIssuesBtn");
-    showIssuesBtn.removeEventListener("click", () => {console.log("Listerner removed")});
+
+    // remove old buttons, to prevent multiple event firing
+    document.getElementById("showIssuesBtn").remove();
+    document.getElementById("showPullsBtn").remove();
+
+    let container = document.getElementById("repository-settings-action");
+
+    let showIssuesBtnText = generateSpan("Issues", "");
+    let showIssuesBtn = generateDiv("dark-btn", "showIssuesBtn");
     showIssuesBtn.addEventListener("click", function() {
         initIssueList(repository);
     });
 
-    let showPullsBtn = document.getElementById("showPullsBtn");
-    showPullsBtn.removeEventListener("click", () =>{});
+    let showPullsBtnText = generateSpan("Polls", "");
+    let showPullsBtn = generateDiv("dark-btn", "showPullsBtn");
     showPullsBtn.addEventListener("click", function () {
         initPollList(repository);
     });
+
+    showIssuesBtn.appendChild(showIssuesBtnText);
+    showPullsBtn.appendChild(showPullsBtnText);
+    container.appendChild(showIssuesBtn);
+    container.appendChild(showPullsBtn);
 
     hideLoader();
 }
