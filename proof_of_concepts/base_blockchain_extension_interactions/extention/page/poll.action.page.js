@@ -22,14 +22,12 @@ async function initPollAction(poll, repository) {
 
 
     let single_poll_contract = new web3.eth.Contract(poll_contract_abi, poll.getContract());
-    let claimer = await single_poll_contract.methods.claimer().call();
-    console.log(claimer);
-    console.log(claimer['username']);
+    let claimerName = await single_poll_contract.methods.claimerName().call();
 
     document.getElementById('submitPullRequestBtn').style.display = "none";
     document.getElementById('votePullRequestBtn').style.display = "none";
 
-    if(claimer['username'] == user.getUsername()) {
+    if(claimerName == user.getUsername()) {
         document.getElementById('submitPullRequestBtn').style.display = "block";
     }
 

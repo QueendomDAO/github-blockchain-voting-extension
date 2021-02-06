@@ -30,7 +30,7 @@ async function initIssueAction(issue, repository) {
     document.getElementById('createBountyBtn').addEventListener("click", async function() {
         showLoader();
         const published_contract = await createIssueContract();
-        await appendIssueContract(published_contract, issue, repository, generatePollEnd(240), generatePollEnd(480));
+        await appendIssueContract(published_contract, issue, repository, generatePollEnd(2), generatePollEnd(6));
         openNewView(document.getElementById("menuCard"));
         hideLoader();
     });

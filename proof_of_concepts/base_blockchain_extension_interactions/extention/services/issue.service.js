@@ -152,17 +152,7 @@ function claimIssue(issue, username, stake) {
                 const sentTx = await web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
 
                 console.log(sentTx);
-                console.log('yooo3');
                 resolve(sentTx);
-
-                /* sentTx.on("receipt", receipt => {
-                    console.log("Bounty was successfully claimed: ", + address);
-                    resolve(receipt);
-                });
-                sentTx.on("error", err => {
-                    console.log("Bounty could not be claimed: ", address);
-                    reject(err);
-                }); */
             }).catch(error => reject(error));
         }).catch(error => reject(error));
     });
@@ -170,20 +160,9 @@ function claimIssue(issue, username, stake) {
 
 function getBounty(issue) {
     return new Promise(async (resolve) => {
-        let bountySum = 0;
-
         let single_poll_contract = new web3.eth.Contract(poll_contract_abi, issue.getContract());
-
-        const bounty_length = await single_poll_contract.methods.getBountiesLength().call();
-        console.log(bounty_length)
-
-        for (let i = 0; i < bounty_length; i++) {
-            await single_poll_contract.methods.bounties(i).call().then(bounty => {
-                bountySum += parseInt(bounty['weight']) / (10 ** 18);
-                console.log(bounty);
-            });
-        }
-
-        resolve(bountySum);
+        const bounty = await single_poll_contract.methods.bounty().call();
+        console.log(bounty);
+        resolve(bounty / (10 ** 18));
     });
 }

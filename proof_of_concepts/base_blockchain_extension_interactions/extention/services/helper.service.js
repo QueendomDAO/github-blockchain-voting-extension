@@ -31,7 +31,7 @@ function formateName(str) {
 function getCurrentDate() {
     let today = new Date();
     var tempDay = "" + appendZeroForDate(today.getDate());
-    var tempMonth= "" + today.getMonth() + 1;
+    var tempMonth= "" + (today.getMonth() + 1);
     if(tempDay.length <= 1){
         tempDay = "0" + tempDay;
     }
