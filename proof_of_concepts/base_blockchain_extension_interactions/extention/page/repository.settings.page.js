@@ -1,3 +1,9 @@
+/**
+ * Generates the repository setting buttons
+ *
+ * @param {any} repository - GitHub repository of the poll
+ * @return {void}
+ */
 async function initRepositorySettings(repository) {
     showLoader();
     

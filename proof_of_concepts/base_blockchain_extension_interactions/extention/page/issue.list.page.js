@@ -1,3 +1,9 @@
+/**
+ * Generates the issue lists
+ *
+ * @param {any} repository - Chosen GitHub repository
+ * @return {void}
+ */
 async function initIssueList(repository) {
 
     showLoader();

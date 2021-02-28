@@ -1,3 +1,10 @@
+/**
+ * Get the balance of a wallet
+ *
+ * @param {Web3} web3 - Web3js object reference
+ * @param {string} public_key - Public address of the wallet to check
+ * @return {Promise<string>} - Balance of the wallet
+ */
 function getWalletBalance(web3, public_key) {
     return new Promise(async (resolve, reject) => {
         try {
@@ -12,6 +19,15 @@ function getWalletBalance(web3, public_key) {
     });
 }
 
+/**
+ * Faucet function to top up the accounts
+ *
+ * @param {Web3} web3 - Web3js object reference
+ * @param {string} from - sender address
+ * @param {string} to - receiver address
+ * @param {string} private_key - private key of the faucet account
+ * @return {Promise<any>} - Blockchain response
+ */
 function initWalletWithGas(web3, from, to, private_key) {
     return new Promise((resolve, reject) => {
         const tx = {

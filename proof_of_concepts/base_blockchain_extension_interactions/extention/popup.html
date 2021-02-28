@@ -11,7 +11,14 @@
     <!-- Login -->
     <div id="loginCard" class="card">
       <div class="login-container">
-        <h2 class="header">deVote</h2>
+        <div class="header-container header-container-fixed">
+          <div>
+            <img src="./assets/logo.png">
+          </div>
+          <div>
+            <h2 class="header">deVote</h2>
+          </div>
+        </div>
         <div>
           <div class="login-warning">
             <span class="warning">
@@ -88,9 +95,9 @@
     <div id="repoInfoCard" class="card">
       <div class="repository-settings-container">
 
-        <div class="header-container header-container-fixed">
+        <div class="header-container header-container-fixed-2">
           <div>
-            <img src="./assets/repository.png">
+            <img src="./assets/actions.png">
           </div>
           <div>
             <h2 class="header">Repository actions</h2>
@@ -122,7 +129,7 @@
 
         <div class="header-container header-container-fixed">
           <div>
-            <img src="./assets/repository.png">
+            <img src="./assets/tasks.png">
           </div>
           <div>
             <h2 id="issueHeader" class="header">Open Issues</h2>
@@ -147,7 +154,7 @@
 
         <div class="header-container header-container-fixed">
           <div>
-            <img src="./assets/repository.png">
+            <img src="./assets/actions.png">
           </div>
           <div>
             <h2 id="issueHeader" class="header">Issue Actions</h2>
@@ -163,19 +170,7 @@
           </div>
         </div>
 
-        <div class="issue-settings-actions">
-          <div id="createBountyBtn" class="dark-btn">
-            <span>Create Bounty-Pool</span>
-          </div>
-
-          <div id="stakeBountyBtn" class="dark-btn">
-            <span>Stake in Bounty-Pool</span>
-          </div>
-
-          <div id="claimIssueBtn" class="dark-btn">
-            <span>Claim Issue</span>
-          </div>
-        </div>
+        <div id="issue-settings-actions" class="issue-settings-actions"></div>
 
         <div>
           <div class="dark-btn backBtn">
@@ -191,7 +186,7 @@
     <div id="pollsCard" class="card">
       <div class="poll-container">
 
-        <div id="pollsHeader" class="header-container header-container-variable">
+        <div id="pollsHeader" class="header-container header-container-fixed">
           <div>
             <img src="./assets/pollable.png">
           </div>
@@ -219,7 +214,7 @@
 
         <div class="header-container header-container-fixed">
           <div>
-            <img src="./assets/repository.png">
+            <img src="./assets/actions.png">
           </div>
           <div>
             <h2 id="pollHeader" class="header">Poll Actions</h2>
@@ -230,18 +225,12 @@
           <div id="poll-title-container" class="poll-title-container">
             <span id="poll-title"></span>
           </div>
-          <div id="poll-time-container" class="poll-time-container"></div>
-        </div>
-
-        <div class="issue-settings-actions">
-          <div id="submitPullRequestBtn" class="dark-btn">
-            <span>Submit Pull Request</span>
-          </div>
-
-          <div id="votePullRequestBtn" class="dark-btn">
-            <span>Voting on Pull-Request</span>
+          <div id="poll-time-container" class="poll-time-container">
+            <span id="poll-time"></span>
           </div>
         </div>
+
+        <div id="poll-settings-actions" class="issue-settings-actions"></div>
 
       </div>
       <div>
@@ -265,7 +254,7 @@
             <span id="account-balance"></span>
           </div>
           <div class="wallet-key-holder">
-            <span class="wallet-desc">Public key:</span>
+            <span class="wallet-desc">Public address:</span>
             <span id="public-key"></span>
           </div>
           <div class="wallet-key-holder">
@@ -306,51 +295,6 @@
     <div class="overlay card" id="overlay">
       <span>Loading data...</span>
     </div>
-
-
-    <!-- <div class="modal-window overlay">
-      <div class="request-modal">
-        <div class="request-modal-title">
-          <h2>Submit Pull-Request</h2>
-        </div>
-        <div class="request-modal-body">
-          <input type="number" placeholder="Pull-Request Id">
-        </div>
-        <div class="modal-actions">
-          <div id="cancel-request-modal-btn" class="dark-btn">
-            <span>Cancel</span>
-          </div>
-          <div id="submit-request-modal-btn" class="dark-btn">
-            <span>Submit</span>
-          </div>
-        </div>
-      </div>
-    </div> -->
-
-    <!-- <div class="modal-window overlay">
-      <div class="voting-modal">
-        <div class="voting-modal-title">
-          <h2>Pull-Request Voting</h2>
-        </div>
-        <div class="voting-modal-body">
-          <input type="number" placeholder="Staking amount">
-          <input type="text" placeholder="Comment">
-          <label class="container">For this pull request
-            <input type="checkbox" checked="checked">
-            <span class="checkmark"></span>
-          </label>
-        </div>
-        <div class="modal-actions">
-          <div id="cancel-voting-modal-btn" class="dark-btn">
-            <span>Cancel</span>
-          </div>
-          <div id="submit-voting-modal-btn" class="dark-btn">
-            <span>Submit</span>
-          </div>
-        </div>
-      </div>
-    </div> -->
-
 
   </div>
 

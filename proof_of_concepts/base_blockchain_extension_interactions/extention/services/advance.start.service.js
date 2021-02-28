@@ -15,20 +15,25 @@
                     2. Bounty wieder eröffnen
                     3. Pfand des Developers in die Bounty */
 
+/**
+* Init the starting evaluation process for the poll process
+*
+* @return {Promise<any>} - When did the process end?
+*/
 function initAdvancedStart() {
     return new Promise(async (resolve) => {
         let polls = await filterPolls();
 
-        for(let i = 0; i < polls.length; i++) {
+        for (let i = 0; i < polls.length; i++) {
             console.log(polls[i]);
-            if(parseInt(polls[i]['pqId'])) {
+            if (parseInt(polls[i]['pqId'])) {
                 let eval = await evaluateVotes(polls[i]);
                 console.log(eval);
                 await resolvePoll(eval['result'], eval['winnerStake'], eval['allStakes'], polls[i]);
                 await setPollStateInManager(polls[i]['id'], 0);
                 console.log("The contract " + polls[i]['poll_contract_address'] + " was resolved!");
             } else {
-                if(polls[i]['state'] == 2) {
+                if (polls[i]['state'] == 2) {
                     await resetToBountyProcess(polls[i]);
                 }
             }
@@ -37,6 +42,11 @@ function initAdvancedStart() {
     });
 }
 
+/**
+* Search for polls that are finished
+*
+* @return {Promise<Poll[]>} - Finished polls
+*/
 function filterPolls() {
     return new Promise(async (resolve) => {
         let polls_blockchain = [];
@@ -45,7 +55,7 @@ function filterPolls() {
         for (let i = 0; i < poll_length; i++) {
             await manager_contract.methods.polls(i).call().then(poll => {
                 console.log(getCurrentDate() + " vs " + poll['votingTimestamp']);
-                if(poll['state'] != 0 && (getCurrentDate() > poll['votingTimestamp'])) {
+                if (poll['state'] != 0 && (getCurrentDate() > poll['votingTimestamp'])) {
                     polls_blockchain.push(poll);
                 }
             });
@@ -56,6 +66,12 @@ function filterPolls() {
     });
 }
 
+/**
+* Evaluates a poll (how many pro- and contra stakes)
+*
+* @param {string} poll - poll to evaluate
+* @return {Promise<any>} - Staking statistics
+*/
 function evaluateVotes(poll) {
     return new Promise(async (resolve) => {
         console.log(poll['poll_contract_address']);
@@ -67,7 +83,7 @@ function evaluateVotes(poll) {
 
         for (let i = 0; i < votes_length; i++) {
             await single_poll_contract.methods.votes(i).call().then(vote => {
-                if(vote['decision']) {
+                if (vote['decision']) {
                     proWeight += parseInt(vote['weight']);
                 } else {
                     contraWeight += parseInt(vote['weight']);
@@ -75,12 +91,23 @@ function evaluateVotes(poll) {
             });
         }
 
-        resolve({"result": proWeight > contraWeight, 
-                "allStakes": proWeight + contraWeight, 
-                "winnerStake": proWeight > contraWeight ? proWeight : contraWeight });
+        resolve({
+            "result": proWeight > contraWeight,
+            "allStakes": proWeight + contraWeight,
+            "winnerStake": proWeight > contraWeight ? proWeight : contraWeight
+        });
     });
 }
 
+/**
+* Resolves a polls (sends winning stakes to the addresses)
+*
+* @param {boolean} result - result of the poll
+* @param {string} winnerStake - summed winner stakes
+* @param {string} allStakes - summed stakes (all stakes winner + losers)
+* @param {string} poll - poll to resolve
+* @return {Promise<any>} - Process finished
+*/
 function resolvePoll(result, winnerStake, allStakes, poll) {
     return new Promise(async (resolve) => {
         console.log(result);
@@ -89,10 +116,10 @@ function resolvePoll(result, winnerStake, allStakes, poll) {
         let single_poll_contract = new web3.eth.Contract(poll_contract_abi, poll["poll_contract_address"]);
         let votes_length = await single_poll_contract.methods.getVotesLength().call();
 
-        for(let i = 0; i < votes_length; i++) {
+        for (let i = 0; i < votes_length; i++) {
             await single_poll_contract.methods.votes(i).call().then(async vote => {
-                if(vote['weight'] != 0) {
-                    if(result == vote['decision']) {
+                if (vote['weight'] != 0) {
+                    if (result == vote['decision']) {
                         const weight = Math.round(((parseInt(vote['weight']) / winnerStake) * allStakes));
                         await transferFunds(poll["poll_contract_address"], vote['id'], weight, vote['delegate']);
                     }
@@ -104,6 +131,12 @@ function resolvePoll(result, winnerStake, allStakes, poll) {
     })
 }
 
+/**
+* Reset the bounty process to the claiming process
+*
+* @param {string} poll - poll to resolve
+* @return {Promise<any>} - Process finished
+*/
 function resetToBountyProcess(poll) {
     return new Promise(async (resolve) => {
         await resetClaimer(poll['poll_contract_address']);
@@ -112,6 +145,12 @@ function resetToBountyProcess(poll) {
     });
 }
 
+/**
+* Reset claimer of an issue / poll
+*
+* @param {string} address - Contract address
+* @return {Promise<any>} - Process finished
+*/
 function resetClaimer(address) {
     return new Promise(async (resolve, reject) => {
 
@@ -134,12 +173,21 @@ function resetClaimer(address) {
 
                 console.log(sentTx);
                 resolve(sentTx);
-                
+
             }).catch(error => reject(error));
         }).catch(error => reject(error));
     });
 }
 
+/**
+* Transfer funds / stakes
+*
+* @param {string} address - Receiver address
+* @param {string} index - index of the poll
+* @param {string} value - value to transfer
+* @param {string} delegate - For the logging
+* @return {Promise<any>} - Process finished
+*/
 function transferFunds(address, index, value, delegate) {
     return new Promise(async (resolve, reject) => {
 

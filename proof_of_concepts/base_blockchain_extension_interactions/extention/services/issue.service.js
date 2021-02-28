@@ -1,3 +1,9 @@
+/**
+ * Get the issues of a repository
+ *
+ * @param {any} repository - Chosen repository 
+ * @return {Promise<Issue[]>} - List of issues
+ */
 function getIssues(repository) {
     return new Promise(async (resolve) => {
         let issues = [];
@@ -32,6 +38,11 @@ function getIssues(repository) {
     });
 }
 
+/**
+ * Creates a new issue contract
+ *
+ * @return {Promise<any>} - Blockchain response
+ */
 function createIssueContract() {
     return new Promise(async (resolve, reject) => {
         let deploy_contract = new web3.eth.Contract(JSON.parse(JSON.stringify(poll_contract_abi)));
@@ -59,6 +70,16 @@ function createIssueContract() {
     });
 }
 
+/**
+ * Save an issue in the poll manager
+ *
+ * @param {string} address - Contract address
+ * @param {number} issue - Created issue
+ * @param {boolean} repository - Chosen GitHub issue 
+ * @param {boolean} deliveryTime - Submit time for the developer (deadline)
+ * @param {boolean} votingTime - Voting time for the community (deadline)
+ * @return {Promise<any>} - Blockchain response
+ */
 function appendIssueContract(address, issue, repository, deliveryTime, votingTime) {
     return new Promise((resolve, reject) => {
         manager_contract.methods.addPoll(repository['id'], issue.getId(), 0, address, deliveryTime, votingTime).estimateGas({ from: getPublicKey() }).then(gas => {
@@ -88,6 +109,13 @@ function appendIssueContract(address, issue, repository, deliveryTime, votingTim
     });
 }
 
+/**
+ * Crowdfund the bounty for an issue
+ *
+ * @param {Issue} issue - Crowdfunded issue
+ * @param {number} stake - Staking amount
+ * @return {Promise<any>} - Blockchain response
+ */
 function stakeOnBounty(issue, stake) {
     return new Promise((resolve, reject) => {
 
@@ -106,29 +134,23 @@ function stakeOnBounty(issue, stake) {
 
             const signPromise = web3.eth.accounts.signTransaction(tx, getPrivateKey());
 
-            console.log('yooo1');
-
             signPromise.then(async (signedTx) => {
-                console.log('yooo2');
                 
                 const sentTx = await web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
-                console.log(sentTx);
-                console.log('yooo3');
                 resolve(sentTx);
 
-                /* sentTx.on("receipt", receipt => {
-                    console.log("Bounty stake was successfull: ", "Staked for the poll under " + address);
-                    resolve(receipt);
-                });
-                sentTx.on("error", err => {
-                    console.log("Bounty stake has failed: ", "Could not stake for the poll under " + address);
-                    reject(err);
-                }); */
             }).catch(error => reject(error));
         }).catch(error => reject(error));
     });
 }
 
+/**
+ * Claim an issue as a developer
+ *
+ * @param {Issue} issue - Claimed issue
+ * @param {string} username - Developer that claimed the issue
+ * @return {Promise<any>} - Blockchain response
+ */
 function claimIssue(issue, username, stake) {
     return new Promise((resolve, reject) => {
 
@@ -158,6 +180,12 @@ function claimIssue(issue, username, stake) {
     });
 }
 
+/**
+ * Get the bounty of an issue
+ *
+ * @param {Issue} issue - Issue with the bounty
+ * @return {Promise<number>} - Bounty amount
+ */
 function getBounty(issue) {
     return new Promise(async (resolve) => {
         let single_poll_contract = new web3.eth.Contract(poll_contract_abi, issue.getContract());

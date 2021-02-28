@@ -1,3 +1,9 @@
+/**
+ * Fetches date through a GET request from an endpoint
+ *
+ * @param {string} url - url of the endpoint
+ * @return {Promise<any>} - Endpoint response
+ */
 function getRequest(url) {
     return fetch(url, {
         method: 'GET', // *GET, POST, PUT, DELETE, etc.
@@ -10,6 +16,13 @@ function getRequest(url) {
     
 }
 
+/**
+ * Merge a pull request
+ *
+ * @param {string} url - url of the endpoint
+ * @param {string} sha - sha of the pull request
+ * @return {Promise<any>} - Endpoint response
+ */
 function mergePullRequest(url, sha) {
     return fetch(url, {
         method: 'PUT',
@@ -27,6 +40,13 @@ function mergePullRequest(url, sha) {
     .then(response => response.json()) //Converting the response to a JSON object
 }
 
+/**
+ * Reject a pull request
+ *
+ * @param {string} url - url of the endpoint
+ * @param {string} sha - sha of the pull request
+ * @return {Promise<any>} - Endpoint response
+ */
 function rejectPullRequest(url) {
     return fetch(url, {
         method: 'PATCH',
@@ -41,6 +61,13 @@ function rejectPullRequest(url) {
     .then(response => response.json())
 }
 
+/**
+ * Post a comment in an issue post
+ *
+ * @param {string} url - url of the endpoint
+ * @param {string} comment - comment to post
+ * @return {Promise<any>} - Endpoint response
+ */
 function createIssueComment(url, comment) {
     return fetch(url, {
         method: 'POST',

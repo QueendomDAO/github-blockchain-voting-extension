@@ -1,3 +1,9 @@
+/**
+ * Generates the poll lists
+ *
+ * @param {any} repository - Chosen GitHub repository
+ * @return {void}
+ */
 async function initPollList(repository) {
     showLoader();
     openNewView(document.getElementById("pollsCard"));

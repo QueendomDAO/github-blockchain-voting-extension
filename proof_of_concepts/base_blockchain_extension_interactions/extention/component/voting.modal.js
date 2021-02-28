@@ -1,3 +1,8 @@
+/**
+ * Generates dynamically the voting modal
+ *
+ * @return {void}
+ */
 async function generateVotingModal() {
     let modalWindow = generateDiv("modal", "voting-modal");
     let votingModal = generateDiv("voting-modal");

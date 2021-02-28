@@ -1,3 +1,9 @@
+/**
+ * Get the open polls
+ *
+ * @param {any} repository - Chosen repository 
+ * @return {Promise<Poll[]>} - List of polls in the repository
+ */
 function getPolls(repository) {
     return new Promise(async (resolve) => {
         let polls = [];
@@ -18,7 +24,6 @@ function getPolls(repository) {
             if (issues_github[i]['state']) {
                 if (polls_blockchain.some((poll) => poll['issueId'] == issues_github[i]['id'])) {
                     const poll = polls_blockchain.find((issue) => issue['issueId'] == issues_github[i]['id']);
-                    //constructor(id, issueId, pullId, deliverTimestamp, votingTimestamp, contract, title, url) {
 
                     polls.push(new Poll(poll['id'], poll['issueId'], poll['pqId'], poll['deliverTimestamp'], poll['votingTimestamp'],
                         poll['poll_contract_address'], issues_github[i]['title'], issues_github[i]['url']));
@@ -31,6 +36,13 @@ function getPolls(repository) {
     });
 }
 
+/**
+ * Update the state of a poll
+ *
+ * @param {number} index - Index of the poll
+ * @param {number} state - New state of the poll
+ * @return {Promise<any>} - Blockchain response
+ */
 function setPollStateInManager(index, state) {
     return new Promise((resolve, reject) => {
         manager_contract.methods.updatePoll(index, state).estimateGas({ from: getPublicKey() }).then(gas => {
@@ -55,6 +67,13 @@ function setPollStateInManager(index, state) {
     });
 }
 
+/**
+ * Submit a pull request for a poll
+ *
+ * @param {number} index - Index of the poll
+ * @param {number} pqId - Id of the pull request
+ * @return {Promise<any>} - Blockchain response
+ */
 function submitPullRequest(index, pqId) {
     return new Promise((resolve, reject) => {
         manager_contract.methods.submitPullRequest(index, pqId).estimateGas({ from: getPublicKey() }).then(gas => {
@@ -79,7 +98,14 @@ function submitPullRequest(index, pqId) {
     });
 }
 
-
+/**
+ * Add a vote for the pull request
+ *
+ * @param {string} address - Address of the voter
+ * @param {number} stake - Stake amount of the vote
+ * @param {boolean} descision - Pro or Contra vote
+ * @return {Promise<any>} - Blockchain response
+ */
 function addVote(address, stake, descision) {
     showLoader();
 

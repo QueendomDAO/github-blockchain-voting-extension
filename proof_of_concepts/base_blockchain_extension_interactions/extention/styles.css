@@ -12,6 +12,11 @@ body {
     grid-template-columns: 35% 1fr;
 }
 
+.header-container-fixed-2 {
+    display: grid;
+    grid-template-columns: 25% 1fr;
+}
+
 .header-container-variable {
     display: grid;
     grid-template-columns: 15% 1fr;
@@ -22,11 +27,13 @@ body {
     font-size: 20px;
     float: left;
     margin-left: 20px;
+    display: block;
+    padding-top: 7.5px;
 }
 
 .header-container > div > img {
-    height: 25px;
-    width: 25px;
+    height: 35px;
+    width: 35px;
     float: right;
     display: block;
     padding-top: 17px;
@@ -78,9 +85,9 @@ span {
 
 .login-container {
     width: 100%;
-    height: 100%;
+    height: 300px;
     display: grid;
-    grid-template-rows: 15% 1fr 30%;
+    grid-template-rows: 15% 1fr 20%;
 }
 
 .login-warning {
@@ -479,7 +486,7 @@ span {
 
 .modal-actions > #cancel-request-modal-btn {
     grid-area: 1 / 2 / 2 / 3;
-    background: #aeaeb2;
+    background: #24292e;
     height: 30px;
 }
 
@@ -489,7 +496,7 @@ span {
 
 .modal-actions > #submit-request-modal-btn {
     grid-area: 1 / 3 / 2 / 4;
-    background: #30d158;
+    background: #24292e;
     height: 30px;
 }
 
@@ -528,7 +535,6 @@ span {
 
 .modal-actions > #cancel-voting-modal-btn {
     grid-area: 1 / 2 / 2 / 3;
-    background: #aeaeb2;
     height: 30px;
 }
 
@@ -538,7 +544,6 @@ span {
 
 .modal-actions > #submit-voting-modal-btn {
     grid-area: 1 / 3 / 2 / 4;
-    background: #30d158;
     height: 30px;
 }
 
@@ -650,7 +655,7 @@ span {
 
 .modal-actions > #cancel-bounty-modal-btn {
     grid-area: 1 / 2 / 2 / 3;
-    background: #aeaeb2;
+    background: #24292e;
     height: 30px;
 }
 
@@ -660,7 +665,7 @@ span {
 
 .modal-actions > #submit-bounty-modal-btn {
     grid-area: 1 / 3 / 2 / 4;
-    background: #30d158;
+    background: #24292e;
     height: 30px;
 }
 
