@@ -25,13 +25,10 @@ function initAdvancedStart() {
         let polls = await filterPolls();
 
         for (let i = 0; i < polls.length; i++) {
-            console.log(polls[i]);
             if (parseInt(polls[i]['pqId']) && (getCurrentDate() > polls[i]['votingTimestamp'])) {
                 let eval = await evaluateVotes(polls[i]);
-                console.log(eval);
                 await resolvePoll(eval['result'], eval['winnerStake'], eval['allStakes'], polls[i]);
                 await setPollStateInManager(polls[i]['id'], 0);
-                console.log("The contract " + polls[i]['poll_contract_address'] + " was resolved!");
             } else {
                 if (polls[i]['state'] == 1 && (getCurrentDate() > polls[i]['bountyTimestamp'])) {
                     await resetToBountyToStart(polls[i]);
@@ -56,14 +53,12 @@ function filterPolls() {
 
         for (let i = 0; i < poll_length; i++) {
             await manager_contract.methods.polls(i).call().then(poll => {
-                console.log(getCurrentDate() + " vs " + poll['votingTimestamp']);
                 if (poll['state'] != 0) {
                     polls_blockchain.push(poll);
                 }
             });
         }
 
-        console.log(polls_blockchain);
         resolve(polls_blockchain);
     });
 }
@@ -76,7 +71,6 @@ function filterPolls() {
 */
 function evaluateVotes(poll) {
     return new Promise(async (resolve) => {
-        console.log(poll['poll_contract_address']);
         let single_poll_contract = new web3.eth.Contract(poll_contract_abi, poll['poll_contract_address']);
         let votes_length = await single_poll_contract.methods.getVotesLength().call();
 
@@ -112,9 +106,6 @@ function evaluateVotes(poll) {
 */
 function resolvePoll(result, winnerStake, allStakes, poll) {
     return new Promise(async (resolve) => {
-        console.log(result);
-        console.log(winnerStake);
-        console.log(allStakes);
         let single_poll_contract = new web3.eth.Contract(poll_contract_abi, poll["poll_contract_address"]);
         let votes_length = await single_poll_contract.methods.getVotesLength().call();
 
@@ -154,7 +145,6 @@ function resetToBountyProcess(poll) {
 * @return {Promise<any>} - Process finished
 */
 function resetToBountyToStart(poll) {
-    console.log('yallah');
     return new Promise(async (resolve) => {
         let single_poll_contract = new web3.eth.Contract(poll_contract_abi, poll["poll_contract_address"]);
         let bounties_length = await single_poll_contract.methods.getBountiesLength().call();
@@ -199,7 +189,6 @@ function resetClaimer(address) {
             signPromise.then(async (signedTx) => {
                 const sentTx = await web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
 
-                console.log(sentTx);
                 resolve(sentTx);
 
             }).catch(error => reject(error));
@@ -235,7 +224,6 @@ function transferFunds(address, index, value, delegate) {
             signPromise.then(async (signedTx) => {
                 const sentTx = await web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
                 console.log("Stake was transfered: ", "The winnerstake of " + value + " was transfered to " + delegate);
-                console.log(sentTx);
                 resolve(sentTx);
             }).catch(error => reject(error));
         }).catch(error => reject(error));
@@ -270,8 +258,7 @@ function transferBountyStakes(address, index, value, delegate) {
 
             signPromise.then(async (signedTx) => {
                 const sentTx = await web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
-                console.log("Bountystake was transfered: ", "The winnerstake of " + value + " was transfered to " + delegate);
-                console.log(sentTx);
+                console.log("Bountystake was transfered: ", "The bountystake of " + value + " was transfered to " + delegate);
                 resolve(sentTx);
             }).catch(error => reject(error));
         }).catch(error => reject(error));
@@ -300,8 +287,6 @@ function cancelPoll(index) {
 
             signPromise.then(async (signedTx) => {
                 const sentTx = await web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
-
-                console.log(sentTx);
                 resolve(sentTx);
             }).catch(error => reject(error));
         }).catch(error => reject(error));

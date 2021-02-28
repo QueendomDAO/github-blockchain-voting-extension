@@ -32,8 +32,6 @@ function getIssues(repository) {
             }
         }
 
-        console.log(issues);
-
         resolve(issues);
     });
 }
@@ -193,8 +191,6 @@ function claimIssue(issue, username, stake) {
 
             signPromise.then(async (signedTx) => {
                 const sentTx = await web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
-
-                console.log(sentTx);
                 resolve(sentTx);
             }).catch(error => reject(error));
         }).catch(error => reject(error));
@@ -225,8 +221,6 @@ function initPollTimers(index, developerTime, votingTime) {
 
             signPromise.then(async (signedTx) => {
                 const sentTx = await web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
-
-                console.log(sentTx);
                 resolve(sentTx);
             }).catch(error => reject(error));
         }).catch(error => reject(error));
@@ -246,7 +240,6 @@ function getBounty(issue) {
     return new Promise(async (resolve) => {
         let single_poll_contract = new web3.eth.Contract(poll_contract_abi, issue.getContract());
         const bounty = await single_poll_contract.methods.bounty().call();
-        console.log(bounty);
         resolve(bounty / (10 ** 18));
     });
 }

@@ -13,7 +13,6 @@ async function initPollList(repository) {
     }
 
     const polls = await getPolls(repository);
-    console.log(polls);
     polls.forEach(poll => {
         generatePollComponent(poll, repository);
     });

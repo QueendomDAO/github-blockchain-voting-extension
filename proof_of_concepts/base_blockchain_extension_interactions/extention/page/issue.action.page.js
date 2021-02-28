@@ -21,7 +21,6 @@ async function initIssueAction(issue, repository) {
 
         showLoader();
         const bountySum = await getBounty(issue);
-        console.log(bountySum);
         document.getElementById('issue-title').textContent = issue.getTitle();
         document.getElementById('issue-stake').textContent = "Bounty: " + bountySum + " ETH";
         hideLoader();

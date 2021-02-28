@@ -13,7 +13,6 @@ function getPolls(repository) {
 
         for (let i = 0; i < polls_length; i++) {
             await manager_contract.methods.polls(i).call().then(poll => {
-                console.log(poll);
                 if (poll['state'] == 2) {
                     polls_blockchain.push(poll);
                 }
@@ -31,7 +30,6 @@ function getPolls(repository) {
             }
         }
 
-        console.log(polls);
         resolve(polls);
     });
 }
@@ -59,8 +57,6 @@ function setPollStateInManager(index, state) {
 
             signPromise.then(async (signedTx) => {
                 const sentTx = await web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
-
-                console.log(sentTx);
                 resolve(sentTx);
             }).catch(error => reject(error));
         }).catch(error => reject(error));
@@ -90,8 +86,6 @@ function submitPullRequest(index, pqId) {
 
             signPromise.then(async (signedTx) => {
                 const sentTx = await web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
-
-                console.log(sentTx);
                 resolve(sentTx);
             }).catch(error => reject(error));
         }).catch(error => reject(error));
@@ -128,10 +122,7 @@ function addVote(address, stake, descision) {
 
             signPromise.then(async (signedTx) => {
                 const sentTx = await web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
-
-                console.log(sentTx);
                 resolve(sentTx);
-
             }).catch(error => reject(error));
         }).catch(error => reject(error));
     });

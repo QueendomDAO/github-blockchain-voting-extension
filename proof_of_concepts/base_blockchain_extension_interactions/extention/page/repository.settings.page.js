@@ -16,8 +16,6 @@ async function initRepositorySettings(repository) {
         : false
     );
 
-    console.log(user);
-
     // remove old buttons, to prevent multiple event firing
     document.getElementById("showIssuesBtn").remove();
     document.getElementById("showPullsBtn").remove();

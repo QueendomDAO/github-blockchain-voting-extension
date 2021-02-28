@@ -25,9 +25,7 @@ window.onload = function () {
 
 function init() {
     showLoader();
-    console.log(this.responseText);
     let token = this.responseText.split("=")[1].split("&")[0];
-    console.log(token);
 
     fetch("https://api.github.com/user", {
         method: 'GET',

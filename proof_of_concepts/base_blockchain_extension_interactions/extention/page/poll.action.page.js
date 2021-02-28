@@ -15,7 +15,6 @@ async function initPollAction(poll, repository) {
     document.getElementById('poll-title').textContent = poll.getTitle();
 
     if (poll.getPullId() > 0) {
-        console.log(repository);
         document.getElementById('poll-title').textContent = "Pull request was submitted!";
         document.getElementById("poll-time").textContent = formateTime(poll.getVotingTimestamp());
     } else {
@@ -96,7 +95,6 @@ async function initPollAction(poll, repository) {
 
         votePullLinkBtn.addEventListener("click", function () {
             let url = repository['pulls_url'];
-            console.log(url)
             window.open(url.substring(0, url.length - 9) + "/" + poll.getPullId(), '_blank')
         });
 
