@@ -39,6 +39,28 @@ function getIssues(repository) {
 }
 
 /**
+ * Get an issue by its contract address from the manager contract
+ *
+ * @param {string} contract_address - issue contract address
+ * @return {Promise<Issue>} - Issue with the searched contract address
+ */
+function getIssueIndexByContract(contract_address) {
+    return new Promise(async (resolve) => {
+        const issue_length = await manager_contract.methods.getPollsLength().call();
+
+        for (let i = 0; i < issue_length; i++) {
+            await manager_contract.methods.polls(i).call().then(poll => {
+                if(poll['poll_contract_address'] == contract_address) {
+                    resolve(poll['id']);
+                }
+            });
+        }
+
+        resolve(0);
+    });
+}
+
+/**
  * Creates a new issue contract
  *
  * @return {Promise<any>} - Blockchain response
@@ -76,20 +98,19 @@ function createIssueContract() {
  * @param {string} address - Contract address
  * @param {number} issue - Created issue
  * @param {boolean} repository - Chosen GitHub issue 
- * @param {boolean} deliveryTime - Submit time for the developer (deadline)
- * @param {boolean} votingTime - Voting time for the community (deadline)
+ * @param {boolean} bountyTime - How long does the issue wait before the crowdfunder get their stake back?
  * @return {Promise<any>} - Blockchain response
  */
-function appendIssueContract(address, issue, repository, deliveryTime, votingTime) {
+function appendIssueContract(address, issue, repository, bountyTime) {
     return new Promise((resolve, reject) => {
-        manager_contract.methods.addPoll(repository['id'], issue.getId(), 0, address, deliveryTime, votingTime).estimateGas({ from: getPublicKey() }).then(gas => {
+        manager_contract.methods.addPoll(repository['id'], issue.getId(), 0, address, 0, 0, bountyTime).estimateGas({ from: getPublicKey() }).then(gas => {
 
             const tx = {
                 from: getPublicKey(),
                 to: manager_contract_address,
                 contractAddress: manager_contract_address,
                 gas: gas,
-                data: manager_contract.methods.addPoll(1, issue.getId(), 0, address, deliveryTime, votingTime).encodeABI()
+                data: manager_contract.methods.addPoll(1, issue.getId(), 0, address, 0, 0, bountyTime).encodeABI()
             };
 
             const signPromise = web3.eth.accounts.signTransaction(tx, getPrivateKey());
@@ -179,6 +200,41 @@ function claimIssue(issue, username, stake) {
         }).catch(error => reject(error));
     });
 }
+
+/**
+ * Inits the timers (developer and voting time) after the issue was claimed
+ *
+ * @param {string} developerTime - How long does the developer have to solve the issue?
+ * @param {string} votingTime - How long does the community have to be able to vote?
+ * @return {Promise<any>} - Blockchain response
+ */
+function initPollTimers(index, developerTime, votingTime) {
+    return new Promise((resolve, reject) => {
+
+        manager_contract.methods.initPollPhases(index, developerTime, votingTime).estimateGas({ from: getPublicKey() }).then(gas => {
+
+            const tx = {
+                from: getPublicKey(),
+                to: manager_contract_address,
+                contractAddress: manager_contract_address,
+                gas: gas,
+                data: manager_contract.methods.initPollPhases(index, developerTime, votingTime).encodeABI()
+            };
+
+            const signPromise = web3.eth.accounts.signTransaction(tx, getPrivateKey());
+
+            signPromise.then(async (signedTx) => {
+                const sentTx = await web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
+
+                console.log(sentTx);
+                resolve(sentTx);
+            }).catch(error => reject(error));
+        }).catch(error => reject(error));
+    });
+}
+
+
+
 
 /**
  * Get the bounty of an issue

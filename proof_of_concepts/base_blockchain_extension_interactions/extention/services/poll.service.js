@@ -26,7 +26,7 @@ function getPolls(repository) {
                     const poll = polls_blockchain.find((issue) => issue['issueId'] == issues_github[i]['id']);
 
                     polls.push(new Poll(poll['id'], poll['issueId'], poll['pqId'], poll['deliverTimestamp'], poll['votingTimestamp'],
-                        poll['poll_contract_address'], issues_github[i]['title'], issues_github[i]['url']));
+                    poll['bountyTimestamp'], poll['poll_contract_address'], issues_github[i]['title'], issues_github[i]['url']));
                 }
             }
         }

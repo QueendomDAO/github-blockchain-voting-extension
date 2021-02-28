@@ -26,14 +26,16 @@ function initAdvancedStart() {
 
         for (let i = 0; i < polls.length; i++) {
             console.log(polls[i]);
-            if (parseInt(polls[i]['pqId'])) {
+            if (parseInt(polls[i]['pqId']) && (getCurrentDate() > polls[i]['votingTimestamp'])) {
                 let eval = await evaluateVotes(polls[i]);
                 console.log(eval);
                 await resolvePoll(eval['result'], eval['winnerStake'], eval['allStakes'], polls[i]);
                 await setPollStateInManager(polls[i]['id'], 0);
                 console.log("The contract " + polls[i]['poll_contract_address'] + " was resolved!");
             } else {
-                if (polls[i]['state'] == 2) {
+                if (polls[i]['state'] == 1 && (getCurrentDate() > polls[i]['bountyTimestamp'])) {
+                    await resetToBountyToStart(polls[i]);
+                } else if (polls[i]['state'] == 2 && (getCurrentDate() > polls[i]['deliverTimestamp'])) {
                     await resetToBountyProcess(polls[i]);
                 }
             }
@@ -55,7 +57,7 @@ function filterPolls() {
         for (let i = 0; i < poll_length; i++) {
             await manager_contract.methods.polls(i).call().then(poll => {
                 console.log(getCurrentDate() + " vs " + poll['votingTimestamp']);
-                if (poll['state'] != 0 && (getCurrentDate() > poll['votingTimestamp'])) {
+                if (poll['state'] != 0) {
                     polls_blockchain.push(poll);
                 }
             });
@@ -146,6 +148,32 @@ function resetToBountyProcess(poll) {
 }
 
 /**
+* Reset the bounty process to the start process
+*
+* @param {string} poll - poll to resolve
+* @return {Promise<any>} - Process finished
+*/
+function resetToBountyToStart(poll) {
+    console.log('yallah');
+    return new Promise(async (resolve) => {
+        let single_poll_contract = new web3.eth.Contract(poll_contract_abi, poll["poll_contract_address"]);
+        let bounties_length = await single_poll_contract.methods.getBountiesLength().call();
+
+        for (let i = 0; i < bounties_length; i++) {
+            await single_poll_contract.methods.bounties(i).call().then(async bounty => {
+                if (bounty['weight'] != 0) {
+                    await transferBountyStakes(poll["poll_contract_address"], bounty['id'], bounty['weight'], bounty['staker']);
+                }
+            });
+        }
+
+        await cancelPoll(poll['id']);
+
+        resolve();
+    });
+}
+
+/**
 * Reset claimer of an issue / poll
 *
 * @param {string} address - Contract address
@@ -183,7 +211,7 @@ function resetClaimer(address) {
 * Transfer funds / stakes
 *
 * @param {string} address - Receiver address
-* @param {string} index - index of the poll
+* @param {string} index - index of the vote
 * @param {string} value - value to transfer
 * @param {string} delegate - For the logging
 * @return {Promise<any>} - Process finished
@@ -207,6 +235,72 @@ function transferFunds(address, index, value, delegate) {
             signPromise.then(async (signedTx) => {
                 const sentTx = await web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
                 console.log("Stake was transfered: ", "The winnerstake of " + value + " was transfered to " + delegate);
+                console.log(sentTx);
+                resolve(sentTx);
+            }).catch(error => reject(error));
+        }).catch(error => reject(error));
+    });
+}
+
+
+/**
+* Transfer funds / stakes
+*
+* @param {string} address - Receiver address
+* @param {string} index - index of the vote
+* @param {string} value - value to transfer
+* @param {string} delegate - For the logging
+* @return {Promise<any>} - Process finished
+*/
+function transferBountyStakes(address, index, value, delegate) {
+    return new Promise(async (resolve, reject) => {
+
+        let single_poll_contract = new web3.eth.Contract(poll_contract_abi, address);
+        single_poll_contract.methods.transferBounty(index, value).estimateGas({ from: getPublicKey() }).then(gas => {
+
+            const tx = {
+                from: getPublicKey(),
+                to: address,
+                contractAddress: address,
+                gas: gas,
+                data: single_poll_contract.methods.transferBounty(index, value).encodeABI()
+            };
+
+            const signPromise = web3.eth.accounts.signTransaction(tx, getPrivateKey());
+
+            signPromise.then(async (signedTx) => {
+                const sentTx = await web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
+                console.log("Bountystake was transfered: ", "The winnerstake of " + value + " was transfered to " + delegate);
+                console.log(sentTx);
+                resolve(sentTx);
+            }).catch(error => reject(error));
+        }).catch(error => reject(error));
+    });
+}
+
+/**
+ * Cancel a poll, if no developer claims it
+ *
+ * @param {number} index - Index of the poll
+ * @return {Promise<any>} - Blockchain response
+ */
+function cancelPoll(index) {
+    return new Promise((resolve, reject) => {
+        manager_contract.methods.cancelPoll(index).estimateGas({ from: getPublicKey() }).then(gas => {
+
+            const tx = {
+                from: getPublicKey(),
+                to: manager_contract_address,
+                contractAddress: manager_contract_address,
+                gas: gas,
+                data: manager_contract.methods.cancelPoll(index).encodeABI()
+            };
+
+            const signPromise = web3.eth.accounts.signTransaction(tx, getPrivateKey());
+
+            signPromise.then(async (signedTx) => {
+                const sentTx = await web3.eth.sendSignedTransaction(signedTx.raw || signedTx.rawTransaction);
+
                 console.log(sentTx);
                 resolve(sentTx);
             }).catch(error => reject(error));

@@ -1,10 +1,11 @@
 class Poll {
-    constructor(id, issueId, pullId, deliverTimestamp, votingTimestamp, contract, title, url) {
+    constructor(id, issueId, pullId, deliverTimestamp, votingTimestamp, bountyTimestamp, contract, title, url) {
         this.id = id;
         this.issueId = issueId;
         this.pullId = pullId;
         this.deliverTimestamp = deliverTimestamp;
         this.votingTimestamp = votingTimestamp;
+        this.bountyTimestamp = bountyTimestamp;
         this.contract = contract;
         this.title = title;
         this.url = url;
@@ -49,6 +50,14 @@ class Poll {
 
     getVotingTimestamp() {
         return this.votingTimestamp;
+    }
+
+    setBountyTimestamp(bountyTimestamp) {
+        this.bountyTimestamp = bountyTimestamp;
+    }
+
+    getBountyTimestamp() {
+        return this.bountyTimestamp;
     }
 
     setContract(contract) {

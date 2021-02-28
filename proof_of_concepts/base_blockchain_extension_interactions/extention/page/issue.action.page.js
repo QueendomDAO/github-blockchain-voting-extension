@@ -37,7 +37,7 @@ async function initIssueAction(issue, repository) {
         createBountyBtn.addEventListener("click", async function () {
             showLoader();
             const published_contract = await createIssueContract();
-            await appendIssueContract(published_contract, issue, repository, generatePollEnd(2), generatePollEnd(6));
+            await appendIssueContract(published_contract, issue, repository, generatePollEnd(bounty_minutes));
             openNewView(document.getElementById("menuCard"));
             hideLoader();
         });
@@ -78,13 +78,14 @@ async function initIssueAction(issue, repository) {
     }
 
     if (!issue.getSaveable()) {
-        let claimIssueBtn = generateDiv("dark-btn", "stakeBountyBtn");
+        let claimIssueBtn = generateDiv("dark-btn", "claimIssueBtn");
         let claimIssueBtnText = generateSpan("Claim Issue", "");
 
         claimIssueBtn.addEventListener("click", async function () {
             showLoader();
             await claimIssue(issue, user.getUsername(), developer_collateral);
             await setPollStateInManager(issue.getPollId(), 2);
+            await initPollTimers(issue.getPollId(), generatePollEnd(developer_minutes), generatePollEnd(voting_minutes));
             openNewView(document.getElementById("menuCard"))
             hideLoader();
         });
