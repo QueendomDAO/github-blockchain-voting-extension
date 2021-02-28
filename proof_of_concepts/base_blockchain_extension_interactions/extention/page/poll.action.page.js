@@ -95,7 +95,8 @@ async function initPollAction(poll, repository) {
 
         votePullLinkBtn.addEventListener("click", function () {
             let url = repository['pulls_url'];
-            window.open(url.substring(0, url.length - 9) + "/" + poll.getPullId(), '_blank')
+            let link = (url.substring(0, url.length - 9) + "/" + poll.getPullId()).replace('api.', '').replace('repos/', '');
+            window.open(link, '_blank')
         });
 
         votePullLinkBtn.appendChild(votePullLinkBtnText);
